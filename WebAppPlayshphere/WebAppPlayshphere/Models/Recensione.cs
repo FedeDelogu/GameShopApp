@@ -17,7 +17,7 @@ namespace WebAppPlayshphere.Models
         public string Commento { get; set; }
         public bool Valido { get; set; }
         public int Valutazione { get; set; }
-        Utente Utente { get; set; }
+        public Utente Utente { get; set; }
 
         // OVERRIDE TOSTRING
         public override string ToString()

@@ -1,15 +1,18 @@
 ﻿
+using PJSK_Songs_WEB.Models;
 using Utility;
 namespace WebAppPlayshphere.Models
 {
     public class Videogioco : Entity
     {
-        public Videogioco(int id, string titolo, string genere, int pegi, List<string> piattaforme, double prezzo,
+        public Videogioco() { }
+        public Videogioco(int id, string titolo, string generi, string descrizione, int pegi, string piattaforme, double prezzo,
                           string publisher, int quantita, DateTime rilascio,
-                          List<string> sviluppatori, List<Recensione> recensioni) : base(id)
+                          string sviluppatori, List<Recensione> recensioni, string link) : base(id)
         {
             Titolo = titolo;
-            Genere = genere;
+            Generi = generi;
+            Descrizione = descrizione;
             Pegi = pegi;
             Piattaforme = piattaforme;
             Prezzo = prezzo;
@@ -18,53 +21,40 @@ namespace WebAppPlayshphere.Models
             Rilascio = rilascio;
             Sviluppatori = sviluppatori;
             Recensioni = recensioni;
+            Link = link;
         }
 
         public string Titolo { get; set; }
-        public string Genere { get; set; }
+        public string Generi { get; set; }
+        public string Descrizione { get; set; }
         public int Pegi { get; set; }
-        public List<string> Piattaforme { get; set; }
+        public string Piattaforme { get; set; }
         public double Prezzo { get; set; }
         public string Publisher { get; set; }
         public int Quantita { get; set; }
         public DateTime Rilascio { get; set; }
-        public List<string> Sviluppatori { get; set; }
+        public string Sviluppatori { get; set; }
         public List<Recensione> Recensioni { get; set; }
+        public string Link { get; set; }
 
 
         public string ToString()
         {
             return base.ToString() +
                 $"Titolo: {Titolo}\n" +
-                $"Genere: {Genere}\n" +
+                $"Genere: {Generi}\n" +
                 $"pegi: {Pegi}\n" +
-                $"Piattaforme: {tuttePiattaforme(Piattaforme)}\n" +
+                $"Piattaforme: {Piattaforme}\n" +
                 $"Prezzo: {Prezzo}\n" +
                 $"Publisher: {Publisher}\n" +
                 $"Quantita: {Quantita}\n" +
                 $"Rilascio: {Rilascio.ToString("dd/MM/yyyy")}\n" +
-                $"Sviluppatore: {tuttiSviluppatori(Sviluppatori)}\n" +
+                $"Sviluppatore: {Sviluppatori}\n" +
                 $"Recensioni: {tutteRecensioni(Recensioni)}\n" +
                 $"Valutazione: {Valutazione(Recensioni)}\n";
         }
-        public string tuttePiattaforme(List<string> p)
-        {
-            string ris = "";
-            foreach (var item in p)
-            {
-                ris += item + ",";
-            }
-            return ris;
-        }
-        public string tuttiSviluppatori(List<string> p)
-        {
-            string ris = "";
-            foreach (var item in p)
-            {
-                ris += item + ",";
-            }
-            return ris;
-        }
+        
+        
         public string tutteRecensioni(List<Recensione> p)
         {
             string ris = "";
@@ -82,6 +72,12 @@ namespace WebAppPlayshphere.Models
                 ris += item.Valutazione;
             }
             return ris / rec.Count;
+        }
+        public override void FromDictionary(Dictionary<string, string> riga)
+        {
+            Recensioni = DAORecensione.GetIstance().RecensioniGioco(Id);
+            
+            base.FromDictionary(riga);
         }
     }
 }
