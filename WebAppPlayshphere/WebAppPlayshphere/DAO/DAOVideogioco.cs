@@ -1,9 +1,9 @@
 ﻿using Utility;
 using WebAppPlayshphere.Models;
 
-namespace PJSK_Songs_WEB.Models
+namespace WebAppPlayshphere.DAO
 {
-    public class DAOVideogioco:IDAO
+    public class DAOVideogioco : IDAO
     {
         private IDatabase db;
 
@@ -27,8 +27,8 @@ namespace PJSK_Songs_WEB.Models
             Videogioco v = (Videogioco)e;
             string descrizione = v.Descrizione;
             descrizione.Replace("'", "''");
-            
-            return db.Update("INSERT INTO Videogiochi (titolo, prezzo, descrizione, rilascio, piattaforme, generi, pegi, sviluppatori, publisher, quantita)"+
+
+            return db.Update("INSERT INTO Videogiochi (titolo, prezzo, descrizione, rilascio, piattaforme, generi, pegi, sviluppatori, publisher, quantita)" +
                              "VALUES(" +
                              $"'{v.Titolo}'," +
                              $"{v.Prezzo}," +
@@ -57,7 +57,7 @@ namespace PJSK_Songs_WEB.Models
                 return null;
             }
             List<Entity> ris = new List<Entity>();
-            foreach(var riga in righe)
+            foreach (var riga in righe)
             {
                 Entity e = new Videogioco();
                 e.FromDictionary(riga);
@@ -68,7 +68,7 @@ namespace PJSK_Songs_WEB.Models
         public Entity Find(int id)
         {
             var righe = db.ReadOne("SELECT * FROM Videogiochi WHERE id=" + id);
-            if(righe == null)
+            if (righe == null)
             {
                 return null;
             }
@@ -77,14 +77,14 @@ namespace PJSK_Songs_WEB.Models
             return e;
 
         }
-       
-       
+
+
         public bool Update(Entity e)
         {
             Videogioco v = (Videogioco)e;
             string descrizione = v.Descrizione;
             descrizione.Replace("'", "''");
-            return db.Update("UPDATE Videogiochi SET "+
+            return db.Update("UPDATE Videogiochi SET " +
                              $"titolo='{v.Titolo}'," +
                              $"prezzo={v.Prezzo}," +
                              $"descrizione='{descrizione}'," +

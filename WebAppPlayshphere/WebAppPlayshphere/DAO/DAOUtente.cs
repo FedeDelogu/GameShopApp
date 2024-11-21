@@ -1,8 +1,9 @@
 ﻿using Utility;
+using WebAppPlayshphere.Models;
 
-namespace WebAppPlayshphere.Models
+namespace WebAppPlayshphere.DAO
 {
-    public class DAOUtente: IDAO
+    public class DAOUtente : IDAO
     {
         private IDatabase db;
         private DAOUtente()

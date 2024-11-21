@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics.Contracts;
 using Utility;
+using WebAppPlayshphere.Models;
 
-namespace WebAppPlayshphere.Models
+namespace WebAppPlayshphere.DAO
 {
-    public class DAOOrdine:IDAO
+    public class DAOOrdine : IDAO
     {
         private IDatabase db;
         private DAOOrdine()
@@ -19,7 +20,7 @@ namespace WebAppPlayshphere.Models
             }
             return instance;
         }
-    //metodi da non usare
+        //metodi da non usare
         public bool Create(Entity e)
         {
             return true;
@@ -32,7 +33,7 @@ namespace WebAppPlayshphere.Models
         {
             return true;
         }
-    //metodi che verranno utilizzati
+        //metodi che verranno utilizzati
         public Entity Find(int id)
         {
             var riga = db.ReadOne($"SELECT * FROM Ordini where id = {id}");

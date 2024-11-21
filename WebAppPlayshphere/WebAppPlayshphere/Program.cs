@@ -1,10 +1,21 @@
+using Microsoft.AspNetCore.SignalR;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddControllers(); // servizio per i controller MVC
+builder.Services.AddEndpointsApiExplorer(); // necessario per Swagger
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+; // aggiunge Swagger
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -20,6 +31,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllers(); // Mappa i controller API
 
 app.MapRazorPages();
 

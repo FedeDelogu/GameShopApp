@@ -2,7 +2,7 @@
 using Utility;
 using WebAppPlayshphere.Models;
 
-namespace PJSK_Songs_WEB.Models
+namespace WebAppPlayshphere.DAO
 {
     public class DAORecensione : IDAO
     {
@@ -22,7 +22,7 @@ namespace PJSK_Songs_WEB.Models
             }
             return istance;
         }
-        public bool Create(Entity e) 
+        public bool Create(Entity e)
         {
             throw new NotImplementedException();
         }
@@ -35,7 +35,7 @@ namespace PJSK_Songs_WEB.Models
             return db.Update("INSERT INTO Recensioni (valutazione, commento, valido, idUtente, idVideogioco) VALUES (" +
                              $"{r.Valutazione}," +
                              $"'{commento}'," +
-                             $"{(r.Valido?1:0)}," +
+                             $"{(r.Valido ? 1 : 0)}," +
                              $"{r.Utente.Id}," +
                              $"{idVideogioco}");
         }
@@ -79,23 +79,23 @@ namespace PJSK_Songs_WEB.Models
             }
             return ris;
         }
-            public List<Recensione> RecensioniUtente(int id)
+        public List<Recensione> RecensioniUtente(int id)
+        {
+            var righe = db.Read("SELECT * FROM Recensioni WHERE idUtente=" + id);
+            if (righe == null)
             {
-                var righe = db.Read("SELECT * FROM Recensioni WHERE idUtente=" + id);
-                if (righe == null)
-                {
-                    return null;
-                }
-                List<Recensione> ris = new List<Recensione>();
-                foreach (var riga in righe)
-                {
-                    Recensione r = new Recensione();
-                    r.FromDictionary(riga);
-                    ris.Add(r);
-                }
-                return ris;
+                return null;
             }
-            public Entity Find(int id)
+            List<Recensione> ris = new List<Recensione>();
+            foreach (var riga in righe)
+            {
+                Recensione r = new Recensione();
+                r.FromDictionary(riga);
+                ris.Add(r);
+            }
+            return ris;
+        }
+        public Entity Find(int id)
         {
             var righe = db.ReadOne("SELECT * FROM Recensioni WHERE id=" + id);
             if (righe == null)
@@ -112,7 +112,7 @@ namespace PJSK_Songs_WEB.Models
         {
             throw new NotImplementedException();
         }
-        public bool UpdateRecensione(Entity e,int idVideogioco)
+        public bool UpdateRecensione(Entity e, int idVideogioco)
         {
             Recensione r = (Recensione)e;
             string commento = r.Commento;
