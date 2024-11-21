@@ -71,7 +71,7 @@ namespace WebAppPlayshphere.Models
             {
                 ris += item.Valutazione;
             }
-            return ris / rec.Count;
+            return Math.Round(ris / rec.Count, 1);
         }
         public override void FromDictionary(Dictionary<string, string> riga)
         {

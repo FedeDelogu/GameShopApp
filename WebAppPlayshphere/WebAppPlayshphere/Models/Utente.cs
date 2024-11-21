@@ -17,10 +17,11 @@ namespace WebAppPlayshphere.Models
         Carrello carrello;
 
         public Utente() { }
-        public Utente(int id,string username, string password, string email, string indirizzo, string telefono, string citta, string cap, string stato, int ruolo, DateTime dob, Carrello carrello)
+        public Utente(int id,string nome, string cognome, string password, string email, string indirizzo, string telefono, string citta, string cap, string stato, int ruolo, DateTime dob, Carrello carrello)
             :base (id)
         {
-            Username = username;
+            Nome = nome;
+            Cognome = cognome;
             Password = password;
             Email = email;
             Indirizzo = indirizzo;
@@ -33,7 +34,9 @@ namespace WebAppPlayshphere.Models
             Carrello = carrello;
         }
 
-        public string Username { get => username; set => username = value; }
+        public string Username { get => Nome + "_" + Cognome; }
+        public string Nome { get; set; }
+        public string Cognome {  get; set; }
         public string Password { get => password; set => password = value; }
         public string Email { get => email; set => email = value; }
         public string Indirizzo { get => indirizzo; set => indirizzo = value; }
