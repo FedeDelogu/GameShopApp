@@ -8,7 +8,7 @@ namespace WebAppPlayshphere.DAO
         private IDatabase db;
         private DAOUtente()
         {
-            db = new Database("Playsphere", "DESKTOP-IB2WLV5");
+            db = new Database("Playsphere2", "FEDUCCINI");
         }
         private static DAOUtente instance = null;
         public static DAOUtente GetInstance()
@@ -39,7 +39,6 @@ namespace WebAppPlayshphere.DAO
                 $"(" +
                 $"{((Utente)e).Email.Replace("'", "''")}," +
                 $"{((Utente)e).Password}," +
-                $"{((Utente)e).Dob.ToString("yyyy-MM-dd")}," +
                 $"{((Utente)e).Ruolo}" +
                 $")");
         }
@@ -72,5 +71,29 @@ namespace WebAppPlayshphere.DAO
             List<Entity> ris = new();
             return ris;
         }
+        public bool Find(string user, string password)
+        {
+            var riga = db.ReadOne($"SELECT * FROM Logins " +
+                                   $"WHERE " +
+                                   $"username = '{user}' AND " +
+                                   $"passw = HASHBYTES('SHA2_512','{password}');");
+
+            return riga != null;
+        }
+        public Entity Find(string user)
+        {
+            var riga = db.ReadOne($"SELECT * FROM Logins WHERE username = '{user}';");
+
+            if (riga != null)
+            {
+                Entity e = new Utente();
+                e.FromDictionary(riga);
+
+                return e;
+            }
+            else
+                return null;
+        }
+
     }
 }
