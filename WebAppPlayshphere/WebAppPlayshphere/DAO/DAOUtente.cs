@@ -25,15 +25,10 @@ namespace WebAppPlayshphere.DAO
             if (riga != null && riga.Count > 0)
             {
                 Entity e = new Utente();
-                //e.FromDictionary(riga);
-                Console.WriteLine(
-                    $"{riga["email"]}\n")
-                    ;
-                ((Utente)e).Email = riga["email"];
-                ((Utente)e).Password = riga["passwordutente"];
-                ((Utente)e).Ruolo = int.Parse(riga["ruolo"]);
+                e.FromDictionary(riga);
+                // QUI RECUPERO L ANAGRAFICA
                 Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
-                if(anagrafica != null)
+                if(anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
                 {
                     ((Utente)e).Anagrafica = (Anagrafica)anagrafica;
                 }
@@ -60,23 +55,22 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Update(Entity e)
         {
-            /*return db.Update($"Update Utenti set " +
+            return db.Update($"Update Utenti set " +
                 $"email = {((Utente)e).Email.Replace("'", "''")}," +
                 $"passwordUtente = {((Utente)e).Password}," +
-                $"dob = {((Utente)e).Dob.ToString("yyyy-MM-dd")}," +
                 $"ruolo = {((Utente)e).Ruolo}" +
                 $"where = {e.Id};" +
                 $"update Anagrafiche set " +
-                $"nome = {((Utente)e).Nome.Replace("'", "''")}," +
-                $"cognome = {((Utente)e).Cognome.Replace("'", "''")}," +
-                $"indirizzo = {((Utente)e).Indirizzo.Replace("'", "''")}," +
-                $"telefono = {((Utente)e).Telefono}," +
-                $"citta = {((Utente)e).Citta.Replace("'", "''")}," +
-                $"stato = {((Utente)e).Stato.Replace("'", "''")}," +
-                $"cap = {((Utente)e).Cap}," +
+                $"nome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Nome.Replace("'", "''"): "null")}," +
+                $"cognome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cognome.Replace("'", "''") : "null")}," +
+                $"indirizzo = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Indirizzo.Replace("'", "''") : "null")}," +
+                $"telefono = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Telefono.Replace("'", "''") : "null")}," +
+                $"citta = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Citta.Replace("'", "''") : "null")}," +
+                $"stato = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Stato.Replace("'", "''") : "null")}," +
+                $"cap = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cap.Replace("'", "''") : "null")}," +
                 $"idUtente = {e.Id} " +
                 $"where = {e.Id}" +
-                $";");*/
+                $";");
             return false;
         }
         public List<Entity> Read()

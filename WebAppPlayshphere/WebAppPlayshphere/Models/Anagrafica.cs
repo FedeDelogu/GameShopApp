@@ -4,6 +4,8 @@ namespace WebAppPlayshphere.Models
 {
     public class Anagrafica : Entity
     {
+        string nome;
+        string cognome;
         string indirizzo;
         string telefono;
         string citta;
@@ -21,10 +23,14 @@ namespace WebAppPlayshphere.Models
         public string Stato { get => stato; set => stato = value; }
         public int Ruolo { get => ruolo; set => ruolo = value; }
         public DateTime Dob { get => dob; set => dob = value; }
+        public string Nome { get => nome; set => nome = value; }
+        public string Cognome { get => cognome; set => cognome = value; }
 
         public override string ToString()
         {
             return 
+                $"Nome : {Nome}\n" +
+                $"Cognome : {Cognome}\n" +
                 $"Indirizzo : {Indirizzo}\n" +
                 $"Telefono : {Telefono}\n" +
                 $"Citta : {Citta}\n" +
