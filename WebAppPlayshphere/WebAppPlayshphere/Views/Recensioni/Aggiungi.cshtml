@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Aggiungi recensione</title>
+</head>
+<body>
+    <h1>Aggiungi recensione</h1>
+    <form action="/Recensioni/Aggiungi" method="post">
+        <label for="username">Nome utente:</label>
+        <input type="text" id="username" name="username" required /><br><br>
+
+        <label for="commento">Commento:</label>
+        <textarea id="commento" name="commento" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="valutazione">Valutazione (1-5):</label>
+        <input type="number" id="valutazione" name="valutazione" min="1" max="5" required /><br><br>
+
+        <label for="idvideogioco">Videogioco:</label>
+        <select id="idvideogioco" name="idvideogioco" required>
+            <option value="1">Videogioco 1</option>
+            <option value="2">Videogioco 2</option>
+            <option value="3">Videogioco 3</option>
+        </select><br><br>
+        <input type="hidden" id="valido" name="valido" value="false" />
+
+        <button type="submit">Aggiungi recensione</button>
+    </form>
+</body>
+</html>

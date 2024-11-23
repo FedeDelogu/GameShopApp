@@ -1,18 +1,5 @@
-﻿<!--
-    Questa pagina ha estensione cshtml, cioè sarà una pagina HTML che tramite l'uso del simbolo chiocciola potrà
-    sfruttare i comandi di C#
-
-    chiocciola using serve per dire dove cercare i modelli
-                     (ricordate che HTML non ha il concetto di classe, quindi le direttive devono
-                     sempre essere scritte per intero, partendo dal namespace)
-    chiocciola model serve per rappresentare il tipo di dato che userò in questa pagina
-    chiocciola Model con la maiuscola si indica il nome di default dell'oggetto importato da BE
--->
-<!-- Questo serve per dire dove cercare Entity-->
-@using Utility
-<!-- Questo serve per dire dove cercare Fumetto quando casterò-->
+﻿@using Utility
 @using WebAppPlayshphere.Models
-<!-- Questo serve per dire il tipo di informazione che il BE mi spedisce qui-->
 @model List<Utility.Entity>
 
 @{
@@ -28,16 +15,37 @@
 </head>
 <body>
     <h1>Elenco recensioni</h1>
+    <h3><a href="/Recensioni/FormAggiungi">Aggiungi recensione</a></h3>
+
+    <br />
+    <form method="get" action="/Recensioni/Ricerca">
+        <label for="colonna">Cerca per: </label>
+        <select name="colonna" id="colonna">
+            <option value="utente">Utente</option>
+            <option value="valido">Bannato</option>
+            <option value="videogioco">Videogioco</option>
+        </select>
+
+        <label for="valore">Valore: </label>
+        <input type="text" id="valore" name="valore" value="" />
+
+        <button type="submit">Cerca</button>
+    </form>
 
     <br />
     <br />
 
     @foreach (var f in @Model)
     {
-        <p>Recensione da parte di : @(((Recensione)f).Utente.Username)</p>
+        <p>Recensione da parte di : @(((Recensione)f).Utente.Username), email : @(((Recensione)f).Utente.Email)</p>
         <p>Commento: @(((Recensione)f).Commento)</p>
         <p>Valutazione: @(((Recensione)f).Valutazione)</p>
         <p>Bannato: @(((Recensione)f).Valido ? "Si" : "No")</p>
+
+        <p>
+            <a href="/Recensioni/FormModifica/@f.Id">Modifica</a>
+            <a href="/Recensioni/Dettagli/@f.Id">Dettagli</a>
+        </p>
 
         <hr />
         <br />

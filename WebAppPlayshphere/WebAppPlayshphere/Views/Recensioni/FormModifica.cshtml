@@ -1,0 +1,30 @@
+﻿@using WebAppPlayshphere.Models
+@model Utility.Entity
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Modifica</title>
+</head>
+<body>
+
+    <h1>Modifica Recensioni</h1>
+
+    <form action="/Recensioni/Modifica" onsubmit="" method="post">
+
+        <input type="text" value="@Model.Id" name="id" readonly hidden />
+        <input type="text" value="@(((Recensione)Model).Utente.Id)" name="idutente" readonly hidden />
+        <input type="text" value="@(((Recensione)Model).IdVideogioco)" name="idvideogioco" readonly hidden />
+        Recensione da parte di : <input type="text" value="@(((Recensione)Model).Utente.Username)" id="username" name="username" /><br />
+        Commento: <input type="text" value="@(((Recensione)Model).Commento)" id="commento" name="commento" /><br />
+        Valutazione: <input type="number" value="@(((Recensione)Model).Valutazione)" id="valutazione" name="valutazione" /><br />
+        Bannata: <input type="text" value="@(((Recensione)Model).Valido ? "Si" : "No")" id="valido" name="valido" />
+
+        <br />
+
+        <input type="submit" value="SALVA" />
+
+    </form>
+</body>
+</html>

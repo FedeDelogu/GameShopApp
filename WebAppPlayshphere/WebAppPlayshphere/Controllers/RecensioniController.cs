@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Utility;
 using WebAppPlayshphere.DAO;
+using WebAppPlayshphere.Factory;
 using WebAppPlayshphere.Models;
 
 namespace WebAppPlayshphere.Controllers
@@ -34,6 +35,11 @@ namespace WebAppPlayshphere.Controllers
                 }
             }
             return View("Elenco");
+        }
+        public IActionResult Dettagli(int id)
+        {
+            Console.WriteLine("RecensioniController - Dettagli");
+            return View(DAORecensione.GetIstance().Find(id));
         }
     }
 }

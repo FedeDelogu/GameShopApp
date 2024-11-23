@@ -1,0 +1,26 @@
+﻿@using WebAppPlayshphere.Models
+@model Utility.Entity
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Dettagli Recensione</title>
+</head>
+<body>
+    <h1>
+        Recensione da parte di :  @(((Recensione)Model).Utente.Username)
+    </h1>
+    <p>Email: @(((Recensione)Model).Utente.Email)</p>
+    <p>Commento: @(((Recensione)Model).Commento)</p>
+    <p>Valutazione: @(((Recensione)Model).Valutazione)</p>
+    <p>Bannato: @(((Recensione)Model).Valido ? "Si" : "No")</p>
+
+
+    <h3>Videogioco con id : @(((Recensione)Model).IdVideogioco)</h3>
+</body>
+</html>
