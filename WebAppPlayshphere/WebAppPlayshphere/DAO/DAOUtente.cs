@@ -69,7 +69,7 @@ namespace WebAppPlayshphere.DAO
                 $"stato = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Stato.Replace("'", "''") : "null")}," +
                 $"cap = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cap.Replace("'", "''") : "null")}," +
                 $"idUtente = {e.Id} " +
-                $"where = {e.Id}" +
+                $"where idUtente = {e.Id}" +
                 $";");
             return false;
         }
