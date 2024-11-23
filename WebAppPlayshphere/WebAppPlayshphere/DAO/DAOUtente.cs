@@ -6,10 +6,17 @@ namespace WebAppPlayshphere.DAO
     public class DAOUtente : IDAO
     {
         private IDatabase db;
+
+        //private DAOUtente()
+        //{
+        //    db = new Database("Playsphere", "FEDUCCINI");
+        //}
+
         private DAOUtente()
         {
             db = new Database("Playsphere", "CIMO");
         }
+
         private static DAOUtente instance = null;
         public static DAOUtente GetInstance()
         {
@@ -44,8 +51,9 @@ namespace WebAppPlayshphere.DAO
                 $"(email, passwordUtente, dob, ruolo)" +
                 $"values" +
                 $"(" +
-                $"{((Utente)e).Email.Replace("'", "''")}," +
-                $"{((Utente)e).Password}," +
+                $"'{((Utente)e).Email.Replace("'", "''")}'," +
+                //$"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
+                $"'{((Utente)e).Dob.ToString("yyyy-MM-dd")}'," +
                 $"{((Utente)e).Ruolo}" +
                 $")");
         }
@@ -57,6 +65,9 @@ namespace WebAppPlayshphere.DAO
         {
             return db.Update($"Update Utenti set " +
                 $"email = {((Utente)e).Email.Replace("'", "''")}," +
+
+                $"passwordUtente = HASHBYTES('SHA2_512','{((Utente)e).Password}');" +
+                $"dob = {((Utente)e).Dob.ToString("yyyy-MM-dd")}," +
                 $"passwordUtente = {((Utente)e).Password}," +
                 $"ruolo = {((Utente)e).Ruolo}" +
                 $"where = {e.Id};" +
@@ -80,16 +91,16 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Find(string user, string password)
         {
-            var riga = db.ReadOne($"SELECT * FROM Logins " +
+            var riga = db.ReadOne($"SELECT * FROM Utenti " +
                                    $"WHERE " +
-                                   $"username = '{user}' AND " +
-                                   $"passw = HASHBYTES('SHA2_512','{password}');");
+                                   $"email = '{user}' AND " +
+                                   $"passwordUtente = HASHBYTES('SHA2_512','{password}');");
 
             return riga != null;
         }
         public Entity Find(string user)
         {
-            var riga = db.ReadOne($"SELECT * FROM Logins WHERE username = '{user}';");
+            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE username = '{user}';");
 
             if (riga != null)
             {
