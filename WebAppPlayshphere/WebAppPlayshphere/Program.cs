@@ -34,6 +34,6 @@ app.UseAuthorization();
 
 app.MapControllers(); // Mappa i controller API
 
-app.MapRazorPages();
+app.MapControllerRoute(name: "default", pattern: "{controller=Utenti}/{action=Registrazione}/{id?}");
 
 app.Run();
