@@ -29,7 +29,7 @@ namespace WebAppPlayshphere.Models
                    $"{Utente.ToString()}" +
                    $"-------------------------------------\n";
         }
-
+        /*
         // OVERTIDE TODICTIONARY
         public override void FromDictionary(Dictionary<string, string> riga)
         {
@@ -39,7 +39,7 @@ namespace WebAppPlayshphere.Models
             }
 
             base.FromDictionary(riga);
-        }
+        }*/
 
     }
 }
