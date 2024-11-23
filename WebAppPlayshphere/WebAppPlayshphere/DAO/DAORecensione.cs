@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 using Utility;
+using WebAppPlayshphere.Factory;
 using WebAppPlayshphere.Models;
 
 namespace WebAppPlayshphere.DAO
@@ -24,10 +25,6 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Create(Entity e)
         {
-            throw new NotImplementedException();
-        }
-        public bool CreateRecensione(Entity e, int idVideogioco)
-        {
             Recensione r = (Recensione)e;
             string commento = r.Commento;
             commento.Replace("'", "''");
@@ -37,15 +34,13 @@ namespace WebAppPlayshphere.DAO
                              $"'{commento}'," +
                              $"{(r.Valido ? 1 : 0)}," +
                              $"{r.Utente.Id}," +
-                             $"{idVideogioco}");
-        }
+                             $"{r.IdVideogioco});");
+        } // OK
 
         public bool Delete(int id)
         {
             return db.Update("DELETE FROM Recensioni WHERE id=" + id);
         }
-
-
 
         public List<Entity> Read()
         {
@@ -58,16 +53,11 @@ namespace WebAppPlayshphere.DAO
             List<Entity> ris = new List<Entity>();
             foreach (var riga in righe)
             {
-                Entity e = new Recensione();
-                //e.FromDictionary(riga);
-                ((Recensione)e).Utente = (Utente)DAOUtente.GetInstance().Find(int.Parse(riga["idutente"]));
-                ((Recensione)e).Valutazione = int.Parse(riga["valutazione"]);
-                ((Recensione)e).Commento = riga["commento"];
-                ((Recensione)e).Valido = riga["valido"] == "1";
+                Entity e = RecensioneFactory.CreateRecensione(riga);
                 ris.Add(e);
             }
             return ris;
-        }
+        } // OK
         public List<Recensione> RecensioniGioco(int id)
         {
             var righe = db.Read("SELECT * FROM Recensioni WHERE idVideogioco=" + id);
@@ -102,34 +92,61 @@ namespace WebAppPlayshphere.DAO
         }
         public Entity Find(int id)
         {
-            var righe = db.ReadOne("SELECT * FROM Recensioni WHERE id=" + id);
+            var riga = db.ReadOne("SELECT * FROM Recensioni WHERE id=" + id);
+            if (riga == null)
+            {
+                return null;
+            }
+            Entity e = RecensioneFactory.CreateRecensione(riga);
+            return e;
+
+        } // OK
+
+        public bool Update(Entity e)
+        {
+            Recensione r = (Recensione)e;
+            return db.Update("UPDATE Recensioni SET " +
+                            $"valutazione={r.Valutazione}," +
+                            $"commento='{r.Commento}'," +
+                            $"valido={(r.Valido ? 1 : 0)}," +
+                            $"idUtente={r.Utente.Id}," +
+                            $"idVideogioco={r.IdVideogioco} WHERE id={r.Id}");
+        } // OK
+
+        public List<Entity> FindBy(string colonna, string valore)
+        {
+            string query = "";
+            switch (colonna)
+            {
+                case "id":
+                    query = $"SELECT * FROM Recensioni WHERE id = {valore};";
+                    break;
+                case "valutazione":
+                    query = $"SELECT * FROM Recensioni WHERE valutazione = {valore};";
+                    break;
+                case "utente":
+                    query = $"SELECT * FROM Recensioni WHERE idUtente = {valore};";
+                    break;
+                case "videogioco":
+
+                    query = $"SELECT * FROM Recensioni WHERE idVideogioco = {valore};";
+                    break;
+                default:
+                    return null;
+            }
+            var righe = db.Read(query);
             if (righe == null)
             {
                 return null;
             }
-            Entity e = new Recensione();
-            e.FromDictionary(righe);
-            return e;
-
+            List<Entity> ris = new List<Entity>();
+            foreach (var riga in righe)
+            {
+                Recensione r = RecensioneFactory.CreateRecensione(riga);
+                ris.Add(r);
+            }
+            return ris;
         }
-
-        public bool Update(Entity e)
-        {
-            throw new NotImplementedException();
-        }
-        public bool UpdateRecensione(Entity e, int idVideogioco)
-        {
-            Recensione r = (Recensione)e;
-            string commento = r.Commento;
-            commento.Replace("'", "''");
-            return db.Update("UPDATE Recensioni SET " +
-                            $"valutazione={r.Valutazione}," +
-                            $"commento='{commento}'," +
-                            $"valido={(r.Valido ? 1 : 0)}," +
-                            $"idUtente={r.Utente.Id}," +
-                            $"idVideogioco={idVideogioco} WHERE id={r.Id}");
-        }
-
     }
 }
 
