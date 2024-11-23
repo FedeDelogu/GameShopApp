@@ -5,23 +5,13 @@ namespace WebAppPlayshphere.DAO
 {
     public class DAOAnagrafica : IDAO
     {
-        private IDatabase db;
+        private readonly IDatabase db;
 
-        private DAOAnagrafica()
+        public DAOAnagrafica(IDatabase database)
         {
-            db = new Database("Playsphere", "CIMO");
+            db = database;
         }
-        private static DAOAnagrafica istance = null;
-
-        public static DAOAnagrafica GetIstance()
-        {
-            if (istance == null)
-            {
-                istance = new DAOAnagrafica();
-            }
-            return istance;
-        }
-
+        
         public bool Delete(int id)
         {
             throw new NotImplementedException();

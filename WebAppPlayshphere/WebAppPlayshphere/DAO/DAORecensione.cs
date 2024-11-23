@@ -6,22 +6,15 @@ namespace WebAppPlayshphere.DAO
 {
     public class DAORecensione : IDAO
     {
-        private IDatabase db;
+        private  readonly IDatabase db;
+        private readonly DAOUtente _daoUtente;
 
-        private DAORecensione()
+        public DAORecensione(IDatabase database,DAOUtente daoUtente)
         {
-            db = new Database("Playsphere", "CIMO");
+            db = database;
+            _daoUtente = daoUtente;
         }
-        private static DAORecensione istance = null;
-
-        public static DAORecensione GetIstance()
-        {
-            if (istance == null)
-            {
-                istance = new DAORecensione();
-            }
-            return istance;
-        }
+        
         public bool Create(Entity e)
         {
             throw new NotImplementedException();
@@ -60,7 +53,7 @@ namespace WebAppPlayshphere.DAO
             {
                 Entity e = new Recensione();
                 //e.FromDictionary(riga);
-                ((Recensione)e).Utente = (Utente)DAOUtente.GetInstance().Find(int.Parse(riga["idutente"]));
+                ((Recensione)e).Utente = (Utente)_daoUtente.Find(int.Parse(riga["idutente"]));
                 ((Recensione)e).Valutazione = int.Parse(riga["valutazione"]);
                 ((Recensione)e).Commento = riga["commento"];
                 ((Recensione)e).Valido = riga["valido"] == "1";

@@ -1,6 +1,22 @@
 using Microsoft.AspNetCore.SignalR;
+using Utility;
+using WebAppPlayshphere.DAO;
+using WebAppPlayshphere.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
+// Carica le configurazioni da appsettings.json
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
+builder.Services.AddSingleton<IDatabase, Database>(); // Iniezione del database
+
+builder.Services.AddTransient<IDAO, DAOAnagrafica>(); // DAOCarrello 
+builder.Services.AddTransient<IDAO, DAOCarrello>(); // DAOVideogioco
+builder.Services.AddTransient<IDAO, DAOOrdine>();
+builder.Services.AddTransient<IDAO, DAORecensione>();
+builder.Services.AddTransient<IDAO, DAOUtente>();
+builder.Services.AddTransient<IDAO, DAOVideogioco>();
+
 
 // Add services to the container.
 builder.Services.AddRazorPages();

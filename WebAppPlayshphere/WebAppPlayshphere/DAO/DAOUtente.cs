@@ -5,27 +5,16 @@ namespace WebAppPlayshphere.DAO
 {
     public class DAOUtente : IDAO
     {
-        private IDatabase db;
+        private readonly IDatabase db;
+        private readonly DAOAnagrafica daoAnagrafica;
 
-        //private DAOUtente()
-        //{
-        //    db = new Database("Playsphere", "FEDUCCINI");
-        //}
-
-        private DAOUtente()
+     
+        public DAOUtente(IDatabase database,DAOAnagrafica _daoAngrafica)
         {
-            db = new Database("Playsphere", "CIMO");
+            db = database;
+            daoAnagrafica = _daoAngrafica;
         }
 
-        private static DAOUtente instance = null;
-        public static DAOUtente GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new DAOUtente();
-            }
-            return instance;
-        }
         public Entity Find(int id)
         {
             var riga = db.ReadOne($"SELECT * FROM Utenti WHERE id = {id}");
@@ -34,7 +23,7 @@ namespace WebAppPlayshphere.DAO
                 Entity e = new Utente();
                 e.FromDictionary(riga);
                 // QUI RECUPERO L ANAGRAFICA
-                Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
+                Entity anagrafica = daoAnagrafica.Find(id);
                 if(anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
                 {
                     ((Utente)e).Anagrafica = (Anagrafica)anagrafica;
@@ -52,8 +41,7 @@ namespace WebAppPlayshphere.DAO
                 $"values" +
                 $"(" +
                 $"'{((Utente)e).Email.Replace("'", "''")}'," +
-                //$"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
-                $"'{((Utente)e).Dob.ToString("yyyy-MM-dd")}'," +
+                $"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
                 $"{((Utente)e).Ruolo}" +
                 $")");
         }
@@ -67,7 +55,6 @@ namespace WebAppPlayshphere.DAO
                 $"email = {((Utente)e).Email.Replace("'", "''")}," +
 
                 $"passwordUtente = HASHBYTES('SHA2_512','{((Utente)e).Password}');" +
-                $"dob = {((Utente)e).Dob.ToString("yyyy-MM-dd")}," +
                 $"passwordUtente = {((Utente)e).Password}," +
                 $"ruolo = {((Utente)e).Ruolo}" +
                 $"where = {e.Id};" +

@@ -1,26 +1,23 @@
 ﻿using Utility;
 using WebAppPlayshphere.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using WebAppPlayshphere.Settings;
 
 namespace WebAppPlayshphere.DAO
 {
     public class DAOCarrello : IDAO
     {
-        private IDatabase db;
-
-        private DAOCarrello()
+        private readonly IDatabase db;
+        private readonly DAOVideogioco _daoVideogioco;
+        private readonly DAOOrdine _daoOrdine;
+        public DAOCarrello(IDatabase database, DAOVideogioco daoVideogioco,DAOOrdine daoOrdine)
         {
-            db = new Database("Playsphere", "DESKTOP-S0KBKL3");
+            db = database;
+            _daoVideogioco = daoVideogioco;
+            _daoOrdine = daoOrdine;
         }
-        private static DAOCarrello istance = null;
-
-        public static DAOCarrello GetIstance()
-        {
-            if (istance == null)
-            {
-                istance = new DAOCarrello();
-            }
-            return istance;
-        }
+       
 
         public bool Create(Entity e)
         {
@@ -68,7 +65,7 @@ namespace WebAppPlayshphere.DAO
         public bool Insert(int idUtente, int idVideogioco, int quantita)
         {
             string query = "";
-            if (((Videogioco)DAOVideogioco.GetIstance().Find(idVideogioco)).Quantita >= quantita + ((Carrello)Find(idUtente)).Videogiochi[(Videogioco)DAOVideogioco.GetIstance().Find(idVideogioco)])
+            if (((Videogioco)_daoVideogioco.Find(idVideogioco)).Quantita >= quantita + ((Carrello)Find(idUtente)).Videogiochi[(Videogioco)_daoVideogioco.Find(idVideogioco)])
             {
                 if (db.ReadOne("SELECT * FROM Carrelli WHERE idUtente=" + idUtente + " AND idVideogioco=" + idVideogioco) == null)
                 {
@@ -111,7 +108,7 @@ namespace WebAppPlayshphere.DAO
             Carrello c = (Carrello)e;
             Delete(c.Id);
             Ordine o = new Ordine(0, c.Videogiochi, "In preparazione", null, DateTime.Now);
-            return DAOOrdine.GetInstance().Create(o);
+            return _daoOrdine.Create(o);
 
         }
 
