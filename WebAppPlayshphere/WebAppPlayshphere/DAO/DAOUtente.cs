@@ -8,7 +8,7 @@ namespace WebAppPlayshphere.DAO
         private IDatabase db;
         private DAOUtente()
         {
-            db = new Database("Playsphere2", "FEDUCCINI");
+            db = new Database("Playsphere", "CIMO");
         }
         private static DAOUtente instance = null;
         public static DAOUtente GetInstance()
@@ -21,15 +21,22 @@ namespace WebAppPlayshphere.DAO
         }
         public Entity Find(int id)
         {
-            var riga = db.ReadOne($"SELECT Utenti.*, Anagrafiche.* FROM" +
-                $" Utenti inner join Anagrafiche on Utenti.Id = Anagrafiche.idUtente where id = {id}");
-            if (riga != null)
+            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE id = {id}");
+            if (riga != null && riga.Count > 0)
             {
                 Entity e = new Utente();
                 e.FromDictionary(riga);
+                // QUI RECUPERO L ANAGRAFICA
+                Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
+                if(anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
+                {
+                    ((Utente)e).Anagrafica = (Anagrafica)anagrafica;
+                }
                 return e;
             }
-            else return null;
+            else
+                Console.WriteLine("utente null");
+                return null;
         }
         public bool Create(Entity e)
         {
@@ -51,20 +58,20 @@ namespace WebAppPlayshphere.DAO
             return db.Update($"Update Utenti set " +
                 $"email = {((Utente)e).Email.Replace("'", "''")}," +
                 $"passwordUtente = {((Utente)e).Password}," +
-                $"dob = {((Utente)e).Dob.ToString("yyyy-MM-dd")}," +
                 $"ruolo = {((Utente)e).Ruolo}" +
                 $"where = {e.Id};" +
                 $"update Anagrafiche set " +
-                $"nome = {((Utente)e).Nome.Replace("'", "''")}," +
-                $"cognome = {((Utente)e).Cognome.Replace("'", "''")}," +
-                $"indirizzo = {((Utente)e).Indirizzo.Replace("'", "''")}," +
-                $"telefono = {((Utente)e).Telefono}," +
-                $"citta = {((Utente)e).Citta.Replace("'", "''")}," +
-                $"stato = {((Utente)e).Stato.Replace("'", "''")}," +
-                $"cap = {((Utente)e).Cap}," +
+                $"nome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Nome.Replace("'", "''"): "null")}," +
+                $"cognome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cognome.Replace("'", "''") : "null")}," +
+                $"indirizzo = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Indirizzo.Replace("'", "''") : "null")}," +
+                $"telefono = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Telefono.Replace("'", "''") : "null")}," +
+                $"citta = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Citta.Replace("'", "''") : "null")}," +
+                $"stato = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Stato.Replace("'", "''") : "null")}," +
+                $"cap = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cap.Replace("'", "''") : "null")}," +
                 $"idUtente = {e.Id} " +
-                $"where = {e.Id}" +
+                $"where idUtente = {e.Id}" +
                 $";");
+            return false;
         }
         public List<Entity> Read()
         {

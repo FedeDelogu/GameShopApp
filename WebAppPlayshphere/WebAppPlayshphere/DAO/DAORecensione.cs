@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAORecensione()
         {
-            db = new Database("Playsphere", "DESKTOP-S0KBKL3");
+            db = new Database("Playsphere", "CIMO");
         }
         private static DAORecensione istance = null;
 
@@ -52,13 +52,18 @@ namespace WebAppPlayshphere.DAO
             var righe = db.Read("SELECT * FROM Recensioni");
             if (righe == null)
             {
+                Console.WriteLine("riga nulla");
                 return null;
             }
             List<Entity> ris = new List<Entity>();
             foreach (var riga in righe)
             {
                 Entity e = new Recensione();
-                e.FromDictionary(riga);
+                //e.FromDictionary(riga);
+                ((Recensione)e).Utente = (Utente)DAOUtente.GetInstance().Find(int.Parse(riga["idutente"]));
+                ((Recensione)e).Valutazione = int.Parse(riga["valutazione"]);
+                ((Recensione)e).Commento = riga["commento"];
+                ((Recensione)e).Valido = riga["valido"] == "1";
                 ris.Add(e);
             }
             return ris;
