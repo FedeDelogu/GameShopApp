@@ -8,7 +8,7 @@ namespace WebAppPlayshphere.DAO
         private IDatabase db;
         private DAOUtente()
         {
-            db = new Database("Playsphere2", "FEDUCCINI");
+            db = new Database("Playsphere", "CIMO");
         }
         private static DAOUtente instance = null;
         public static DAOUtente GetInstance()
@@ -21,15 +21,27 @@ namespace WebAppPlayshphere.DAO
         }
         public Entity Find(int id)
         {
-            var riga = db.ReadOne($"SELECT Utenti.*, Anagrafiche.* FROM" +
-                $" Utenti inner join Anagrafiche on Utenti.Id = Anagrafiche.idUtente where id = {id}");
-            if (riga != null)
+            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE id = {id}");
+            if (riga != null && riga.Count > 0)
             {
                 Entity e = new Utente();
-                e.FromDictionary(riga);
+                //e.FromDictionary(riga);
+                Console.WriteLine(
+                    $"{riga["email"]}\n")
+                    ;
+                ((Utente)e).Email = riga["email"];
+                ((Utente)e).Password = riga["passwordutente"];
+                ((Utente)e).Ruolo = int.Parse(riga["ruolo"]);
+                Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
+                if(anagrafica != null)
+                {
+                    ((Utente)e).Anagrafica = (Anagrafica)anagrafica;
+                }
                 return e;
             }
-            else return null;
+            else
+                Console.WriteLine("utente null");
+                return null;
         }
         public bool Create(Entity e)
         {
@@ -48,7 +60,7 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Update(Entity e)
         {
-            return db.Update($"Update Utenti set " +
+            /*return db.Update($"Update Utenti set " +
                 $"email = {((Utente)e).Email.Replace("'", "''")}," +
                 $"passwordUtente = {((Utente)e).Password}," +
                 $"dob = {((Utente)e).Dob.ToString("yyyy-MM-dd")}," +
@@ -64,7 +76,8 @@ namespace WebAppPlayshphere.DAO
                 $"cap = {((Utente)e).Cap}," +
                 $"idUtente = {e.Id} " +
                 $"where = {e.Id}" +
-                $";");
+                $";");*/
+            return false;
         }
         public List<Entity> Read()
         {
