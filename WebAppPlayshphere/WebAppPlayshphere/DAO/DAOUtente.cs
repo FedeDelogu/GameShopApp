@@ -6,10 +6,10 @@ namespace WebAppPlayshphere.DAO
     public class DAOUtente : IDAO
     {
         private IDatabase db;
-        private DAOUtente()
-        {
-            db = new Database("Playsphere", "FEDUCCINI");
-        }
+        //private DAOUtente()
+        //{
+        //    db = new Database("Playsphere", "FEDUCCINI");
+        //}
         private static DAOUtente instance = null;
         public static DAOUtente GetInstance()
         {
@@ -38,7 +38,7 @@ namespace WebAppPlayshphere.DAO
                 $"values" +
                 $"(" +
                 $"'{((Utente)e).Email.Replace("'", "''")}'," +
-                $"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
+                //$"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
                 $"'{((Utente)e).Dob.ToString("yyyy-MM-dd")}'," +
                 $"{((Utente)e).Ruolo}" +
                 $")");
