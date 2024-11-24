@@ -6,12 +6,20 @@ namespace WebAppPlayshphere.DAO
 {
     public class DAOOrdine : IDAO
     {
-        private readonly IDatabase db;
-        public DAOOrdine(IDatabase database)
+        private IDatabase db;
+        private DAOOrdine()
         {
-            db = database;
+            db = new Database("Playsphere", "FEDUCCINI");
         }
-        
+        private static DAOOrdine instance = null;
+        public static DAOOrdine GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new DAOOrdine();
+            }
+            return instance;
+        }
         //metodi da non usare
         public bool Create(Entity e)
         {

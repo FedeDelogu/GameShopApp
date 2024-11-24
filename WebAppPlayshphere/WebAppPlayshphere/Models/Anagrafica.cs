@@ -28,7 +28,7 @@ namespace WebAppPlayshphere.Models
 
         public override string ToString()
         {
-            return 
+            return
                 $"Nome : {Nome}\n" +
                 $"Cognome : {Cognome}\n" +
                 $"Indirizzo : {Indirizzo}\n" +

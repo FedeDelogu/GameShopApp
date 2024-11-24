@@ -5,16 +5,27 @@ namespace WebAppPlayshphere.DAO
 {
     public class DAOUtente : IDAO
     {
-        private readonly IDatabase db;
-        private readonly DAOAnagrafica daoAnagrafica;
+        private IDatabase db;
 
-     
-        public DAOUtente(IDatabase database,DAOAnagrafica _daoAngrafica)
+        //private DAOUtente()
+        //{
+        //    db = new Database("Playsphere", "FEDUCCINI");
+        //}
+
+        private DAOUtente()
         {
-            db = database;
-            daoAnagrafica = _daoAngrafica;
+            db = new Database("Playsphere", "FEDUCCINI");
         }
 
+        private static DAOUtente instance = null;
+        public static DAOUtente GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new DAOUtente();
+            }
+            return instance;
+        }
         public Entity Find(int id)
         {
             var riga = db.ReadOne($"SELECT * FROM Utenti WHERE id = {id}");
@@ -23,8 +34,8 @@ namespace WebAppPlayshphere.DAO
                 Entity e = new Utente();
                 e.FromDictionary(riga);
                 // QUI RECUPERO L ANAGRAFICA
-                Entity anagrafica = daoAnagrafica.Find(id);
-                if(anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
+                Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
+                if (anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
                 {
                     ((Utente)e).Anagrafica = (Anagrafica)anagrafica;
                 }
@@ -32,7 +43,7 @@ namespace WebAppPlayshphere.DAO
             }
             else
                 Console.WriteLine("utente null");
-                return null;
+            return null;
         }
         public bool Create(Entity e)
         {
@@ -41,7 +52,7 @@ namespace WebAppPlayshphere.DAO
                 $"values" +
                 $"(" +
                 $"'{((Utente)e).Email.Replace("'", "''")}'," +
-                $"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
+                //$"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
                 $"{((Utente)e).Ruolo}" +
                 $")");
         }
@@ -59,7 +70,7 @@ namespace WebAppPlayshphere.DAO
                 $"ruolo = {((Utente)e).Ruolo}" +
                 $"where = {e.Id};" +
                 $"update Anagrafiche set " +
-                $"nome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Nome.Replace("'", "''"): "null")}," +
+                $"nome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Nome.Replace("'", "''") : "null")}," +
                 $"cognome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cognome.Replace("'", "''") : "null")}," +
                 $"indirizzo = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Indirizzo.Replace("'", "''") : "null")}," +
                 $"telefono = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Telefono.Replace("'", "''") : "null")}," +

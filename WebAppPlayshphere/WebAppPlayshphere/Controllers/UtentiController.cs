@@ -29,7 +29,7 @@ namespace WebAppPlayshphere.Controllers
             return View(tentativiAccesso);
         }
 
-        
+
 
         public IActionResult Login(Dictionary<string, string> credenziali)
         {
@@ -86,4 +86,3 @@ namespace WebAppPlayshphere.Controllers
         }
     }
 }
-

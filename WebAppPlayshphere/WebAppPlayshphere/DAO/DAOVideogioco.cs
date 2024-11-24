@@ -5,13 +5,23 @@ namespace WebAppPlayshphere.DAO
 {
     public class DAOVideogioco : IDAO
     {
-        private readonly IDatabase db;
+        private IDatabase db;
 
-        public DAOVideogioco(IDatabase database)
+        private DAOVideogioco()
         {
-            db = database;
+            db = new Database("Playsphere", "FEDUCCINI");
         }
-        
+        private static DAOVideogioco istance = null;
+
+        public static DAOVideogioco GetIstance()
+        {
+            if (istance == null)
+            {
+                istance = new DAOVideogioco();
+            }
+            return istance;
+        }
+
         public bool Create(Entity e)
         {
             Videogioco v = (Videogioco)e;
@@ -89,4 +99,3 @@ namespace WebAppPlayshphere.DAO
 
     }
 }
-

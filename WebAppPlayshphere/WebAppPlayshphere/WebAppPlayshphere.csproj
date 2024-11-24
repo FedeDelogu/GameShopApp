@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Reference Include="Utility">
-      <HintPath>bin\Debug\net8.0\Utility.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\ProjectWorkGOL\WebAppPlayshphere\WebAppPlayshphere\bin\Debug\net8.0\Utility.dll</HintPath>
     </Reference>
   </ItemGroup>
 

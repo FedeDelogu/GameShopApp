@@ -5,7 +5,7 @@ namespace WebAppPlayshphere.Models
     public class Ordine : Entity
     {
         public Ordine() { }
-        public Ordine(int id, Dictionary<Videogioco,int> videogiochi, string stato, Utente utente, DateTime dataOrdine) :base(id)
+        public Ordine(int id, Dictionary<Videogioco, int> videogiochi, string stato, Utente utente, DateTime dataOrdine) : base(id)
         {
             Videogiochi = videogiochi;
             Stato = stato;
@@ -13,7 +13,7 @@ namespace WebAppPlayshphere.Models
             DataOrdine = dataOrdine;
         }
 
-        public Dictionary<Videogioco,int> Videogiochi { get; set; } // oggetto Videogioco e int per la quantità
+        public Dictionary<Videogioco, int> Videogiochi { get; set; } // oggetto Videogioco e int per la quantità
         public string Stato { get; set; }
         public Utente Utente { get; set; }
         public DateTime DataOrdine { get; set; }
