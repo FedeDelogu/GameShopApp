@@ -28,39 +28,51 @@ namespace WebAppPlayshphere.Controllers
             _logger.LogInformation($"Tentativo {tentativiAccesso} alle {DateTime.Now}");
             return View(tentativiAccesso);
         }
+        public IActionResult Login()
+        {
+            return View();
+        }
 
 
-
-        public IActionResult Login(Dictionary<string, string> credenziali)
+        public IActionResult Accedi(Dictionary<string, string> credenziali)
         {
             // Le chiavi del dictionary sono i name di HTML
             string user = credenziali["username"];
-            string password = credenziali["passw"];
+            string password = credenziali["password"];
+            Console.WriteLine($"{user} {password}");
 
             if (DAOUtente.GetInstance().Find(user, password))
             {
+                Console.WriteLine("sono nell'if");
                 Entity e = DAOUtente.GetInstance().Find(user);
                 // Memorizzo chi ha fatto login
                 _utenteLoggato = (Utente)e;
 
                 _logger.LogInformation($"Utente Loggato: {_utenteLoggato.Username} alle {DateTime.Now}");
-
-                return View(e);
+                if (((Utente)e).Ruolo == 0)
+                {
+                    return RedirectToAction("/Admin/Index");
+                }
+                return RedirectToAction("Index", e);
             }
             else
-                return RedirectToAction("Index");
+                return RedirectToAction("Login");
         }
 
         public IActionResult Registrazione()
         {
             return View();
         }
-
+        [HttpPost]
+        public ActionResult Azione(string par1, string par2)
+        {
+            return RedirectToAction("");
+        }
         public IActionResult Salva(Dictionary<string, string> credenziali)
         {
             Entity e = new Utente();
             e.FromDictionary(credenziali);
-            ((Utente)e).Ruolo = 0;
+            ((Utente)e).Ruolo = 1;
 
             if (DAOUtente.GetInstance().Create(e))
             {
