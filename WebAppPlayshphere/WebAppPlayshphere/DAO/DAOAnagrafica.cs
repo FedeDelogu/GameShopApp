@@ -9,7 +9,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOAnagrafica()
         {
-            db = new Database("Playsphere", "FEDUCCINI");
+            db = new Database("Playsphere", "CIMO");
         }
         private static DAOAnagrafica istance = null;
 
