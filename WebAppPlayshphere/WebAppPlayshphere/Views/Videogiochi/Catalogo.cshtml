@@ -1,0 +1,32 @@
+﻿@using Utility
+@using WebAppPlayshphere.Models
+@model List<Utility.Entity>
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h1>Elenco dei videogame disponibili</h1>
+    <div class="container">
+        @foreach (var v in Model)
+        {
+            var gioco = (Videogioco)v;
+
+            <div class="cards">
+                <h3>@(gioco.Titolo)</h3><br />
+                <p>
+                    Console: @(gioco.Piattaforme)<br />
+                    Genere: @(gioco.Generi)<br />
+                    <a href="/Videogiochi/Dettagli/@gioco.Id"><input type="button" value="Dettagli"><a />
+                </p><br />
+            </div>
+        }
+    </div>
+</body>
+</html>
