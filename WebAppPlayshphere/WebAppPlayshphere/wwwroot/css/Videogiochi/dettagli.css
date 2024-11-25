@@ -1,0 +1,197 @@
+﻿
+/* --floral-white: #fffcf2ff;
+--timberwolf: #ccc5b9ff;
+--black-olive: #403d39ff;
+--eerie-black: #252422ff;
+--flame:    ; */
+html, body {
+    background: var(--eerie-black);
+    background: radial-gradient(circle, rgb(41, 29, 24)0%, var(--eerie-black) 100%);
+}
+
+h2 {
+    color: var(--floral-white) !important;
+}
+
+h1 {
+    color: var(--floral-white) !important;
+}
+
+p, #links-footer {
+    color: var(--timberwolf);
+}
+
+#container-navbar {
+    background-color: #33333366;
+    top: 25px;
+    border-radius: 5vh;
+    backdrop-filter: blur(15px)
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.active {
+    color: var(--flame) !important;
+}
+
+.navbar .nav-link {
+    color: #fbfbfb;
+}
+
+.bi-person-circle, .bi-cart2 {
+    color: var(--flame);
+}
+
+i:hover {
+    cursor: pointer;
+}
+
+form .btn {
+    background: var(--floral-white);
+}
+
+.form-control:focus {
+    outline: none !important; /* Rimuove l'outline blu predefinito */
+    box-shadow: 0 0 0 0.15rem #ff440095 !important; /* Contorno personalizzato */
+    border-color: #FF4500 !important; /* Cambia il colore del bordo */
+}
+
+.btn:hover, a:hover {
+    cursor: pointer;
+}
+
+#profile-box {
+    margin-right: 20px;
+}
+
+/* img, svg{
+    vertical-align: baseline;
+} */
+.card {
+    box-shadow: 1.5px 1.5px 3px 2px #403d39ff;
+    position: relative;
+    display: block;
+    height: 100% !important;
+    background-color: #252422ff !important;
+    color: #fffcf2ff !important;
+}
+
+    .card:hover {
+        cursor: pointer;
+    }
+
+img {
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+:root {
+    --floral-white: #fffcf2ff;
+    --timberwolf: #ccc5b9ff;
+    --black-olive: #403d39ff;
+    --eerie-black: #252422ff;
+    --flame: #eb5e28ff;
+}
+
+footer {
+    background-color: var(--black-olive);
+}
+
+/*MAIN*/
+#full-img {
+    background-image: url("https://gaming-cdn.com/img/products/5376/pcover/1920x620/5376.jpg?v=1732113803");
+    height: 400px;
+    width: 100%;
+    position: absolute;
+}
+
+.carousel {
+    max-width: 45%;
+}
+
+.carousel-item, .active, .carousel-inner {
+    height: 100% !important;
+}
+
+#riepilogo-videogioco {
+    margin-top: 20vh;
+}
+
+#dettagli-gioco {
+    background-color: var(--black-olive);
+    z-index: 1;
+    width: 48%;
+    border-radius: 5px;
+}
+
+#return-catalog {
+    color: var(--flame);
+    font-size: 12px;
+}
+
+label, p {
+    color: var(--timberwolf);
+}
+
+#stock {
+    color: green;
+}
+
+#container-piattaforma {
+    max-width: 30%;
+    margin: 0;
+}
+
+#price {
+    font-size: 36px;
+    color: var(--floral-white);
+    margin-right: 15px;
+}
+
+#quantita {
+    width: 40px;
+    height: 30px;
+}
+
+.btn-primary {
+    background-color: var(--flame) !important;
+    border-color: var(--flame) !important;
+}
+
+#wisthlist {
+    width: 20%;
+}
+
+#carrello {
+    width: 80%;
+}
+
+#links-footer {
+    max-width: 50%;
+    border-bottom: 1px solid;
+    border-color: var(--timberwolf);
+}
+
+    #links-footer > a:hover {
+        color: var(--flame);
+        transition: color 0.25s;
+    }
+
+#company {
+    color: var(--timberwolf);
+}
+
+#piattaforma, #quantita {
+    background: var(--eerie-black);
+    border-color: var(--eerie-black);
+    color: var(--floral-white);
+    padding-inline: 8px;
+}
+/* PALETTE
+#161a1e, #9a9a9a, var(--flame), #fbfbfb
+inspiration> https://dribbble.com/shots/18253209-Game-Store-Website
+*/
