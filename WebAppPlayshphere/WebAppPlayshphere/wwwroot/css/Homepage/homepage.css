@@ -1,0 +1,99 @@
+﻿/* -- HOMEPAGE CSS -- */
+.carousel-item, .active, .carousel-inner, .carousel {
+    max-height: 400px;
+}
+
+#disable-style {
+    color: unset;
+    text-decoration: none;
+}
+
+.bg-primary {
+    background-color: var(--black-olive) !important; /*provare con mirror bg*/
+}
+
+#info-company {
+    background-image: url("https://image.api.playstation.com/vulcan/ap/rnd/202312/0511/fb9ce1671c6a36fdf1e6548ab8947940f1fc2a1c873ae83d.jpg");
+    width: 100%;
+    background-size: cover;
+    background-attachment: fixed;
+    justify-content: center;
+}
+
+    #info-company p, #info-company h3 {
+        color: var(--floral-white) !important;
+        text-align: center !important;
+    }
+
+#main-box {
+    transform: scale(1.2);
+    max-width: 30%;
+    box-shadow: 0 0 15px 0.5px var(--black-olive);
+    z-index: 2;
+    margin-right: 60%;
+    text-align: center;
+}
+
+.fa-comments {
+    font-size: 48px;
+}
+
+.fa-chevron-right {
+    font-size: calc(h2);
+    transition: transform 0.25s ease;
+}
+
+h2:hover .fa-chevron-right{
+    transform: translateX(10px);
+    transition: transform 0.25s ease;
+}
+
+/* -- CSS CARDS */
+/* Per assicurarti che il contenitore della col sia il punto di riferimento */
+.category-col {
+    position: relative; /* Necessario per il posizionamento assoluto dell'overlay */
+    padding: 0; /* Rimuove eventuali padding indesiderati */
+    width: 30%;
+}
+
+.category-col:hover {
+    transform: scale(1.025);
+    transition: transform 0.25s ease;
+}
+
+/* L'overlay che copre l'immagine */
+.overlay {
+    position: absolute; /* Posiziona l'overlay relativo al contenitore .col */
+    top: 0;
+    left: 0;
+    width: 100%; /* Copre l'intera larghezza del contenitore */
+    height: 100%; /* Copre l'intera altezza del contenitore */
+    background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: 1; /* Porta l'overlay sopra l'immagine */
+}
+
+.overlay:hover {
+    background-image: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    opacity: 1;
+}
+
+.title-category {
+    color: var(--floral-white);
+    margin: 0 3vh 2vh 0;
+    text-transform: uppercase;
+}
+
+/* Lo stile dell'immagine */
+.category-img {
+    display: block; /* Rimuove margini o spazi indesiderati */
+    width: -webkit-fill-available; /* Adatta l'immagine alla larghezza del contenitore */
+    height: auto; /* Mantiene le proporzioni dell'immagine */
+    min-height: 250px;
+}
+
+/* Assicurati che gli altri elementi nella griglia siano separati */
+.category-item {
+    padding: 15px; /* Aggiunge un po' di spazio ai contenuti delle altre colonne */
+}
