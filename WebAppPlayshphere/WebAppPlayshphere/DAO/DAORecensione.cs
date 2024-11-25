@@ -14,7 +14,7 @@ namespace WebAppPlayshphere.DAO
         private DAORecensione()
         {
 
-            db = new Database("Playsphere2", "LAPTOP-ANDREA");
+            db = new Database("Playsphere2", "MSI");
 
 
         }

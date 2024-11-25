@@ -1,0 +1,81 @@
+﻿body {
+}
+/* -- SIDEBAR -- */
+#sidebar {
+    position: sticky !important;
+    /*top: 0;*/
+/*    width: 230px;
+    height: calc(100vh - var(--navbar));*/
+
+    background-color: #fbfbfb10;
+    color: #fffcf2ff;
+    box-shadow: 0 0 5px 2px var(--flame);
+}
+
+#sidebar button {
+    color: var(--floral-white);
+    background-color: transparent;
+    border-color: var(--flame);
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#sidebar button:hover {
+    background-color: var(--flame);
+    color: var(--black-olive);
+    border-color: var(--eerie-black);
+}
+
+select:hover {
+    cursor: pointer;
+}
+.ulSB{
+    z-index:600;
+}
+/* -- FINE SIDEBAR -- */
+/* -- CATALOGO -- */
+.card {
+    box-shadow: 1.5px 1.5px 3px 2px #403d39ff;
+    position: relative;
+    display: block;
+    height: 100% !important;
+    background-color: #252422ff !important;
+    color: #fffcf2ff !important;
+    transition: transform 0.3s ease-in-out; /* Animazione graduale */
+}
+
+    .card img {
+        width: -webkit-fill-available;
+    }
+
+    .card:hover {
+        cursor: pointer;
+        transform: scale(1.10); /* Ingrandisce leggermente la card */
+    }
+
+
+img {
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+/* -- FINE CATALOGO -- */
+
+/* FAQ */
+.accordion-header {
+    border-radius: 25px !important;
+}
+
+.accordion-header, .accordion-button {
+    background-color: var(--floral-white) !important;
+    color: var(--eerie-black) !important;
+    font-weight: bold !important;
+    box-shadow: 0 2px 5px 1px var(--black-olive) !important;
+}
+
+.accordion-body {
+    background-color: var(--timberwolff);
+    color: var(--black-olive);
+    padding: 10px;
+}
+/* FINE FAQ */

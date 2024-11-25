@@ -14,7 +14,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-            db = new Database("Playsphere", "FEDUCCINI");
+            db = new Database("Playsphere2", "MSI");
         }
 
         private static DAOUtente instance = null;

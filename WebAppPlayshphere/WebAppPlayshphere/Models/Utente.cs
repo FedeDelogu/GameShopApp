@@ -1,15 +1,15 @@
-﻿using Utility;
+﻿using System.ComponentModel.DataAnnotations;
+using Utility;
 using WebAppPlayshphere.DAO;
 
 namespace WebAppPlayshphere.Models
 {
     public class Utente : Entity
     {
-        string username;
-        string password;
-        string email;
-        int ruolo;
-        Anagrafica anagrafica;
+        //string password;
+        //string email;
+        //int ruolo;
+        //Anagrafica anagrafica;
 
         //Carrello carrello;
 
@@ -45,7 +45,7 @@ namespace WebAppPlayshphere.Models
         [Range(0, 10, ErrorMessage = "Ruolo non valido.")]
         public int Ruolo { get; set; }
         public Anagrafica Anagrafica { get; set; }
-     
+
 
 
         /*
@@ -59,7 +59,17 @@ namespace WebAppPlayshphere.Models
         public string Cognome {  get; set; }
         public DateTime Dob { get => dob; set => dob = value; }*/
         //public Carrello Carrello { get => carrello; set => carrello = value; }
-
+        public string Username
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Email) && Email.Contains("@"))
+                {
+                    return Email.Split('@')[0];
+                }
+                return string.Empty;
+            }
+        }
         public override string ToString()
         {
             return $"Id : {base.ToString()}\n" +

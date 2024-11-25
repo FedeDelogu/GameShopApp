@@ -9,7 +9,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOVideogioco()
         {
-            db = new Database("Playsphere2", "LAPTOP-ANDREA");
+            db = new Database("Playsphere2", "MSI");
 
         }
         private static DAOVideogioco istance = null;
