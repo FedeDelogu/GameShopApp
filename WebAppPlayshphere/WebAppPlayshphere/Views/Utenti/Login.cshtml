@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿
+@{
+    Layout = "_Layout";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,62 +13,18 @@
     <title>Login</title>
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="p-4 sticky-top">
-        <div class="container d-flex p-2 justify-content-between align-items-center justify-items-center rounded-5" id="container-navbar">
-            <nav class="navbar">
-                <div class="container">
-                    <a class="navbar-brand" href="#">
-                        <img src="C:\Users\gbolz\source\repos\Settimana_5\Front-end\img\HellsGames.png" alt="Bootstrap" width="64" height="64">
-                    </a>
-                </div>
-            </nav>
-            <nav class="navbar">
-                <ul class="nav nav-underline">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Chi siamo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Trending</a>
-                    </li>
-                    <li class="nav-item">
-                        <form class="d-flex" role="search">
-                            <input class="form-control form-control-sm rounded-end-0 border-0" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-light rounded-start-0 border-0" type="submit">
-                                <i class="fa-solid fa-search fs-4" style="color:#403d39ff;"></i>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
-            <nav class="navbar" id="profile-box">
-                <ul class="nav nav-underline">
-                    <li class="nav-item">
-                        <i class="fa-solid fa-user fs-3" style="color:#eb5e28ff;"></i>
-                    </li>
-                    <li class="nav-item">
-                        <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    <!-- FINE HEADER -->
-
     <main class="container mb-3">
         <div class="d-flex justify-content-between">
             <section id="login" class="d-flex flex-column align-items-center justify-content-center">
                 <h2 class=" text-white">Login</h2>
-                <form class="row justify-content-center my-3">
+                <form class="row justify-content-center my-3" method="POST" action="/Utenti/Accedi">
+
                     <div class="mb-3 col-8">
-                        <input type="email" class="form-control email-password" id="email" placeholder="Enter your email" required>
+                        <input type="text" class="form-control username-password" name="username" id="username" placeholder="Enter your email" required>
                         <div id="emailHelp" class="form-text text-white">We'll never share your email with anyone else.</div>
                     </div>
                     <div class="mb-3 col-8">
-                        <input type="password" class="form-control email-password" id="password" placeholder="********" required>
+                        <input type="password" class="form-control email-password" name="password" id="password" placeholder="********" required>
                     </div>
                     <div class="mb-3 col-8 form-check">
                         <input type="checkbox" class="form-check-input" id="rememberMe">
@@ -90,7 +50,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between mt-3 w-75">
-                    <a href="#">Registrati</a>
+                    <a href="/Utenti/Registrazione">Registrati</a>
                     <a href="#" class="text-white">Forgot password?</a>
                 </div>
             </section>

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,51 +12,6 @@
     <title>Registrazione</title>
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="p-4 sticky-top">
-        <div class="container d-flex p-2 justify-content-between align-items-center justify-items-center rounded-5" id="container-navbar">
-            <nav class="navbar">
-                <div class="container">
-                    <a class="navbar-brand" href="#">
-                        <img src="img/HellsGames.png" alt="Logo" width="64" height="64">
-                    </a>
-                </div>
-            </nav>
-            <nav class="navbar">
-                <ul class="nav nav-underline">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Chi siamo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Trending</a>
-                    </li>
-                    <li class="nav-item">
-                        <form class="d-flex" role="search">
-                            <input class="form-control form-control-sm rounded-end-0 border-0" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-light rounded-start-0 border-0" type="submit">
-                                <i class="fa-solid fa-search fs-4" style="color:#403d39ff;"></i>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
-            <nav class="navbar" id="profile-box">
-                <ul class="nav nav-underline">
-                    <li class="nav-item">
-                        <i class="fa-solid fa-user fs-3" style="color:#eb5e28ff;"></i>
-                    </li>
-                    <li class="nav-item">
-                        <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    <!-- FINE HEADER -->
-
     <main class="container mb-3">
         <div class="d-flex justify-content-between">
             <section id="login" class="d-flex flex-column align-items-center justify-content-center">
