@@ -1,0 +1,46 @@
+﻿<!--
+    Questa pagina ha estensione cshtml, cioè sarà una pagina HTML che tramite l'uso del simbolo chiocciola potrà
+    sfruttare i comandi di C#
+
+    chiocciola using serve per dire dove cercare i modelli
+                     (ricordate che HTML non ha il concetto di classe, quindi le direttive devono
+                     sempre essere scritte per intero, partendo dal namespace)
+    chiocciola model serve per rappresentare il tipo di dato che userò in questa pagina
+    chiocciola Model con la maiuscola si indica il nome di default dell'oggetto importato da BE
+-->
+<!-- Questo serve per dire dove cercare Entity-->
+@using Utility
+<!-- Questo serve per dire dove cercare Fumetto quando casterò-->
+@using WebAppPlayshphere.Models
+<!-- Questo serve per dire il tipo di informazione che il BE mi spedisce qui-->
+@model List<Utility.Entity>
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <title>Elenco</title>
+</head>
+<body>
+    <h1>Elenco recensioni</h1>
+
+    <br />
+    <br />
+
+    @foreach (var f in @Model)
+    {
+        <p>Recensione da parte di : @(((Recensione)f).Utente.Username)</p>
+        <p>Commento: @(((Recensione)f).Commento)</p>
+        <p>Valutazione: @(((Recensione)f).Valutazione)</p>
+        <p>Bannato: @(((Recensione)f).Valido ? "Si" : "No")</p>
+
+        <hr />
+        <br />
+    }
+</body>
+</html>

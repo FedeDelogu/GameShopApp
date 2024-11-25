@@ -52,8 +52,8 @@ namespace WebAppPlayshphere.Models
                 $"Recensioni: {tutteRecensioni(Recensioni)}\n" +
                 $"Valutazione: {Valutazione(Recensioni)}\n";
         }
-        
-        
+
+
         public string tutteRecensioni(List<Recensione> p)
         {
             string ris = "";
@@ -72,11 +72,11 @@ namespace WebAppPlayshphere.Models
             }
             return Math.Round(ris / rec.Count, 1);
         }
-        public override void FromDictionary(Dictionary<string, string> riga)
-        {
-            Recensioni = DAORecensione.GetIstance().RecensioniGioco(Id);
-            
-            base.FromDictionary(riga);
-        }
+        //public override void FromDictionary(Dictionary<string, string> riga)
+        //{
+        //    Recensioni = DAORecensione.GetIstance().RecensioniGioco(Id);
+
+        //    base.FromDictionary(riga);
+        //}
     }
 }
