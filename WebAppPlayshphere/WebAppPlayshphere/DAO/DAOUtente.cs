@@ -48,11 +48,11 @@ namespace WebAppPlayshphere.DAO
         public bool Create(Entity e)
         {
             return db.Update($"insert into Utenti" +
-                $"(email, passwordUtente, dob, ruolo)" +
+                $"(email, passwordUtente,ruolo)" +
                 $"values" +
                 $"(" +
                 $"'{((Utente)e).Email.Replace("'", "''")}'," +
-                //$"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
+                $"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
                 $"{((Utente)e).Ruolo}" +
                 $")");
         }
@@ -87,18 +87,18 @@ namespace WebAppPlayshphere.DAO
             List<Entity> ris = new();
             return ris;
         }
-        public bool Find(string user, string password)
+        public bool Find(string username, string password)
         {
             var riga = db.ReadOne($"SELECT * FROM Utenti " +
                                    $"WHERE " +
-                                   $"email = '{user}' AND " +
+                                   $"email = '{username}' AND " +
                                    $"passwordUtente = HASHBYTES('SHA2_512','{password}');");
 
             return riga != null;
         }
-        public Entity Find(string user)
+        public Entity Find(string username)
         {
-            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE username = '{user}';");
+            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE username = '{username}';");
 
             if (riga != null)
             {
