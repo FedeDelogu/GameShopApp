@@ -7,7 +7,7 @@ namespace WebAppPlayshphere.Models
         public Videogioco() { }
         public Videogioco(int id, string titolo, string generi, string descrizione, int pegi, string piattaforme, double prezzo,
                           string publisher, int quantita, DateTime rilascio,
-                          string sviluppatori, List<Recensione> recensioni, string link) : base(id)
+                          string sviluppatori, List<Entity> recensioni, string link) : base(id)
         {
             Titolo = titolo;
             Generi = generi;
@@ -33,7 +33,7 @@ namespace WebAppPlayshphere.Models
         public int Quantita { get; set; }
         public DateTime Rilascio { get; set; }
         public string Sviluppatori { get; set; }
-        public List<Recensione> Recensioni { get; set; }
+        public List<Entity> Recensioni { get; set; }
         public string Link { get; set; }
 
 
@@ -48,9 +48,10 @@ namespace WebAppPlayshphere.Models
                 $"Publisher: {Publisher}\n" +
                 $"Quantita: {Quantita}\n" +
                 $"Rilascio: {Rilascio.ToString("dd/MM/yyyy")}\n" +
-                $"Sviluppatore: {Sviluppatori}\n" +
-                $"Recensioni: {tutteRecensioni(Recensioni)}\n" +
-                $"Valutazione: {Valutazione(Recensioni)}\n";
+                $"Sviluppatore: {Sviluppatori}\n";// +
+                /*
+                $"Recensioni: {tutteRecensioni((Recensione)Recensioni)}\n" +
+                $"Valutazione: {Valutazione(Recensioni)}\n";*/
         }
 
 
@@ -72,11 +73,14 @@ namespace WebAppPlayshphere.Models
             }
             return Math.Round(ris / rec.Count, 1);
         }
-        //public override void FromDictionary(Dictionary<string, string> riga)
-        //{
-        //    Recensioni = DAORecensione.GetIstance().RecensioniGioco(Id);
+        /*
+        public override void FromDictionary(Dictionary<string, string> riga)
+        {
+            //List<Recensione> recensioni = (List<Recensione>)DAORecensione.GetIstance().RecensioniGioco(Id);
 
-        //    base.FromDictionary(riga);
-        //}
+            Recensioni = DAORecensione.GetIstance().RecensioniGioco(Id);
+
+            base.FromDictionary(riga);
+        }*/
     }
 }

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Contracts;
+using System.Globalization;
 using Utility;
 using WebAppPlayshphere.DAO;
+using WebAppPlayshphere.Models;
 
 namespace WebAppPlayshphere.Controllers
 {
@@ -33,6 +36,70 @@ namespace WebAppPlayshphere.Controllers
         public IActionResult Catalogo()
         {
             return View(DAOVideogioco.GetIstance().Read());
+        }
+
+        /*
+         * METODI UTILIZZABILI SOLO DALL ADMIN (BISOGNA BLOCCARE IL CONTENUTO PER GLI UTENTI NON ADMIN)
+         */
+
+        public IActionResult FormAggiungi()
+        {
+            Entity e = new Videogioco();
+            return View(e);
+        }
+        public IActionResult FormModifica(int id)
+        {
+            return View(DAOVideogioco.GetIstance().Find(id));
+        }
+
+        public IActionResult Elimina(int id) // OPERAZIONE VALIDA SOLO SE SI E' ADMIN
+        {
+            //////////////////////////////////////////////////////////
+            ///
+            // AGGIUNGERE CONTROLLO SE L'UTENTE E' ADMIN
+            // QUI -> SE L'UTENTE NON E' ADMIN TORNO AL CATALOGO
+            //
+            //////////////////////////////////////////////////////////
+
+
+            // SE L ID E' MINORE DI 0 TORNO AL CATALOGO
+            if (id < 0)
+            {
+                return View("Catalogo", DAOVideogioco.GetIstance().Read());
+            }
+            // SE L ID E' MAGGIORE DI 0 TENTO DI ELIMINARE IL VIDEOGIOCO
+            else
+            {
+                if (DAOVideogioco.GetIstance().Delete(id))
+                {
+                    Console.WriteLine("Videogioco eliminato");
+                    return View("Catalogo", DAOVideogioco.GetIstance().Read());
+                }
+                else
+                {
+                    Console.WriteLine("ERRORE : Videogioco non eliminato");
+                    return View("Catalogo", DAOVideogioco.GetIstance().Read());
+                }
+            }
+        } // fine metodo elimina
+        public IActionResult Modifica([FromForm] Dictionary<string, string> videogioco)
+        {
+            Console.WriteLine("VideogiochiController - Modifica");
+            Entity v = new Videogioco();
+            if (videogioco != null)
+            {
+                //v = VideogiocoFactory.CreateVideogioco(videogioco);
+                videogioco["prezzo"] = videogioco["prezzo"].Replace(".", ",");
+                Console.WriteLine($"prezzo : {videogioco["prezzo"]}"); // STAMPA IL PREZZO
+
+                v.FromDictionary(videogioco);
+                if (DAOVideogioco.GetIstance().Update(v))
+                {
+                    Console.WriteLine("Videogioco modificato");
+                    return View("Catalogo", DAOVideogioco.GetIstance().Read());
+                }
+            }
+            return View("Home/Index");
         }
     }
 }

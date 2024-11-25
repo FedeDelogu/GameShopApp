@@ -41,5 +41,10 @@ namespace WebAppPlayshphere.Controllers
             Console.WriteLine("RecensioniController - Dettagli");
             return View(DAORecensione.GetIstance().Find(id));
         }
+        public IActionResult RecensioniGioco(int idvideogioco)
+        {
+            Console.WriteLine($"ID VIDEOGIOCO : {idvideogioco}");
+            return View(DAORecensione.GetIstance().RecensioniGioco(idvideogioco));
+        }
     }
 }

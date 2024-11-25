@@ -122,12 +122,14 @@
             <h2>Descrizione</h2>
             <p>@(((Videogioco)Model).Descrizione)</p>
         </div>
+        <p id="idvideogioco" >@(((Videogioco)Model).Id)</p>
         <!--  VA INSERITO NEL DB IL LINK DI YT -->
         <div class="container mt-3 mb-3">
             <h2>Trailer</h2>
             <iframe width="100%" height="600" src="https://www.youtube.com/embed/PKO4PL8Xzik?si=qxywSRxdchQ_vEgL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
         <div class="container" id="recensioni">
+            <!--  ELENCO DELLE RECENSIONI PER GIOCO -->
         </div>
     </main>
 </body>
@@ -152,4 +154,25 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/5101093cd6.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script>
+    // Funzione per caricare le recensioni
+    async function getRecensioniGioco() {
+        try {
+            const idvideogioco = document.getElementById('idvideogioco').textContent;
+            // Costruisci l'URL con l'ID del gioco come parametro
+            const response = await fetch(`/Recensioni/RecensioniGioco?idvideogioco=${idvideogioco}`);
+            if (!response.ok) {
+                throw new Error('Errore nel recupero delle recensioni');
+            }
+            const htmlContent = await response.text();
+            document.getElementById('recensioni').innerHTML = htmlContent;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Esegui la funzione al caricamento della pagina
+    window.onload = getRecensioniGioco;
+</script>
 </html>

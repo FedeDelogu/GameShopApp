@@ -39,7 +39,7 @@ namespace WebAppPlayshphere.Models
 
         [Range(0, 10, ErrorMessage = "Ruolo non valido.")]
         public int Ruolo { get; set; }
-        public Anagrafica Anagrafica { get => Anagrafica; set => Anagrafica = value; }
+        public Anagrafica Anagrafica { get; set; }
      
 
         /*
