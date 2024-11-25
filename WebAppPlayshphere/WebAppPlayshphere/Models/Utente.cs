@@ -1,11 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Utility;
+﻿using Utility;
 using WebAppPlayshphere.DAO;
 
 namespace WebAppPlayshphere.Models
 {
     public class Utente : Entity
     {
+        string username;
+        string password;
+        string email;
+        int ruolo;
+        Anagrafica anagrafica;
+
         //Carrello carrello;
 
         public Utente() { }
@@ -42,6 +47,7 @@ namespace WebAppPlayshphere.Models
         public Anagrafica Anagrafica { get; set; }
      
 
+
         /*
         public string Indirizzo { get => indirizzo; set => indirizzo = value; }
         public string Telefono { get => telefono; set => telefono = value; }
@@ -54,17 +60,6 @@ namespace WebAppPlayshphere.Models
         public DateTime Dob { get => dob; set => dob = value; }*/
         //public Carrello Carrello { get => carrello; set => carrello = value; }
 
-        public string Username
-        {
-            get 
-            { 
-                if(!string.IsNullOrEmpty(Email) && Email.Contains("@"))
-                {
-                    return Email.Split('@')[0];
-                }
-                return string.Empty;
-            }
-        }
         public override string ToString()
         {
             return $"Id : {base.ToString()}\n" +
