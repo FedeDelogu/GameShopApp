@@ -31,11 +31,22 @@ namespace WebAppPlayshphere.Models
             Carrello = carrello;
         }*/
 
-        public string Username { get => Email.Split("@")[0]; }
-        public string Password { get => password; set => password = value; }
-        public string Email { get => email; set => email = value; }
-        public Anagrafica Anagrafica { get => anagrafica; set => anagrafica = value; }
-        public int Ruolo { get => ruolo; set => ruolo = value; }
+        [Required(ErrorMessage = "L'email è obbligatoria.")]
+        [EmailAddress(ErrorMessage = "L'email non è valida.")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "La password è obbligatoria.")]
+        [StringLength(100, ErrorMessage = "La password deve avere almeno 8 caratteri.", MinimumLength = 8)]
+        public string Password { get; set; }
+        [Required(ErrorMessage = "La password di conferma è obbligatoria.")]
+        [Compare("Password", ErrorMessage = "Le password non corrispondono.")]
+        public string ConfermaPassword { get; set; }
+
+        [Range(0, 10, ErrorMessage = "Ruolo non valido.")]
+        public int Ruolo { get; set; }
+        public Anagrafica Anagrafica { get; set; }
+     
+
 
         /*
         public string Indirizzo { get => indirizzo; set => indirizzo = value; }
