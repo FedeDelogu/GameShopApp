@@ -34,7 +34,7 @@
 
     @foreach (var f in @Model)
     {
-        <p>Recensione da parte di : @(((Recensione)f).Utente.Username)</p>
+        @* <p>Recensione da parte di : @(((Recensione)f).Utente.Username)</p> *@
         <p>Commento: @(((Recensione)f).Commento)</p>
         <p>Valutazione: @(((Recensione)f).Valutazione)</p>
         <p>Bannato: @(((Recensione)f).Valido ? "Si" : "No")</p>

@@ -17,4 +17,9 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\Sidebar\" />
+    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
 </Project>
