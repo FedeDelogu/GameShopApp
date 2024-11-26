@@ -72,7 +72,7 @@ namespace WebAppPlayshphere.Controllers
         {
             Entity e = new Utente();
             e.FromDictionary(credenziali);
-            ((Utente)e).Ruolo = 0;
+            ((Utente)e).Ruolo = 1;
 
             if (DAOUtente.GetInstance().Create(e))
             {

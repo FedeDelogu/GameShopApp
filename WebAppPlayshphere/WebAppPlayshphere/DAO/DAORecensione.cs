@@ -14,7 +14,9 @@ namespace WebAppPlayshphere.DAO
         private DAORecensione()
         {
 
-            db = new Database("Playsphere2", "MSI");
+
+            db = new Database("Playsphere", "CIMO");
+
 
 
         }
@@ -58,23 +60,24 @@ namespace WebAppPlayshphere.DAO
             List<Entity> ris = new List<Entity>();
             foreach (var riga in righe)
             {
+                Console.WriteLine($"ID GIOCO : {riga["idvideogioco"]}");
                 Entity e = RecensioneFactory.CreateRecensione(riga);
                 ris.Add(e);
             }
             return ris;
         } // OK
-        public List<Recensione> RecensioniGioco(int id)
+        public List<Entity> RecensioniGioco(int id)
         {
             var righe = db.Read("SELECT * FROM Recensioni WHERE idVideogioco=" + id);
             if (righe == null)
             {
                 return null;
             }
-            List<Recensione> ris = new List<Recensione>();
+            List<Entity> ris = new List<Entity>();
             foreach (var riga in righe)
             {
-                Recensione r = new Recensione();
-                r.FromDictionary(riga);
+                Recensione r = RecensioneFactory.CreateRecensione(riga);
+                //r.FromDictionary(riga);
                 ris.Add(r);
             }
             return ris;
@@ -149,6 +152,10 @@ namespace WebAppPlayshphere.DAO
             {
                 Recensione r = RecensioneFactory.CreateRecensione(riga);
                 ris.Add(r);
+            }
+            if(ris.Count == 0)
+            {
+                Console.WriteLine("nessuna recensione trovata");
             }
             return ris;
         }

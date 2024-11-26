@@ -15,6 +15,7 @@
     <title>Catalogo</title>
 </head>
 <body>
+
     <div class="container my-5 row">
         <!-- SIDEBAR -->
         <div class="col-3">
@@ -78,24 +79,6 @@
             <!--FINE CATALOGO -->
         </div>
     </div>
-
-@* 
-    <div class="container">
-        @foreach (var v in Model)
-        {
-            var gioco = (Videogioco)v;
-
-            <div class="cards">
-                <h3>@(gioco.Titolo)</h3><br />
-                <p>
-                    Console: @(gioco.Piattaforme)<br />
-                    Genere: @(gioco.Generi)<br />
-                    <a href="/Videogiochi/Dettagli/@gioco.Id"><input type="button" value="Dettagli"><a />
-                </p><br />
-            </div>
-        }
-    </div> *@
-
 </body>
 <script src="/js/Sidebar/Sidebar.js" crossorigin="anonymous"></script>
 

@@ -14,7 +14,9 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-            db = new Database("Playsphere2", "MSI");
+
+            db = new Database("Playsphere", "CIMO");
+
         }
 
         private static DAOUtente instance = null;
@@ -32,7 +34,7 @@ namespace WebAppPlayshphere.DAO
             if (riga != null && riga.Count > 0)
             {
                 Entity e = new Utente();
-                e.FromDictionary(riga);
+                //e.FromDictionary(riga);
                 // QUI RECUPERO L ANAGRAFICA
                 Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
                 if (anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
@@ -98,7 +100,9 @@ namespace WebAppPlayshphere.DAO
         }
         public Entity Find(string username)
         {
+
             var riga = db.ReadOne($"SELECT * FROM Utenti WHERE username = '{username}';");
+
 
             if (riga != null)
             {

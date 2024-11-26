@@ -1,0 +1,32 @@
+﻿@using WebAppPlayshphere.Models
+@model Utility.Entity
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Modifica</title>
+</head>
+<body>
+
+    <h1>Modifica Videogioco</h1>
+
+    <form action="/Videogiochi/Modifica" onsubmit="" method="post">
+
+        <input type="text" value="@Model.Id" name="id" readonly hidden />
+        Titolo: <input type="text" value="@(((Videogioco)Model).Titolo)" id="titolo" name="titolo" /><br />
+        Sviluppatore: <input type="text" value="@(((Videogioco)Model).Sviluppatori)" id="sviluppatori" name="sviluppatori" /><br />
+        Descrizione: <input type="text" value="@(((Videogioco)Model).Descrizione)" id="descrizione" name="descrizione" /><br />
+        Generi: <input type="text" value="@(((Videogioco)Model).Generi)" id="generi" name="generi" />
+        Pegi: <input type="text" value="@(((Videogioco)Model).Pegi)" id="pegi" name="pegi" />
+        Publisher: <input type="text" value="@(((Videogioco)Model).Publisher)" id="publisher" name="publisher" />
+        Data di rilascio: <input type="text" value="@(((Videogioco)Model).Rilascio)" id="rilascio" name="rilascio" />
+        Prezzo: <input type="number" value="@(((Videogioco)Model).Prezzo)" id="prezzo" name="prezzo" />
+
+        <br />
+
+        <input type="submit" value="SALVA" />
+
+    </form>
+</body>
+</html>
