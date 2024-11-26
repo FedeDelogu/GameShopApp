@@ -67,7 +67,7 @@ namespace WebAppPlayshphere.DAO
             var righe = db.Read(
                 $"SELECT p.*, pl.nome " +
                 $"FROM PiattaformeVideogiochi p " +
-                $"LEFT JOIN Piattaforme pl ON p.piattaforma = pl.id " +
+                $"LEFT JOIN Piattaforme pl ON p.idPiattaforma = pl.id " +
                 $"WHERE p.idVideogioco = {idGioco}");
 
             // Itera sulle righe ottenute e aggiunge i risultati alla lista

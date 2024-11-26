@@ -1,4 +1,4 @@
-﻿@using Utility
+@using Utility
 @using WebAppPlayshphere.Models
 @model List<Utility.Entity>
 @{
@@ -15,6 +15,27 @@
     <title>Catalogo</title>
 </head>
 <body>
+
+    <h1>Elenco dei videogame disponibili</h1>
+    <h2><a href="/Videogiochi/FormAggiungi">Aggiungi nuovo videogioco<a/></h2>
+    <div class="container">
+        @foreach (var v in Model)
+        {
+            var gioco = (Videogioco)v;
+
+            <div class="cards">
+                <h3>@(gioco.Titolo)</h3><br />
+
+
+                <p>
+                    Console: @(gioco.GetPiattaforme())<br />
+                    Genere: @(gioco.Generi)<br />
+                    <a href="/Videogiochi/Dettagli/@gioco.Id"><input type="button" value="Dettagli"><a />
+                    <a href="/Videogiochi/FormModifica/@gioco.Id"><input type="button" value="Modifica"><a />
+                    <a href="/Videogiochi/Elimina/@gioco.Id"><input type="button" value="Elimina"><a />
+                    <a href="/#PATH DA INSERIRE/@gioco.Id"><input type="button" value="Aggiungi al carrello"><a />
+                </p><br />
+
 
     <div class="container my-5 row">
         <!-- SIDEBAR -->
@@ -48,6 +69,7 @@
                         </select>
                     </li>
                 </ul>
+
             </div>
         </div>
         <!-- FINE SIDEBAR -->
