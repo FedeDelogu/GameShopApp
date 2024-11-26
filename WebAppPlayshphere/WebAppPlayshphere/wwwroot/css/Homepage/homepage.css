@@ -27,6 +27,7 @@
 
 #main-box {
     transform: scale(1.2);
+    background-color:var(--black-olive)!important;
     max-width: 30%;
     box-shadow: 0 0 15px 0.5px var(--black-olive);
     z-index: 2;
