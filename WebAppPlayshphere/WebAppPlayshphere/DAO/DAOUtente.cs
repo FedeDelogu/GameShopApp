@@ -14,7 +14,9 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
+
             db = new Database("Playsphere", "CIMO");
+
         }
 
         private static DAOUtente instance = null;
@@ -87,18 +89,20 @@ namespace WebAppPlayshphere.DAO
             List<Entity> ris = new();
             return ris;
         }
-        public bool Find(string user, string password)
+        public bool Find(string username, string password)
         {
             var riga = db.ReadOne($"SELECT * FROM Utenti " +
                                    $"WHERE " +
-                                   $"email = '{user}' AND " +
+                                   $"email = '{username}' AND " +
                                    $"passwordUtente = HASHBYTES('SHA2_512','{password}');");
 
             return riga != null;
         }
-        public Entity Find(string user)
+        public Entity Find(string username)
         {
-            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE email = '{user}';");
+
+            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE username = '{username}';");
+
 
             if (riga != null)
             {

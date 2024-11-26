@@ -1,4 +1,4 @@
-﻿@using Utility
+@using Utility
 @using WebAppPlayshphere.Models
 @model List<Utility.Entity>
 @{
@@ -6,12 +6,16 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/Catalogo/catalogo.css" rel="stylesheet" />
+
+    <title>Catalogo</title>
 </head>
 <body>
+
     <h1>Elenco dei videogame disponibili</h1>
     <h2><a href="/Videogiochi/FormAggiungi">Aggiungi nuovo videogioco<a/></h2>
     <div class="container">
@@ -31,8 +35,73 @@
                     <a href="/Videogiochi/Elimina/@gioco.Id"><input type="button" value="Elimina"><a />
                     <a href="/#PATH DA INSERIRE/@gioco.Id"><input type="button" value="Aggiungi al carrello"><a />
                 </p><br />
+
+
+    <div class="container my-5 row">
+        <!-- SIDEBAR -->
+        <div class="col-3">
+            <div class="text-light me-3 rounded-5 d-flex flex-column justify-content-start py-4" id="sidebar">
+                <ul class="ulSB">
+                    <li class="my-3"><a href="#">NEW !!!</a></li>
+                    <li class="my-3">
+                        <a data-bs-toggle="collapse" href="#collapseGeneri" role="button" aria-expanded="false" aria-controls="collapseGeneri">
+                            GENERE
+                        </a>
+                        <div class="collapse my-3" id="collapseGeneri">
+                            <div class="gy-2 mt-1 ">
+                            @foreach (var v in Model)
+                            {
+                                var genere = (((Videogioco)v).Generi);
+
+                                <button class="btn col-5 fw-bold p-1 mx-1" style="font-size: 0.8rem;">@genere</button>
+                            }
+                            </div>
+                        </div>
+                    </li>
+                    <li class="my-3">
+                        <a href="#">PIATTAFORMA</a>
+                        <select name="piattaforma" id="piattaforma" class="d-block w-75 rounded-4 px-2 py-1 my-2">
+                            <option value="All">All</option>
+                            <option value="PS5">PS5</option>
+                            <option value="PS4">PS4</option>
+                            <option value="XBOX">XBOX</option>
+                            <option value="Nintendo Switch">Nintendo Switch</option>
+                        </select>
+                    </li>
+                </ul>
+
             </div>
-        }
+        </div>
+        <!-- FINE SIDEBAR -->
+        <div class="col-9 d-flex justify-content-center">
+            <!-- CATALOGO -->
+            <section id="catalogo">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4">
+                        @foreach(var v in Model)
+                        {
+                            var titolo = (((Videogioco)v).Titolo);
+                            var prezzo = (((Videogioco)v).Prezzo);
+
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="card w-100 bg-dark text-light">
+                                    <div>
+                                        <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCpmTwX4ZRF2UTGojLVsxs856EIR-6Aed1TQ&s" alt="borderlands">
+                                    </div>
+                                    <div class="card-footer h-100 d-flex flex-column justify-content-between">
+                                        <h5>@titolo</h5>
+                                        <h6 class="text-end fw-bold" style="color:var(--flame)">@prezzo Eur</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
+                </div>
+            </section>
+            <!--FINE CATALOGO -->
+        </div>
     </div>
 </body>
+<script src="/js/Sidebar/Sidebar.js" crossorigin="anonymous"></script>
+
 </html>
