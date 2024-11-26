@@ -42,7 +42,7 @@
 
 .wallpaper {
     background-image: url(https://4kwallpapers.com/images/wallpapers/call-of-duty-black--18321.jpeg);
-    background-position: -550px top; /* Sposta il contenuto dell'immagine verso sinistra */
+    background-position: -450px top; /* Sposta il contenuto dell'immagine verso sinistra */
     background-size: cover;
     position: fixed;
     z-index: 400;
