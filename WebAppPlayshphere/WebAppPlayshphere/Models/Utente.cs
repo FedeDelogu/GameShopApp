@@ -6,6 +6,11 @@ namespace WebAppPlayshphere.Models
 {
     public class Utente : Entity
     {
+        //string password;
+        //string email;
+        //int ruolo;
+        //Anagrafica anagrafica;
+
         //Carrello carrello;
 
         public Utente() { }
@@ -40,7 +45,8 @@ namespace WebAppPlayshphere.Models
         [Range(0, 10, ErrorMessage = "Ruolo non valido.")]
         public int Ruolo { get; set; }
         public Anagrafica Anagrafica { get; set; }
-     
+
+
 
         /*
         public string Indirizzo { get => indirizzo; set => indirizzo = value; }
@@ -53,12 +59,11 @@ namespace WebAppPlayshphere.Models
         public string Cognome {  get; set; }
         public DateTime Dob { get => dob; set => dob = value; }*/
         //public Carrello Carrello { get => carrello; set => carrello = value; }
-
         public string Username
         {
-            get 
-            { 
-                if(!string.IsNullOrEmpty(Email) && Email.Contains("@"))
+            get
+            {
+                if (!string.IsNullOrEmpty(Email) && Email.Contains("@"))
                 {
                     return Email.Split('@')[0];
                 }
