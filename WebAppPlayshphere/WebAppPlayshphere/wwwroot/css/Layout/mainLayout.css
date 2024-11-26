@@ -1,0 +1,137 @@
+﻿/* -- GENERALI -- */
+:root {
+    --floral-white: #fffcf2ff;
+    --timberwolf: #ccc5b9ff;
+    --black-olive: #403d39ff;
+    --eerie-black: #252422ff;
+    --flame: #eb5e28ff;
+    --navbar: 60px; /* Altezza della navbar */
+    --sidebar-width: 200px; /* Larghezza della sidebar */
+    --footer-height: 100px; /* Altezza della footer */
+}
+
+html, body {
+    background: var(--eerie-black);
+    background: radial-gradient(circle, rgb(41, 29, 24) 0%, var(--eerie-black) 100%);
+}
+
+h2 {
+    color: var(--floral-white) !important;
+    text-transform: uppercase;
+}
+
+li {
+    list-style: none !important;
+}
+
+a {
+    color: var(--floral-white) !important;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--flame) !important;
+}
+
+i:hover {
+    cursor: pointer;
+}
+
+form .btn {
+    background: var(--floral-white);
+}
+
+.form-control:focus {
+    outline: none !important; /* Rimuove l'outline blu predefinito */
+    box-shadow: 0 0 0 0.15rem #ff440095 !important; /* Contorno personalizzato */
+    border-color: #FF4500 !important; /* Cambia il colore del bordo */
+}
+
+.btn:hover, a:hover {
+    cursor: pointer;
+}
+
+main {
+    position: relative !important;
+}
+/* -- FINE GENERALI -- */
+
+/* -- HEADER / NAV -- */
+#container-navbar {
+    background-color: #33333366;
+    backdrop-filter: blur(15px);
+    top: 25px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.active {
+    color: var(--flame) !important;
+    border-bottom: 3px solid;
+}
+
+.navbar .nav-link {
+    color: #fbfbfb;
+    font-weight: bold;
+}
+
+.navbar .nav-link:hover {
+    color: var(--flame);
+}
+
+.bi-person-circle, .bi-cart2 {
+    color: var(--flame);
+}
+
+#profile-box {
+    margin-right: 20px;
+}
+
+input[type=search], form > .btn {
+    border-radius: 0;
+}
+
+input[type=search] {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+form > .btn {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+/* -- FINE HEADER / NAV -- */
+
+/* -- FOOTER -- */
+footer {
+    background-color: var(--black-olive);
+    position: sticky !important;
+    width: 100%;
+    z-index: 500;
+}
+
+#links-footer {
+    max-width: 50%;
+    border-bottom: 1px solid;
+    border-color: var(--timberwolf);
+}
+
+    #links-footer > a:hover {
+        color: var(--flame);
+        transition: color 0.25s;
+    }
+
+#prezzo {
+    font-size: 36px;
+    color: var(--floral-white) !important;
+}
+
+#company {
+    color: var(--timberwolf);
+}
+/* -- FINE FOOTER -- */
