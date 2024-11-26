@@ -24,21 +24,16 @@
         Data di rilascio: <input type="text" value="@(((Videogioco)Model).Rilascio)" id="rilascio" name="rilascio" /><br />
         Prezzo: <input type="number" value="@(((Videogioco)Model).Prezzo)" id="prezzo" name="prezzo" /><br />
         @{
-            if (((Videogioco)Model).Piattaforme.Count <= 0)
-            {
-                <label>Piattaforme:</label>
-                <input type="text" value="" id="piattaforme" name="piattaforme" />
-            }
             @foreach (var v in ((DAOPiattaforma.GetIstance().Read())))
             {
                 if(((Piattaforma)v).Nome != null || ((Piattaforma)v).Nome != "")
                 {
                     <div>
-                        <input type="checkbox" id="piattaforma_@((Piattaforma)v).Id"
+                        <input type="checkbox" id="@(((Piattaforma)v).Id)"
                                name="piattaforme"
                                value="@(((Piattaforma)v).Nome)"
                         @(((Videogioco)Model).Piattaforme.Any(p => p.Nome == ((Piattaforma)v).Nome) ? "checked" : "") />
-                        <label for="piattaforma_@((Piattaforma)v).Id">"@(((Piattaforma)v).Nome)"</label>
+                        <label for="@((Piattaforma)v).Id">"@(((Piattaforma)v).Nome)"</label>
                     </div>
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using Utility;
@@ -49,6 +50,7 @@ namespace WebAppPlayshphere.Controllers
 
         public IActionResult FormAggiungi()
         {
+            Console.WriteLine("FORM AGGIUNGI INVIATO");
             Entity e = new Videogioco();
             return View(e);
         }
@@ -56,7 +58,6 @@ namespace WebAppPlayshphere.Controllers
         {
             return View(DAOVideogioco.GetIstance().Find(id));
         }
-
         public IActionResult Elimina(int id) // OPERAZIONE VALIDA SOLO SE SI E' ADMIN
         {
             //////////////////////////////////////////////////////////
@@ -87,24 +88,51 @@ namespace WebAppPlayshphere.Controllers
                 }
             }
         } // fine metodo elimina
-        public IActionResult Modifica([FromForm] Dictionary<string, string> videogioco)
+        public IActionResult Modifica([FromForm] Dictionary<string, string> videogioco, [FromForm] List<string> piattaforme)
         {
             Console.WriteLine("VideogiochiController - Modifica");
             Entity v = new Videogioco();
-            if (videogioco != null)
-            {
-                //v = VideogiocoFactory.CreateVideogioco(videogioco);
-                videogioco["prezzo"] = videogioco["prezzo"].Replace(".", ",");
-                Console.WriteLine($"prezzo : {videogioco["prezzo"]}"); // STAMPA IL PREZZO
+            List<Entity> pi = DAOPiattaforma.GetIstance().Read();
 
-                v.FromDictionary(videogioco);
-                if (DAOVideogioco.GetIstance().Update(v))
+            videogioco.Remove("piattaforme");
+            videogioco["prezzo"] = videogioco["prezzo"].Replace(".", ",");
+            v.FromDictionary(videogioco);
+            foreach (var piattaforma in pi)
+            {
+                if(piattaforme.Contains(((Piattaforma)piattaforma).Nome))
                 {
-                    Console.WriteLine("Videogioco modificato");
-                    return View("Catalogo", DAOVideogioco.GetIstance().Read());
+                    ((Videogioco)v).Piattaforme.Add((Piattaforma)piattaforma);
                 }
             }
-            return View("Home/Index");
+            if (DAOVideogioco.GetIstance().Update(v))
+            {
+                Console.WriteLine("Videogioco modificato");
+                return View("Catalogo", DAOVideogioco.GetIstance().Read());
+            }
+            return View("Catalogo", DAOVideogioco.GetIstance().Read());
+        } // FINE METODO MODIFICA
+        public IActionResult Aggiungi([FromForm] Dictionary<string, string> videogioco, [FromForm] List<string> piattaforme)
+        {
+            Console.WriteLine("VideogiochiController - Aggiungi");
+            Entity v = new Videogioco();
+            List<Entity> pi = DAOPiattaforma.GetIstance().Read();
+
+            videogioco.Remove("piattaforme");
+            videogioco["prezzo"] = videogioco["prezzo"].Replace(".", ",");
+            v.FromDictionary(videogioco);
+            foreach (var piattaforma in pi)
+            {
+                if (piattaforme.Contains(((Piattaforma)piattaforma).Nome))
+                {
+                    ((Videogioco)v).Piattaforme.Add((Piattaforma)piattaforma);
+                }
+            }
+            if (DAOVideogioco.GetIstance().Create(v))
+            {
+                Console.WriteLine("Videogioco modificato");
+                return View("Catalogo", DAOVideogioco.GetIstance().Read());
+            }
+            return View("Catalogo", DAOVideogioco.GetIstance().Read());
         }
     }
 }
