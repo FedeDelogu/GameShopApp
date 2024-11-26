@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="~/WebAppPlayshphere.styles.css" asp-append-version="true" />
 </head>
 <body>
+    @{
+        // Controllo se c'è un utente loggato
+        var utenteLoggatoJson = Context.Session.GetString("UtenteLoggato");
+        dynamic utenteLoggato = string.IsNullOrEmpty(utenteLoggatoJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject(utenteLoggatoJson);
+    }
+
     <header class="p-4 sticky-top" id="menu">
         <div class="container d-flex p-2 justify-content-between align-items-center justify-items-center rounded-5" id="container-navbar">
             <nav class="navbar">
@@ -41,12 +47,33 @@
             </nav>
             <nav class="navbar" id="profile-box">
                 <ul class="nav nav-underline">
-                    <li class="nav-item">
-                        <a asp-controller="Utenti" asp-action="Login"><i class="fa-solid fa-user fs-3 px-2" style="color:#eb5e28ff;"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <i class="fa-solid fa-cart-shopping fs-3 px-2" style="color:#eb5e28ff;"></i>
-                    </li>
+                    @if (utenteLoggato != null)
+                    {
+                        if (utenteLoggato.Ruolo == 0) // Admin
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="DashboardAdmin">Gestione Admin</a>
+                            </li>
+                        }
+                        else // Utente normale
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Ordini" asp-action="Index">I miei ordini</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Logout">Logout</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Utenti" asp-action="Login"><i class="fa-solid fa-user fs-3 px-2" style="color:#eb5e28ff;"></i> Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Utenti" asp-action="Registrazione">Registrati</a>
+                        </li>
+                    }
                 </ul>
             </nav>
         </div>

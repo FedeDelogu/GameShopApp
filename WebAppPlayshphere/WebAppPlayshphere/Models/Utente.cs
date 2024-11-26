@@ -99,5 +99,13 @@ namespace WebAppPlayshphere.Models
 
             return eta;
         }
+        public override void FromDictionary(Dictionary<string, string> riga)
+        {
+            Entity anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(int.Parse(riga["id"]));
+            if (anagrafica != null) {
+                Anagrafica = (Anagrafica)anagrafica;
+            }
+            base.FromDictionary(riga);
+        }
     }
 }

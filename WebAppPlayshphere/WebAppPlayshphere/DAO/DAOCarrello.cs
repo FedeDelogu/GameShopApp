@@ -12,7 +12,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOCarrello()
         {
-            db = new Database("Playsphere2", "MSI");
+            db = new Database("Playsphere2", "FEDUCCINI");
         }
         private static DAOCarrello istance = null;
 
