@@ -1,4 +1,5 @@
 ﻿@using WebAppPlayshphere.Models
+@using WebAppPlayshphere.DAO
 @model Utility.Entity
 
 <!DOCTYPE html>
@@ -17,12 +18,31 @@
         Titolo: <input type="text" value="@(((Videogioco)Model).Titolo)" id="titolo" name="titolo" /><br />
         Sviluppatore: <input type="text" value="@(((Videogioco)Model).Sviluppatori)" id="sviluppatori" name="sviluppatori" /><br />
         Descrizione: <input type="text" value="@(((Videogioco)Model).Descrizione)" id="descrizione" name="descrizione" /><br />
-        Generi: <input type="text" value="@(((Videogioco)Model).Generi)" id="generi" name="generi" />
-        Pegi: <input type="text" value="@(((Videogioco)Model).Pegi)" id="pegi" name="pegi" />
-        Publisher: <input type="text" value="@(((Videogioco)Model).Publisher)" id="publisher" name="publisher" />
-        Data di rilascio: <input type="text" value="@(((Videogioco)Model).Rilascio)" id="rilascio" name="rilascio" />
-        Prezzo: <input type="number" value="@(((Videogioco)Model).Prezzo)" id="prezzo" name="prezzo" />
-
+        Generi: <input type="text" value="@(((Videogioco)Model).Generi)" id="generi" name="generi" /><br />
+        Pegi: <input type="text" value="@(((Videogioco)Model).Pegi)" id="pegi" name="pegi" /><br />
+        Publisher: <input type="text" value="@(((Videogioco)Model).Publisher)" id="publisher" name="publisher" /><br />
+        Data di rilascio: <input type="text" value="@(((Videogioco)Model).Rilascio)" id="rilascio" name="rilascio" /><br />
+        Prezzo: <input type="number" value="@(((Videogioco)Model).Prezzo)" id="prezzo" name="prezzo" /><br />
+        @{
+            if (((Videogioco)Model).Piattaforme.Count <= 0)
+            {
+                <label>Piattaforme:</label>
+                <input type="text" value="" id="piattaforme" name="piattaforme" />
+            }
+            @foreach (var v in ((DAOPiattaforma.GetIstance().Read())))
+            {
+                if(((Piattaforma)v).Nome != null || ((Piattaforma)v).Nome != "")
+                {
+                    <div>
+                        <input type="checkbox" id="piattaforma_@((Piattaforma)v).Id"
+                               name="piattaforme"
+                               value="@(((Piattaforma)v).Nome)"
+                        @(((Videogioco)Model).Piattaforme.Any(p => p.Nome == ((Piattaforma)v).Nome) ? "checked" : "") />
+                        <label for="piattaforma_@((Piattaforma)v).Id">"@(((Piattaforma)v).Nome)"</label>
+                    </div>
+                }
+            }
+        }
         <br />
 
         <input type="submit" value="SALVA" />

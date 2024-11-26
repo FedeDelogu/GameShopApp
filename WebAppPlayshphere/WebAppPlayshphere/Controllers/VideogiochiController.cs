@@ -35,6 +35,11 @@ namespace WebAppPlayshphere.Controllers
 
         public IActionResult Catalogo()
         {
+            if(DAOVideogioco.GetIstance().Read() == null)
+            {
+                Console.WriteLine("ERRORE CATALOGO");
+                return View("Home/Index");
+            }
             return View(DAOVideogioco.GetIstance().Read());
         }
 
