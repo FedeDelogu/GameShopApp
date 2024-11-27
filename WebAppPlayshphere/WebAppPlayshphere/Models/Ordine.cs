@@ -4,7 +4,9 @@ namespace WebAppPlayshphere.Models
 {
     public class Ordine : Entity
     {
-        public Ordine() { }
+        public Ordine() {
+            Videogiochi = new Dictionary<Videogioco, int>();
+        }
         public Ordine(int id, Dictionary<Videogioco, int> videogiochi, string stato, Utente utente, DateTime dataOrdine) : base(id)
         {
             Videogiochi = videogiochi;

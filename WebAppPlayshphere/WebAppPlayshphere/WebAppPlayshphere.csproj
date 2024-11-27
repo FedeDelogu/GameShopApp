@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
@@ -15,6 +16,11 @@
     <Reference Include="Utility">
       <HintPath>..\..\..\..\..\..\Desktop\ProjectWorkGOL\WebAppPlayshphere\WebAppPlayshphere\bin\Debug\net8.0\Utility.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\Sidebar\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
 </Project>

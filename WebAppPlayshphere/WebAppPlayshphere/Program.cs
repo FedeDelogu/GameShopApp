@@ -8,6 +8,7 @@ builder.Services.AddControllers(); // servizio per i controller MVC
 builder.Services.AddEndpointsApiExplorer(); // necessario per Swagger
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
 
 var app = builder.Build();
 ; // aggiunge Swagger
@@ -26,7 +27,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
-
+app.UseSession();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -36,8 +37,10 @@ app.UseAuthorization();
 app.MapControllers(); // Mappa i controller API
 
 
+
 //app.MapRazorPages();
 app.MapControllerRoute(name: "dafault", pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 
 app.Run();

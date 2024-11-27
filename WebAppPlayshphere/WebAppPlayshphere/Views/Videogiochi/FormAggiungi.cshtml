@@ -1,0 +1,50 @@
+﻿@using WebAppPlayshphere.Models
+@using WebAppPlayshphere.DAO
+@model Utility.Entity
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Aggiungi</title>
+</head>
+<body>
+
+    <h1>Aggiungi Videogioco</h1>
+
+    <form action="/Videogiochi/Aggiungi" onsubmit="" method="post">
+
+        <input type="text" value="@Model.Id" name="id" readonly hidden />
+        Titolo: <input type="text" value="@(((Videogioco)Model).Titolo)" id="titolo" name="titolo" /><br />
+        Sviluppatore: <input type="text" value="@(((Videogioco)Model).Sviluppatori)" id="sviluppatori" name="sviluppatori" /><br />
+        Descrizione: <input type="text" value="@(((Videogioco)Model).Descrizione)" id="descrizione" name="descrizione" /><br />
+        Generi: <input type="text" value="@(((Videogioco)Model).Generi)" id="generi" name="generi" /><br />
+        Pegi: <input type="text" value="@(((Videogioco)Model).Pegi)" id="pegi" name="pegi" /><br />
+        Publisher: <input type="text" value="@(((Videogioco)Model).Publisher)" id="publisher" name="publisher" /><br />
+        Data di rilascio: <input type="text" value="@(((Videogioco)Model).Rilascio)" id="rilascio" name="rilascio" /><br />
+        Prezzo: <input type="text" value="@(((Videogioco)Model).Prezzo)" id="prezzo" name="prezzo" /><br />
+        Link: <input type="text" value="@(((Videogioco)Model).Link)" id="link" name="link" /><br />
+        Quantita: <input type="text" value="@(((Videogioco)Model).Quantita)" id="quantita" name="quantita" /><br />
+        @{
+            @foreach (var v in ((DAOPiattaforma.GetIstance().Read())))
+            {
+                if (((Piattaforma)v).Nome != null || ((Piattaforma)v).Nome != "")
+                {
+                    <div>
+                        <input type="checkbox" id="@(((Piattaforma)v).Id)"
+                               name="piattaforme"
+                               value="@(((Piattaforma)v).Nome)"
+                        @(((Videogioco)Model).Piattaforme.Any(p => p.Nome == ((Piattaforma)v).Nome) ? "checked" : "") />
+                        <label for="@((Piattaforma)v).Id">"@(((Piattaforma)v).Nome)"</label>
+                    </div>
+                }
+            }
+        }
+
+        <br />
+
+        <input type="submit" value="SALVA" />
+
+    </form>
+</body>
+</html>

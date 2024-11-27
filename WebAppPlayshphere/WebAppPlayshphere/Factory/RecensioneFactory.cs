@@ -1,4 +1,5 @@
-﻿using WebAppPlayshphere.DAO;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using WebAppPlayshphere.DAO;
 using WebAppPlayshphere.Models;
 
 namespace WebAppPlayshphere.Factory
@@ -13,7 +14,9 @@ namespace WebAppPlayshphere.Factory
             r.Valutazione = Convert.ToInt32(recensione["valutazione"]);
             r.Valido = Convert.ToBoolean(recensione["valido"]);
             r.Utente = (Utente)DAOUtente.GetInstance().Find(Convert.ToInt32(recensione["idutente"]));
-            r.IdVideogioco = Convert.ToInt32(recensione["idvideogioco"]);
+            // controllo se l id videogioco è presente
+            string idVideogiocoStr = recensione["idvideogioco"];
+            r.IdVideogioco = (int.TryParse(idVideogiocoStr, out int idVideogioco)) ? idVideogioco : 0;
 
             return r;
         }

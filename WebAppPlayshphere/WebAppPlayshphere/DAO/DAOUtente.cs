@@ -15,6 +15,7 @@ namespace WebAppPlayshphere.DAO
         private DAOUtente()
         {
             db = new Database("Playsphere", "FEDUCCINI");
+
         }
 
         private static DAOUtente instance = null;
@@ -32,7 +33,7 @@ namespace WebAppPlayshphere.DAO
             if (riga != null && riga.Count > 0)
             {
                 Entity e = new Utente();
-                e.FromDictionary(riga);
+                //e.FromDictionary(riga);
                 // QUI RECUPERO L ANAGRAFICA
                 Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
                 if (anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
@@ -84,21 +85,30 @@ namespace WebAppPlayshphere.DAO
         }
         public List<Entity> Read()
         {
-            List<Entity> ris = new();
-            return ris;
+            List<Entity> lista = new List<Entity>();
+            var righe = db.Read($"select * from Utenti");
+            foreach (var riga in righe)
+            {
+                Entity e = new Utente();
+                e.FromDictionary(riga);
+                lista.Add(e);
+            }
+            return lista;
         }
-        public bool Find(string user, string password)
+        public bool Find(string username, string password)
         {
             var riga = db.ReadOne($"SELECT * FROM Utenti " +
                                    $"WHERE " +
-                                   $"email = '{user}' AND " +
+                                   $"email = '{username}' AND " +
                                    $"passwordUtente = HASHBYTES('SHA2_512','{password}');");
 
             return riga != null;
         }
-        public Entity Find(string user)
+        public Entity Find(string username)
         {
-            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE email = '{user}';");
+
+            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE email = '{username}';");
+
 
             if (riga != null)
             {
