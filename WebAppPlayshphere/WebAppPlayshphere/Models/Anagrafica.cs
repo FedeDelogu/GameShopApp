@@ -22,7 +22,6 @@ namespace WebAppPlayshphere.Models
         public string Cap { get => cap; set => cap = value; }
         public string Stato { get => stato; set => stato = value; }
         public int Ruolo { get => ruolo; set => ruolo = value; }
-        public DateTime Dob { get => dob; set => dob = value; }
         public string Nome { get => nome; set => nome = value; }
         public string Cognome { get => cognome; set => cognome = value; }
 
@@ -36,8 +35,9 @@ namespace WebAppPlayshphere.Models
                 $"Citta : {Citta}\n" +
                 $"Cap : {Cap}\n" +
                 $"Stato : {Stato}\n" +
-                $"Ruolo : {Ruolo}\n" +
-                $"Data di nascita : {Dob}\n";
+                $"Ruolo : {Ruolo}\n";
         }
+
+
     }
 }

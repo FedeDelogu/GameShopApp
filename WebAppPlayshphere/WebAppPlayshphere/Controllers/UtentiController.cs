@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Json;
+using System.Text.Json.Serialization;
 using Utility;
 using WebAppPlayshphere.DAO;
 using WebAppPlayshphere.Models;
+using Newtonsoft.Json;
 
 namespace WebAppPlayshphere.Controllers
 {
@@ -33,6 +37,13 @@ namespace WebAppPlayshphere.Controllers
             return View();
         }
 
+        [Authorize]
+        public ActionResult Profilo()
+        {
+            return View();
+        }
+
+
 
         public IActionResult Accedi(Dictionary<string, string> credenziali)
         {
@@ -43,17 +54,18 @@ namespace WebAppPlayshphere.Controllers
 
             if (DAOUtente.GetInstance().Find(user, password))
             {
-                Console.WriteLine("sono nell'if");
+                
                 Entity e = DAOUtente.GetInstance().Find(user);
                 // Memorizzo chi ha fatto login
                 _utenteLoggato = (Utente)e;
 
+                HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(_utenteLoggato));
                 _logger.LogInformation($"Utente Loggato: {_utenteLoggato.Username} alle {DateTime.Now}");
                 if (((Utente)e).Ruolo == 0)
                 {
-                    return RedirectToAction("/Admin/Index");
+                    return RedirectToAction("Index","Admin");
                 }
-                return RedirectToAction("Index", e);
+                return RedirectToAction("Index","Home", new {id=e.Id});
             }
             else
                 return RedirectToAction("Login");
@@ -95,6 +107,32 @@ namespace WebAppPlayshphere.Controllers
             tentativiAccesso = -1;
             // Reindirizzo al Login per il prossimo accesso
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult ListaUtenti()
+        {
+            var entities = DAOUtente.GetInstance().Read(); // Lista di Entity
+            List<Utente> utenti = new List<Utente>();
+
+            foreach (var entity in entities)
+            {
+                // Mappa ogni entity a un oggetto Utente
+                Utente utente = new Utente
+                {
+                    Id = entity.Id,
+                    Email = ((Utente)entity).Email,
+                    Password = ((Utente)entity).Password,
+                    Ruolo = ((Utente)entity).Ruolo,
+                    Dob = ((Utente)entity).Dob,
+                    Anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(entity.Id)
+                };
+
+                // Aggiungi l'oggetto Utente alla lista
+                utenti.Add(utente);
+            }
+
+            return Json(utenti);
         }
     }
 }

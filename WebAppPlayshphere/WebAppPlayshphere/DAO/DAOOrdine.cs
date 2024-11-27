@@ -10,6 +10,7 @@ namespace WebAppPlayshphere.DAO
         private DAOOrdine()
         {
             db = new Database("Playsphere", "CIMO");
+
         }
         private static DAOOrdine instance = null;
         public static DAOOrdine GetInstance()
