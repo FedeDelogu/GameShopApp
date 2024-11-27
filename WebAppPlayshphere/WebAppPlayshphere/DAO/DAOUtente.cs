@@ -66,8 +66,7 @@ namespace WebAppPlayshphere.DAO
             return db.Update($"Update Utenti set " +
                 $"email = {((Utente)e).Email.Replace("'", "''")}," +
 
-                $"passwordUtente = HASHBYTES('SHA2_512','{((Utente)e).Password}');" +
-                $"passwordUtente = {((Utente)e).Password}," +
+                $"passwordUtente = HASHBYTES('SHA2_512','{((Utente)e).Password}')," +
                 $"ruolo = {((Utente)e).Ruolo}" +
                 $"where = {e.Id};" +
                 $"update Anagrafiche set " +

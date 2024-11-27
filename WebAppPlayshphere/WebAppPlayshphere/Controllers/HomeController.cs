@@ -7,10 +7,10 @@ namespace WebAppPlayshphere.Controllers
 {
     public class HomeController :Controller
     {
-        public IActionResult Index(int id)
+        public IActionResult Index()
         {
-            Entity e = (Utente)DAOUtente.GetInstance().Find(id);
-           return View((Utente)e);   
+            
+           return View();   
                         }
     }
 }

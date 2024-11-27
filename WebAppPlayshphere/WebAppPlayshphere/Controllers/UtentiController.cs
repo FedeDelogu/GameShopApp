@@ -37,10 +37,24 @@ namespace WebAppPlayshphere.Controllers
             return View();
         }
 
-        [Authorize]
-        public ActionResult Profilo()
+        public IActionResult Profilo()
         {
-            return View();
+            if( _utenteLoggato.Anagrafica == null )
+            {
+                Entity AnagraficaVuota = new Anagrafica
+                {
+                    Nome = "",
+                    Cognome="",
+                    Indirizzo="",
+                    Telefono="",
+                    Citta="",
+                    Cap = "",
+
+
+                };
+                _utenteLoggato.Anagrafica = (Anagrafica)AnagraficaVuota;
+            }
+            return View(_utenteLoggato);
         }
 
 
@@ -58,8 +72,14 @@ namespace WebAppPlayshphere.Controllers
                 Entity e = DAOUtente.GetInstance().Find(user);
                 // Memorizzo chi ha fatto login
                 _utenteLoggato = (Utente)e;
-
-                HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(_utenteLoggato));
+                Utente utenteFront = new Utente
+                {
+                    Id = _utenteLoggato.Id,
+                    Ruolo = ((Utente)_utenteLoggato).Ruolo,
+                    Email = ((Utente)_utenteLoggato).Email
+                    // Anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(entity.Id)
+                };
+                HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(utenteFront));
                 _logger.LogInformation($"Utente Loggato: {_utenteLoggato.Username} alle {DateTime.Now}");
                 if (((Utente)e).Ruolo == 0)
                 {
@@ -69,6 +89,20 @@ namespace WebAppPlayshphere.Controllers
             }
             else
                 return RedirectToAction("Login");
+        }
+        public IActionResult ModificaAnagrafica([FromBody]Dictionary<string, string> valori)
+        {
+            Entity e = new Anagrafica();
+            e.FromDictionary(valori);
+            if (DAOAnagrafica.GetIstance().Update(e))
+            {
+                Console.WriteLine("cambio fatto");
+            }
+            else
+            {
+                Console.WriteLine("non fatto");
+            }
+            return RedirectToAction("Profilo");
         }
 
         public IActionResult Registrazione()
@@ -105,8 +139,9 @@ namespace WebAppPlayshphere.Controllers
             _utenteLoggato = null;
             // Ripulisco i tentativi di accesso
             tentativiAccesso = -1;
+            HttpContext.Session.Clear();
             // Reindirizzo al Login per il prossimo accesso
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
 
         [HttpGet]
@@ -134,5 +169,6 @@ namespace WebAppPlayshphere.Controllers
 
             return Json(utenti);
         }
+
     }
 }

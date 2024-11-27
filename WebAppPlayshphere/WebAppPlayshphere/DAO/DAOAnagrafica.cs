@@ -1,4 +1,5 @@
-﻿using Utility;
+﻿using System.Reflection.Metadata.Ecma335;
+using Utility;
 using WebAppPlayshphere.Models;
 
 namespace WebAppPlayshphere.DAO
@@ -29,10 +30,25 @@ namespace WebAppPlayshphere.DAO
             throw new NotImplementedException();
         }
 
-        public bool Update(Entity e)
-        {
-            throw new NotImplementedException();
+       
+            public bool Update(Entity e)
+            {
+            return db.Update(
+                $"update Anagrafiche set " +
+                $"nome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Nome.Replace("'", "''") : "null")}," +
+                $"cognome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cognome.Replace("'", "''") : "null")}," +
+                $"indirizzo = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Indirizzo.Replace("'", "''") : "null")}," +
+                $"telefono = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Telefono.Replace("'", "''") : "null")}," +
+                $"citta = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Citta.Replace("'", "''") : "null")}," +
+                $"stato = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Stato.Replace("'", "''") : "null")}," +
+                $"cap = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cap.Replace("'", "''") : "null")}," +
+                $"idUtente = {e.Id} " +
+                $"where idUtente = {e.Id}" +
+                $";");
+
         }
+        
+        
 
         public bool Create(Entity e)
         {
@@ -42,7 +58,7 @@ namespace WebAppPlayshphere.DAO
         public Entity Find(int id)
         {
             //throw new NotImplementedException();
-            var righe = db.ReadOne($"SELECT * FROM Anagrafiche WHERE id = {id}");
+            var righe = db.ReadOne($"SELECT * FROM Anagrafiche WHERE idUtente = {id}");
             if (righe == null)
             {
                 return null;

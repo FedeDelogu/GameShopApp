@@ -38,9 +38,6 @@ namespace WebAppPlayshphere.Models
         [Required(ErrorMessage = "La password è obbligatoria.")]
         [StringLength(100, ErrorMessage = "La password deve avere almeno 8 caratteri.", MinimumLength = 8)]
         public string Password { get; set; }
-        [Required(ErrorMessage = "La password di conferma è obbligatoria.")]
-        [Compare("Password", ErrorMessage = "Le password non corrispondono.")]
-        public string ConfermaPassword { get; set; }
 
         [Range(0, 10, ErrorMessage = "Ruolo non valido.")]
         public int Ruolo { get; set; }
@@ -71,6 +68,7 @@ namespace WebAppPlayshphere.Models
                 }
                 return string.Empty;
             }
+            
         }
         public override string ToString()
         {
@@ -104,8 +102,10 @@ namespace WebAppPlayshphere.Models
 
         public override void FromDictionary(Dictionary<string, string> riga)
         {
+            Console.WriteLine("sono nel fromdictionary");
             Entity anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(int.Parse(riga["id"]));
             if (anagrafica != null) {
+                Console.WriteLine("anagrafica trovata");
                 Anagrafica = (Anagrafica)anagrafica;
             }
 
