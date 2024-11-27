@@ -23,6 +23,35 @@ namespace WebAppPlayshphere.DAO
         //metodi da non usare
         public bool Create(Entity e)
         {
+            // se l'ordine è stato creato correttamente deve avere almeno un videogioco altrimenti non eseguo l insert
+            if (((Ordine)e).Videogiochi.Count == 0)
+            {
+                Console.WriteLine("ERRORE ORDINE SENZA VIDEOGIOCHI");
+                return false;
+            }
+            // inserisco l'ordine
+            bool risultatoQuery = 
+                db.Update($"INSERT INTO Ordini (stato, idUtente) VALUES( " +
+                          $"'{((Ordine)e).Stato}', {((Ordine)e).Utente.Id});");
+            if (!risultatoQuery)
+            {
+                Console.WriteLine("ERRORE INSERT INTO SULLA TABELLA ORDINI");
+                return risultatoQuery;
+            }
+            // inserisco i dettagli dell'ordine
+            foreach(var gioco in ((Ordine)e).Videogiochi)
+            {
+                risultatoQuery = 
+                    db.Update(
+                        $"INSERT INTO DettagliOrdini(quantitaTotale, idVideogioco, idOrdine)VALUES(" +
+                        $"{gioco.Value}, {gioco.Key.Id}, {e.Id}");
+                if (!risultatoQuery)
+                {
+                    Console.WriteLine("ERRORE INSERT INTO SULLA TABELLA DettagliOrdini");
+                    return risultatoQuery;
+                }
+            }
+
             return true;
         }
         public bool Delete(int id)
@@ -33,11 +62,10 @@ namespace WebAppPlayshphere.DAO
         {
             return true;
         }
-        public bool update(string stato, int id)
+        public bool Update(string stato, int id)
         {
             return db.Update($"UPDATE Ordini SET stato = '{stato}' WHERE id = {id}");
         }
-            //metodi che verranno utilizzati
         public Entity Find(int id)
         {
             var riga = db.ReadOne($"SELECT * FROM Ordini where id = {id}");
@@ -48,6 +76,33 @@ namespace WebAppPlayshphere.DAO
                 return e;
             }
             else return null;
+        }
+        public List<Entity>FindByUtente(int id)
+        {
+            List<Entity> lista = new List<Entity>();
+            var righe = db.Read($"SELECT * FROM Ordini WHERE idUtente = {id}");
+            if (righe == null)
+            {
+                Console.WriteLine("Errore metodo read tabella Ordini");
+                return null;
+            }
+            foreach (var riga in righe)
+            {
+                Entity o = new Ordine();
+                o.FromDictionary(riga);
+                // AGGIUNGERE LA LISTA DI VIDEOGIOCHI DELL ORDINE
+                // devo fare una select * from DettagliOrdine where idOrdine = o.Id
+                var righeDettagli = db.Read($"select * from DettagliOrdini where idOrdine = {o.Id}");
+                foreach (var rigaDettaglio in righeDettagli)
+                {
+                    Entity v = DAOVideogioco.GetIstance().Find(int.Parse(rigaDettaglio["idvideogioco"]));
+                    int quantita = int.Parse(rigaDettaglio["quantitatotale"]);
+                    ((Ordine)o).Videogiochi.Add((Videogioco)v, quantita);
+
+                }
+                lista.Add(o);
+            }
+            return lista;
         }
         public List<Entity> Read()
         {
@@ -70,22 +125,30 @@ namespace WebAppPlayshphere.DAO
                     Entity v = DAOVideogioco.GetIstance().Find(int.Parse(rigaDettaglio["idvideogioco"]));
                     int quantita = int.Parse(rigaDettaglio["quantitatotale"]);
                     ((Ordine)o).Videogiochi.Add((Videogioco)v, quantita);
-                    Console.WriteLine($"STATO ORDINE : {((Ordine)o).Stato}");
 
                 }
                 lista.Add(o);
             }
             return lista;
         }
-        public List<Entity> FilterPerGiorno(DateTime data)
+        public List<Entity> FindByData(string data)
         {
             List<Entity> lista = new();
-            var righe = db.Read($"Select * from Ordini where dataOrdine = {data.ToString("yyyy-MM-dd")}");
+            DateTime d = DateTime.Parse(data);
+            var righe = db.Read($"Select * from Ordini where dataOrdine = '{d.ToString("yyyy-MM-dd")}'");
             foreach (var riga in righe)
             {
-                Entity e = new Ordine();
-                e.FromDictionary(riga);
-                lista.Add(e);
+                Entity ordine = new Ordine();
+                ordine.FromDictionary(riga);
+                var righeDettagli = db.Read($"select * from DettagliOrdini where idOrdine = {ordine.Id}");
+                foreach (var rigaDettaglio in righeDettagli)
+                {
+                    Entity v = DAOVideogioco.GetIstance().Find(int.Parse(rigaDettaglio["idvideogioco"]));
+                    int quantita = int.Parse(rigaDettaglio["quantitatotale"]);
+                    ((Ordine)ordine).Videogiochi.Add((Videogioco)v, quantita);
+
+                }
+                lista.Add(ordine);
             }
             return lista;
         }

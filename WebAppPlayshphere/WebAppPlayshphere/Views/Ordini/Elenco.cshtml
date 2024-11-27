@@ -17,7 +17,11 @@
     @foreach (var f in @Model)
     {
         <p>ID : @(((Ordine)f).Id)</p>
-        <p>Stato : @(((Ordine)f).Stato)</p>
+        <input type="text" value="@(((Ordine)f).Stato)" />
+
+        <a href="/Ordini/UpdateStato/@f.Id?stato=Consegnato">Modifica</a>
+        <a href="/Ordini/GetByUtente/2">cerca per utente</a>
+        <a href="/Ordini/GetByData/0?data=11-1-2024">cerca per data</a>
         @foreach(var p in ((Ordine)f).Videogiochi)
 		{
 			<p>Videogioco : @p.Key.Titolo</p>
@@ -27,6 +31,7 @@
 		}
         <p>Totale : @(((Ordine)f).Totale()) euro</p>
         <p>
+
             <a href="/Ordini/Dettagli/@f.Id">Dettagli</a>
         </p>
 
