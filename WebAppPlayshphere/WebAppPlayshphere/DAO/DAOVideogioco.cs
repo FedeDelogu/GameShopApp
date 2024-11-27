@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
         private DAOVideogioco()
         {
 
-            db = new Database("Playsphere", "CIMO");
+            db = new Database("Playsphere", "FEDUCCINI");
 
 
         }
@@ -29,34 +29,35 @@ namespace WebAppPlayshphere.DAO
         {
             bool ris = false;
             Videogioco v = (Videogioco)e;
-            string descrizione = v.Descrizione;
-            descrizione.Replace("'", "''");
+            v.Descrizione = v.Descrizione.Replace("'", " ");
+            v.Titolo = v.Titolo.Replace("'", " ");
+            v.Sviluppatori = v.Sviluppatori.Replace("'", " ");
+            v.Publisher = v.Publisher.Replace("'", " ");
+            v.Generi = v.Generi.Replace("'", " ");
+            // PROBLEMA PREZZO 
+            string prezzo = ((Videogioco)v).Prezzo.ToString().Replace(",", ".");
+            //
 
             ris = db.Update("INSERT INTO Videogiochi (titolo, prezzo, descrizione, rilascio, generi, pegi, sviluppatori, publisher, quantita)" +
                              "VALUES(" +
                              $"'{v.Titolo}'," +
-                             $"{v.Prezzo}," +
-                             $"'{descrizione}'," +
-                             $"'{v.Rilascio.ToString("yyyy-mm-dd")}'," +
+                             $"{prezzo}," +
+                             $"'{v.Descrizione}'," +
+                             $"'{v.Rilascio.ToString("yyyy-MM-dd")}'," +
                              $"'{v.Generi}'," +
                              $"{v.Pegi}," +
                              $"'{v.Sviluppatori}'," +
                              $"'{v.Publisher}'," +
-                             $"{v.Quantita}");
+                             $"{v.Quantita});");
             if (!ris)
             {
-                Console.WriteLine("ERRORE UPDATE SULLA TABELLA VIDEOGIOCHI");
+                Console.WriteLine("ERRORE INSERT INTO SULLA TABELLA VIDEOGIOCHI");
                 return ris;
             }
-
-            ris = db.Update("DELETE FROM PiattaformeVideogiochi WHERE idVideogioco=" + v.Id);
-            if (!ris)
-            {
-                Console.WriteLine("ERRORE DELETE SULLA TABELLA PiattaformeVideogiochi");
-            }
+            Videogioco gioco = (Videogioco)GetIstance().FindByTitolo(v.Titolo);
             foreach (var item in v.Piattaforme)
             {
-                ris = db.Update("INSERT INTO PiattaformeVideogiochi (idVideogioco, idPiattaforma) VALUES (" + v.Id + ",'" + item.Id + "')");
+                ris = db.Update("INSERT INTO PiattaformeVideogiochi (idVideogioco, idPiattaforma) VALUES (" + gioco.Id + ",'" + item.Id + "')");
                 if (!ris)
                 {
                     Console.WriteLine("ERRORE INSERT SULLA TABELLA PiattaformeVideogiochi");
@@ -101,7 +102,7 @@ namespace WebAppPlayshphere.DAO
                             Id = ((Piattaforma)item).Id,
                             Nome = ((Piattaforma)item).Nome
                         }
-                        );
+                    );
                 }
                 ris.Add(e);
             }
@@ -131,20 +132,47 @@ namespace WebAppPlayshphere.DAO
             }
             return e;
         }
+        public Entity FindByTitolo(string titolo)
+        {
+            var righe = db.ReadOne($"SELECT * FROM Videogiochi WHERE titolo = '{titolo}'");
+            if (righe == null)
+            {
+                return null;
+            }
+            Entity e = new Videogioco();
+            e.FromDictionary(righe);
+            ((Videogioco)e).Recensioni = DAORecensione.GetIstance().RecensioniGioco(e.Id);
+            // recupero tutte le piattaforme del gioco
+            var ris = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+            // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+            foreach (var item in ris)
+            {
+                ((Videogioco)e).Piattaforme.Add(
+                    new Piattaforma()
+                    {
+                        Id = ((Piattaforma)item).Id,
+                        Nome = ((Piattaforma)item).Nome
+                    }
+                    );
+            }
+            return e;
+        }
 
 
         public bool Update(Entity e)
         {
             Videogioco v = (Videogioco)e;
-            string descrizione = v.Descrizione;
-            descrizione.Replace("'", "''");
+            v.Descrizione = v.Descrizione.Replace("'", " ");
+            v.Titolo = v.Titolo.Replace("'", " ");
+            v.Sviluppatori = v.Sviluppatori.Replace("'", " ");
+            v.Publisher = v.Publisher.Replace("'", " ");
+            v.Generi = v.Generi.Replace("'", " ");
             // PROBLEMA PREZZO 
             string prezzo = ((Videogioco)v).Prezzo.ToString().Replace(",", ".");
-            //
             bool ris = db.Update("UPDATE Videogiochi SET " +
                              $"titolo='{v.Titolo}'," +
                              $"prezzo={prezzo}," +
-                             $"descrizione='{descrizione}'," +
+                             $"descrizione='{v.Descrizione}'," +
                              $"rilascio='{v.Rilascio.ToString("yyyy-MM-dd")}'," +
                              $"generi='{v.Generi}'," +
                              $"pegi={v.Pegi}," +

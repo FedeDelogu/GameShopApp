@@ -14,8 +14,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-
-            db = new Database("Playsphere2", "LAPTOP-ANDREA");
+            db = new Database("Playsphere", "FEDUCCINI");
 
         }
 
@@ -108,7 +107,7 @@ namespace WebAppPlayshphere.DAO
         public Entity Find(string username)
         {
 
-            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE username = '{username}';");
+            var riga = db.ReadOne($"SELECT * FROM Utenti WHERE email = '{username}';");
 
 
             if (riga != null)

@@ -20,10 +20,10 @@
     justify-content: center;
 }
 
-    #info-company p, #info-company h3 {
-        color: var(--floral-white) !important;
-        text-align: center !important;
-    }
+#info-company p, #info-company h3 {
+    color: var(--floral-white) !important;
+    text-align: center !important;
+}
 
 #main-box {
     transform: scale(1.2);
@@ -60,6 +60,10 @@ h2:hover .fa-chevron-right{
 .category-col:hover {
     transform: scale(1.025);
     transition: transform 0.25s ease;
+    cursor:pointer;
+}
+.card:hover {
+    cursor: pointer !important;
 }
 
 /* L'overlay che copre l'immagine */

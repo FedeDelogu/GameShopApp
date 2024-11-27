@@ -104,9 +104,9 @@ namespace WebAppPlayshphere.Models
 
         public override void FromDictionary(Dictionary<string, string> riga)
         {
-            if (riga["id"] != null)
-            {
-                Anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(Convert.ToInt32(riga["id"]));
+            Entity anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(int.Parse(riga["id"]));
+            if (anagrafica != null) {
+                Anagrafica = (Anagrafica)anagrafica;
             }
 
             base.FromDictionary(riga);
