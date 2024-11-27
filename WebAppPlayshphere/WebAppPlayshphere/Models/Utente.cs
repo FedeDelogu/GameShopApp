@@ -44,6 +44,8 @@ namespace WebAppPlayshphere.Models
 
         [Range(0, 10, ErrorMessage = "Ruolo non valido.")]
         public int Ruolo { get; set; }
+
+        public DateTime Dob {  get; set; }
         public Anagrafica Anagrafica { get; set; }
 
 
@@ -89,15 +91,25 @@ namespace WebAppPlayshphere.Models
                 return -1;
             }
             DateTime oggi = DateTime.Now;
-            int eta = oggi.Year - this.Anagrafica.Dob.Year;
+            int eta = oggi.Year - Dob.Year;
 
             // SE IL COMPLEANNO NON E' ANCORA PASSATO TOLGO 1 DALL 'ETA'
-            if (oggi < this.Anagrafica.Dob.AddYears(eta))
+            if (oggi < Dob.AddYears(eta))
             {
                 eta--;
             }
 
             return eta;
+        }
+
+        public override void FromDictionary(Dictionary<string, string> riga)
+        {
+            if (riga["id"] != null)
+            {
+                Anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(Convert.ToInt32(riga["id"]));
+            }
+
+            base.FromDictionary(riga);
         }
     }
 }

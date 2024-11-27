@@ -96,5 +96,31 @@ namespace WebAppPlayshphere.Controllers
             // Reindirizzo al Login per il prossimo accesso
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult ListaUtenti()
+        {
+            var entities = DAOUtente.GetInstance().Read(); // Lista di Entity
+            List<Utente> utenti = new List<Utente>();
+
+            foreach (var entity in entities)
+            {
+                // Mappa ogni entity a un oggetto Utente
+                Utente utente = new Utente
+                {
+                    Id = entity.Id,
+                    Email = ((Utente)entity).Email,
+                    Password = ((Utente)entity).Password,
+                    Ruolo = ((Utente)entity).Ruolo,
+                    Dob = ((Utente)entity).Dob,
+                    Anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(entity.Id)
+                };
+
+                // Aggiungi l'oggetto Utente alla lista
+                utenti.Add(utente);
+            }
+
+            return Json(utenti);
+        }
     }
 }

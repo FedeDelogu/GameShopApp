@@ -11,7 +11,7 @@ namespace WebAppPlayshphere.DAO
         {
 
 
-            db = new Database("Playsphere", "CIMO");
+            db = new Database("Playsphere2", "LAPTOP-ANDREA");
 
         }
         private static DAOAnagrafica istance = null;
