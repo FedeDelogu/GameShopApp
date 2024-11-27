@@ -63,7 +63,7 @@ namespace WebAppPlayshphere.Controllers
                 _logger.LogInformation($"Utente Loggato: {_utenteLoggato.Username} alle {DateTime.Now}");
                 if (((Utente)e).Ruolo == 0)
                 {
-                    return RedirectToAction("Index","Admin");
+                    return RedirectToAction("Dashboard","Admin");
                 }
                 return RedirectToAction("Index","Home", new {id=e.Id});
             }
