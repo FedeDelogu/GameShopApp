@@ -9,7 +9,7 @@ namespace WebAppPlayshphere.DAO
         private IDatabase db;
         private DAOOrdine()
         {
-            db = new Database("Playsphere2", "MSI");
+            db = new Database("Playsphere", "CIMO");
         }
         private static DAOOrdine instance = null;
         public static DAOOrdine GetInstance()
@@ -33,7 +33,11 @@ namespace WebAppPlayshphere.DAO
         {
             return true;
         }
-        //metodi che verranno utilizzati
+        public bool update(string stato, int id)
+        {
+            return db.Update($"UPDATE Ordini SET stato = '{stato}' WHERE id = {id}");
+        }
+            //metodi che verranno utilizzati
         public Entity Find(int id)
         {
             var riga = db.ReadOne($"SELECT * FROM Ordini where id = {id}");
@@ -49,11 +53,27 @@ namespace WebAppPlayshphere.DAO
         {
             List<Entity> lista = new List<Entity>();
             var righe = db.Read($"select * from Ordini");
+            if(righe == null)
+            {
+                Console.WriteLine("Errore metodo read tabella Ordini");
+                return null;
+            }
             foreach (var riga in righe)
             {
-                Entity e = new Ordine();
-                e.FromDictionary(riga);
-                lista.Add(e);
+                Entity o = new Ordine();
+                o.FromDictionary(riga);
+                // AGGIUNGERE LA LISTA DI VIDEOGIOCHI DELL ORDINE
+                // devo fare una select * from DettagliOrdine where idOrdine = o.Id
+                var righeDettagli = db.Read($"select * from DettagliOrdini where idOrdine = {o.Id}");
+                foreach (var rigaDettaglio in righeDettagli)
+                {
+                    Entity v = DAOVideogioco.GetIstance().Find(int.Parse(rigaDettaglio["idvideogioco"]));
+                    int quantita = int.Parse(rigaDettaglio["quantitatotale"]);
+                    ((Ordine)o).Videogiochi.Add((Videogioco)v, quantita);
+                    Console.WriteLine($"STATO ORDINE : {((Ordine)o).Stato}");
+
+                }
+                lista.Add(o);
             }
             return lista;
         }
