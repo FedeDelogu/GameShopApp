@@ -1,7 +1,9 @@
 ﻿@using Utility
 @using WebAppPlayshphere.Models
 @model Utility.Entity
-
+@{
+    Layout = "_LayoutProfilo";
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,115 +18,67 @@
 </head>
 
 <body class="vh-100" style="overflow-y:hidden">
-@*     <div class="row h-100">
-        <section class="sidebar py-4 col-2 h-100">
-            <div class="h-100 py-4 px-3">
-                <div class="d-flex w-100 h-50 flex-column justify-content-center align-items-center border">
-                    <ul class="list-group list-group-flush h-100 w-100">
-                        <li class="list-group-item"><a>Anagrafica</a></li>
-                        <li class="list-group-item"><a>Storico Acquisti</a></li>
-                        <li class="list-group-item"><a>Le tue Recensioni</a></li>
-                    </ul>
-                </div>
-            </div>
-        </section> *@
-    <nav class="navbar navbar-expand-lg px-5">
-        <div class="container-fluid">
-            <div>
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    <img src="/img/HellsGames.png" alt="Bootstrap" width="64" height="64">
-                </a>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item mx-1">
-                        <a class="nav-link active" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                        <a class="nav-link" href="#">Anagrafica</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                        <a class="nav-link" href="#">Storico Acquisti</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                        <a class="nav-link" href="#">Le tue Recensioni</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-        <section class="container py-4 px-5 rounded-bottom-5" id="datiUtente">
-            <section id="anagrafica">
-                <h3 class="text-center py-2 fs-1">ANAGRAFICA</h3>
+    <section class="container py-4 px-5 rounded-bottom-5" id="datiUtente">
+        <section id="anagrafica">
+            <h3 class="text-center py-2 fs-1">ANAGRAFICA</h3>
             <h5 class="text-center py-1">Benvenuto <span class="fw-bold" style="color:var(--flame)"> @(((Utente)Model).Username)</span>! </h5>
-            <form action="/Utenti/ModificaAnagrafica" method="post">
+            <form method="post" action="/Utenti/ModificaAnagrafica">
                 <div class="row justify-content-center py-3 gy-3">
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Nome:</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Nome)">
-                            <button class="input-group-text" id="nome" type="submit">Modifica</button>
+                            <input type="text" class="form-control" name="Nome" value="@(((Utente)Model).Anagrafica.Nome)">
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Cognome:</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Cognome)">
-                            <button class="input-group-text" id="cognome" type="submit">Modifica</button>
+                            <input type="text" class="form-control" name="Cognome" value="@(((Utente)Model).Anagrafica.Cognome)">
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Email:</span>
-                        <input type="email" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Email)">
-                            <button class="input-group-text rounded-end-1" id="nome" type="submit">Modifica</button>
+                            <input type="email" class="form-control rounded-end-2" name="Email" value="@(((Utente)Model).Email)">
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Indirizzo:</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Indirizzo)">
-                            <button class="input-group-text" id="indirizzo" type="submit">Modifica</button>
+                            <input type="text" class="form-control" name="Indirizzo" value="@(((Utente)Model).Anagrafica.Indirizzo)">
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">CAP:</span>
-                        <input type="number" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Cap)">
-                            <button class="input-group-text rounded-end-1" id="cap" type="submit">Modifica</button>
+                            <input type="number" class="form-control rounded-end-2" name="Cap" value="@(((Utente)Model).Anagrafica.Cap)">
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
-                            <span class="input-group-text">Città:</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Citta)">
-                            <button class="input-group-text" id="citta" type="submit">Modifica</button>
+                            <span class="input-group-text">Città :</span>
+                            <input type="text" class="form-control" name="Citta" value="@(((Utente)Model).Anagrafica.Citta)">
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Paese:</span>
-                            <input type="text" class="form-control" aria-label="Sizing example input" value="Italia">
-                            <button class="input-group-text" id="stato" type="submit">Modifica</button>
+                            <input type="text" class="form-control" name="Stato" value="@(((Utente)Model).Anagrafica.Stato)">
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Cell:</span>
-                        <input type="number" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Telefono)">
-                            <button class="input-group-text rounded-end-1" id="telefono" type="submit">Modifica</button>
+                            <input type="number" class="form-control rounded-end-2" name="Telefono" value="@(((Utente)Model).Anagrafica.Telefono)">
                         </div>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary">Modifica</button>
                     </div>
                 </div>
             </form>
-            </section>
 
-            <section id="storicoAcquisti">
-            </section>
+        </section>
         </section>
     
 </body>
