@@ -11,7 +11,9 @@ namespace WebAppPlayshphere.DAO
         {
 
 
+
             db = new Database("Playsphere", "localhost");
+
 
 
         }
@@ -27,6 +29,7 @@ namespace WebAppPlayshphere.DAO
         //metodi da non usare
         public bool Create(Entity e)
         {
+            Console.WriteLine("HIIII"+((Ordine)e).Utente.Id);
             // se l'ordine è stato creato correttamente deve avere almeno un videogioco altrimenti non eseguo l insert
             if (((Ordine)e).Videogiochi.Count == 0)
             {

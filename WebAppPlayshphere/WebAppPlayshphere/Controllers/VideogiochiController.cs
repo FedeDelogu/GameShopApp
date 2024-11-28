@@ -134,5 +134,12 @@ namespace WebAppPlayshphere.Controllers
             }
             return View("Catalogo", DAOVideogioco.GetIstance().Read());
         }
+        public IActionResult AggiungiCarrello(int idVid, int idUtente, int idPiattaforma)
+        {
+            Console.WriteLine("ci sei fratello");
+            DAOCarrello.GetIstance().Insert(idUtente, idVid, 1, idPiattaforma);
+            return RedirectToAction("Catalogo");
+        }
+
     }
 }

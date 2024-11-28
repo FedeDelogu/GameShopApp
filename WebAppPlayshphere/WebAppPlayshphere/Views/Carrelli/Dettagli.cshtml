@@ -1,0 +1,71 @@
+﻿@using WebAppPlayshphere.Models;
+@using WebAppPlayshphere.DAO;
+@using Utility;
+@model Utility.Entity;
+
+@{
+    Layout = "_Layout";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/css/Carrelli/carrello.css" />
+    <meta charset="utf-8" />
+    <title>Carrello</title>
+</head>
+<body>
+    <div id="priceCheck">
+        <h2>Totale</h2>
+        <p style="color: white">@(((Carrello)Model).Totale() + "€")</p>
+        <button onclick="window.location.href='/Carrelli/Ordina?id=@(Model.Id)'">Vai al pagamento ></button>
+    </div>
+    @foreach (var item in ((Carrello)Model).Videogiochi)
+    {
+        string titolo = item.Key.Titolo;
+        int quantita = item.Value;  // Recupera la quantità del gioco
+        titolo = titolo.Replace("''", "'");  // Gestisce gli apici nel titolo
+
+        DateTime dataUscita = item.Key.Rilascio; // Recupera la data di uscita
+        bool isPreOrder = dataUscita > DateTime.Now; // Controlla se è un pre-order
+
+        <div class="games">
+            <img src="~/images/copertine/@(item.Key.Id).png" class="copertine" />
+            <div class="info">
+                <p>@(titolo)</p>
+                <p>@(item.Key.Sviluppatori)</p>
+                <p>Data di uscita: @(dataUscita.ToString("dd/MM/yyyy"))</p>
+                @if (isPreOrder)
+                {
+                    <p style="color: orange; font-weight: bold;">Pre-order</p>
+                }
+            </div>
+
+            <div class="quantita">
+                <label for="quantita-@(item.Key.Id)">Quantità:</label>
+                <select id="quantita-@(item.Key.Id)" name="quantita-@(item.Key.Id)" class="quantity-select" onchange="updateQuantity(@(item.Key.Id), @(Model.Id), @(((Carrello)Model).Piattaforme[item.Key]))">
+                    @for (int i = 1; i <= 10; i++)  // Puoi regolare il numero massimo di opzioni qui
+                    {
+                        <option value="@i" @(i == quantita ? "selected" : "")>@i</option>
+                    }
+                </select>
+                <h1>Logo</h1>
+                @{
+                    
+                    Console.WriteLine(((Piattaforma)DAOPiattaforma.GetIstance().Find(((Carrello)Model).Piattaforme[item.Key])).Nome);
+                }
+                <img src="/images/loghi/@(((Carrello)Model).Piattaforme[item.Key]).png" width="50" height="50"/>
+            </div>
+        </div>
+    }
+    <script>
+        function updateQuantity(gameId, userId, piattaforma) {
+            // Ottieni la quantità selezionata dal select
+            var selectedQuantity = document.getElementById("quantita-" + gameId).value;
+
+            // Invia una richiesta AJAX al controller per aggiornare la quantità
+            var url = '/Carrelli/UpdateUnits?qt=' + selectedQuantity + '&id=' + gameId + '&idCarrello=' + userId+"&idPiattaforma="+piattaforma;
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html> 
