@@ -10,8 +10,12 @@ namespace WebAppPlayshphere.DAO
         private DAOVideogioco()
         {
 
-            //db = new Database("Playsphere", "FEDUCCINI");
-            db = new Database("Playsphere2", "DESKTOP-S0KBKL3");
+
+
+            db = new Database("Playsphere", "localhost");
+
+
+
 
 
         }
@@ -132,6 +136,18 @@ namespace WebAppPlayshphere.DAO
                     );
             }
             return e;
+        }
+        public string FindTitolo(int id)
+        {
+            var righe = db.ReadOne("SELECT titolo FROM Videogiochi WHERE id=" + id);
+            if (righe == null)
+            {
+                return null;
+            }
+            Videogioco e = new Videogioco();
+            e.FromDictionary(righe);
+            
+            return e.Titolo;
         }
         public Entity FindByTitolo(string titolo)
         {

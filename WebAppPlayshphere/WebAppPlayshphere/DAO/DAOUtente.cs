@@ -14,7 +14,9 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-            db = new Database("Playsphere5", "LAPTOP-ANDREA");
+
+            db = new Database("Playsphere", "localhost");
+
 
         }
 
@@ -120,6 +122,8 @@ namespace WebAppPlayshphere.DAO
                 return null;
         }
 
+
+        /*RISERVATO ALL'ADMIN*/
         // UPDATE BAN UTENTE
         public bool Ban(int id)
         {

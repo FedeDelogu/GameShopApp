@@ -12,5 +12,16 @@ namespace WebAppPlayshphere.Controllers
             
            return View();   
                         }
+
+        public IActionResult Regolamento()
+        {
+
+            return View();
+        }
+        public IActionResult Privacy()
+        {
+
+            return View();
+        }
     }
 }

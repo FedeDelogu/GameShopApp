@@ -9,8 +9,12 @@ namespace WebAppPlayshphere.DAO
         private IDatabase db;
         private DAOOrdine()
         {
-            //db = new Database("Playsphere", "FEDUCCINI");
-            db = new Database("Playsphere2", "DESKTOP-S0KBKL3");
+
+
+
+            db = new Database("Playsphere", "localhost");
+
+
 
         }
         private static DAOOrdine instance = null;
@@ -107,6 +111,35 @@ namespace WebAppPlayshphere.DAO
             }
             return lista;
         }
+
+        public List<Ordine> OrdiniUtente(int id)
+        {
+            List<Ordine> lista = new List<Ordine>();
+            var righe = db.Read($"SELECT * FROM Ordini WHERE idUtente = {id}");
+            if (righe == null)
+            {
+                Console.WriteLine("Errore metodo read tabella Ordini");
+                return null;
+            }
+            foreach (var riga in righe)
+            {
+                Ordine o = new Ordine();
+                o.FromDictionary(riga);
+                // AGGIUNGERE LA LISTA DI VIDEOGIOCHI DELL ORDINE
+                // devo fare una select * from DettagliOrdine where idOrdine = o.Id
+                var righeDettagli = db.Read($"select * from DettagliOrdini where idOrdine = {o.Id}");
+                foreach (var rigaDettaglio in righeDettagli)
+                {
+                    Entity v = DAOVideogioco.GetIstance().Find(int.Parse(rigaDettaglio["idvideogioco"]));
+                    int quantita = int.Parse(rigaDettaglio["quantitatotale"]);
+                    o.Videogiochi.Add((Videogioco)v, quantita);
+
+                }
+                lista.Add(o);
+            }
+            return lista;
+        }
+
         public List<Entity> Read()
         {
             List<Entity> lista = new List<Entity>();
