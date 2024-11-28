@@ -22,7 +22,7 @@ namespace WebAppPlayshphere.Controllers
         }
 
         // Mi serve per tenere in memoria chi ha fatto login
-        static Utente _utenteLoggato = null;
+        public static Utente _utenteLoggato = null;
         static int tentativiAccesso = -1;
 
         public IActionResult Index()
@@ -91,19 +91,54 @@ namespace WebAppPlayshphere.Controllers
             else
                 return RedirectToAction("Login");
         }
-        public IActionResult ModificaAnagrafica([FromBody]Dictionary<string, string> valori)
+        public IActionResult ModificaAnagrafica(Dictionary<string, string> dati)
         {
-            Entity e = new Anagrafica();
-            e.FromDictionary(valori);
-            if (DAOAnagrafica.GetIstance().Update(e))
+           
+            var utenteLoggato = JsonConvert.DeserializeObject<Utente>(HttpContext.Session.GetString("UtenteLoggato"));
+
+                foreach(var l in dati)
+                    Console.WriteLine(l.Key +" "+ l.Value);
+
+            // Aggiorna l'anagrafica
+            utenteLoggato.Anagrafica = new Anagrafica
             {
-                Console.WriteLine("cambio fatto");
-            }
-            else
+                Nome = dati["Nome"],
+                Cognome = dati["Cognome"],
+                Indirizzo = dati["Indirizzo"],
+                Telefono = dati["Telefono"],
+                Citta = dati["Citta"],
+                Stato = dati["Stato"],
+                Cap = dati["Cap"]
+            };
+
+            // Verifica se è un'operazione di aggiornamento o di creazione
+            if (utenteLoggato.Anagrafica.Nome!="")
             {
-                Console.WriteLine("non fatto");
+               
+                var succ = DAOAnagrafica.GetInstance().Update(utenteLoggato);
+                if (succ)
+                {
+                    return View("Profilo", utenteLoggato);
+                }
+                else
+                {
+                    return RedirectToAction("Profilo", utenteLoggato);
+                }
             }
-            return RedirectToAction("Profilo");
+            else 
+            
+            {
+                // Se l'anagrafica è nuova, usa il metodo Create
+                var succ = DAOAnagrafica.GetInstance().Create(utenteLoggato);
+                if (succ)
+                {
+                    return View("Profilo", utenteLoggato);
+                }
+                else
+                {
+                    return RedirectToAction("Profilo", utenteLoggato);
+                }
+            }
         }
 
         public IActionResult Registrazione()
@@ -117,14 +152,23 @@ namespace WebAppPlayshphere.Controllers
         }
         public IActionResult Salva(Dictionary<string, string> credenziali)
         {
-            Entity e = new Utente();
-            e.FromDictionary(credenziali);
+            foreach(var l in credenziali)
+            {
+                Console.WriteLine(l.Key+" "+l.Value);
+            }
+
+            Entity e = new Utente
+            {
+               Email= credenziali["Email"],
+               Password = credenziali["Password"],
+            };
+            
             ((Utente)e).Ruolo = 1;
 
             if (DAOUtente.GetInstance().Create(e))
             {
                 // Dove lo mando se la registrazione avviene?
-                return RedirectToAction("Index");
+                return RedirectToAction("Login");
             }
             else
             {
@@ -195,7 +239,7 @@ namespace WebAppPlayshphere.Controllers
                     Password = ((Utente)entity).Password,
                     Ruolo = ((Utente)entity).Ruolo,
                     Dob = ((Utente)entity).Dob,
-                    Anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(entity.Id)
+                    Anagrafica = (Anagrafica)DAOAnagrafica.GetInstance().Find(entity.Id)
                 };
 
                 // Aggiungi l'oggetto Utente alla lista

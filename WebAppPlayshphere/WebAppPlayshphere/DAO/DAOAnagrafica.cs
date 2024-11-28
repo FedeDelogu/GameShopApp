@@ -11,12 +11,12 @@ namespace WebAppPlayshphere.DAO
         private DAOAnagrafica()
         {
 
-            db = new Database("Playsphere5", "LAPTOP-ANDREA");
+            db = new Database("Playsphere", "localhost");
 
         }
         private static DAOAnagrafica istance = null;
 
-        public static DAOAnagrafica GetIstance()
+        public static DAOAnagrafica GetInstance()
         {
             if (istance == null)
             {
@@ -30,29 +30,50 @@ namespace WebAppPlayshphere.DAO
             throw new NotImplementedException();
         }
 
-       
-            public bool Update(Entity e)
-            {
-            return db.Update(
-                $"update Anagrafiche set " +
-                $"nome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Nome.Replace("'", "''") : "null")}," +
-                $"cognome = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cognome.Replace("'", "''") : "null")}," +
-                $"indirizzo = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Indirizzo.Replace("'", "''") : "null")}," +
-                $"telefono = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Telefono.Replace("'", "''") : "null")}," +
-                $"citta = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Citta.Replace("'", "''") : "null")}," +
-                $"stato = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Stato.Replace("'", "''") : "null")}," +
-                $"cap = {(((Utente)e).Anagrafica != null ? ((Utente)e).Anagrafica.Cap.Replace("'", "''") : "null")}," +
-                $"idUtente = {e.Id} " +
-                $"where idUtente = {e.Id}" +
-                $";");
 
+        public bool Update(Entity e)
+        {
+            Console.WriteLine("sto entrando nell'update");
+            if (e is Utente utente && utente.Anagrafica != null)
+            {
+                Console.WriteLine("sono nell'if");
+                // Costruzione della query SQL con i valori da inserire
+                string query = $"UPDATE Anagrafiche SET " +
+                               $"nome = '{utente.Anagrafica.Nome?.Replace("'", "''")}', " +
+                               $"cognome = '{utente.Anagrafica.Cognome?.Replace("'", "''")}', " +
+                               $"indirizzo = '{utente.Anagrafica.Indirizzo?.Replace("'", "''")}', " +
+                               $"telefono = '{utente.Anagrafica.Telefono?.Replace("'", "''")}', " +
+                               $"citta = '{utente.Anagrafica.Citta?.Replace("'", "''")}', " +
+                               $"stato = '{utente.Anagrafica.Stato?.Replace("'", "''")}', " +
+                               $"cap = '{utente.Anagrafica.Cap}' " +
+                               $"WHERE idUtente = {e.Id}";
+
+                Console.WriteLine(query);
+                // Passa la query come unico parametro al metodo Update del database
+                return db.Update(query);
+            }
+            return false;
         }
-        
-        
+
+
+
+
 
         public bool Create(Entity e)
         {
-            throw new NotImplementedException();
+            return db.Update($"Inserti into anagrafiche" +
+                $"(nome,cognome, indirizzo, telefono, citta , stato, cap, idUtente)" +
+                $"values" +
+                $"(" +
+                $"{((Utente)e).Anagrafica.Nome}," +
+                $"{((Utente)e).Anagrafica.Cognome}," +
+                $"{((Utente)e).Anagrafica.Indirizzo}," +
+                $"{((Utente)e).Anagrafica.Telefono}," +
+                $"{((Utente)e).Anagrafica.Citta}," +
+                $"{((Utente)e).Anagrafica.Stato}," +
+                $"{((Utente)e).Anagrafica.Cap}," +
+                $"{((Utente)e).Id}" +
+                $")");
         }
 
         public Entity Find(int id)

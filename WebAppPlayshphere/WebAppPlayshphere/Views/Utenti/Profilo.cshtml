@@ -61,66 +61,53 @@
             <section id="anagrafica">
                 <h3 class="text-center py-2 fs-1">ANAGRAFICA</h3>
             <h5 class="text-center py-1">Benvenuto <span class="fw-bold" style="color:var(--flame)"> @(((Utente)Model).Username)</span>! </h5>
-            <form action="/Utenti/ModificaAnagrafica" method="post">
+            <form method="post" action="/Utenti/ModificaAnagrafica">
                 <div class="row justify-content-center py-3 gy-3">
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Nome:</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Nome)">
-                            <button class="input-group-text" id="nome" type="submit">Modifica</button>
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Cognome:</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Cognome)">
-                            <button class="input-group-text" id="cognome" type="submit">Modifica</button>
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Email:</span>
-                        <input type="email" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Email)">
-                            <button class="input-group-text rounded-end-1" id="nome" type="submit">Modifica</button>
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Indirizzo:</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Indirizzo)">
-                            <button class="input-group-text" id="indirizzo" type="submit">Modifica</button>
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">CAP:</span>
-                        <input type="number" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Cap)">
-                            <button class="input-group-text rounded-end-1" id="cap" type="submit">Modifica</button>
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Città:</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Citta)">
-                            <button class="input-group-text" id="citta" type="submit">Modifica</button>
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Paese:</span>
-                            <input type="text" class="form-control" aria-label="Sizing example input" value="Italia">
-                            <button class="input-group-text" id="stato" type="submit">Modifica</button>
                         </div>
                     </div>
                     <div class="col-8 col-sm-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Cell:</span>
-                        <input type="number" class="form-control" aria-label="Sizing example input" value="@(((Utente)Model).Anagrafica.Telefono)">
-                            <button class="input-group-text rounded-end-1" id="telefono" type="submit">Modifica</button>
-                        </div>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary">Modifica</button>
                     </div>
                 </div>
             </form>
+
             </section>
 
             <section id="storicoAcquisti">

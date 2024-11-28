@@ -120,18 +120,6 @@ namespace WebAppPlayshphere.DAO
             Entity e = new Videogioco();
             e.FromDictionary(righe);
             ((Videogioco)e).Recensioni = DAORecensione.GetIstance().RecensioniGioco(id);
-            // recupero tutte le piattaforme del gioco
-            var ris = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
-            // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
-            foreach (var item in ris) {
-                ((Videogioco)e).Piattaforme.Add(
-                    new Piattaforma()
-                    {
-                        Id = ((Piattaforma)item).Id,
-                        Nome = ((Piattaforma)item).Nome
-                    }
-                    );
-            }
             return e;
         }
         public Entity FindByTitolo(string titolo)
@@ -144,19 +132,6 @@ namespace WebAppPlayshphere.DAO
             Entity e = new Videogioco();
             e.FromDictionary(righe);
             ((Videogioco)e).Recensioni = DAORecensione.GetIstance().RecensioniGioco(e.Id);
-            // recupero tutte le piattaforme del gioco
-            var ris = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
-            // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
-            foreach (var item in ris)
-            {
-                ((Videogioco)e).Piattaforme.Add(
-                    new Piattaforma()
-                    {
-                        Id = ((Piattaforma)item).Id,
-                        Nome = ((Piattaforma)item).Nome
-                    }
-                    );
-            }
             return e;
         }
 
