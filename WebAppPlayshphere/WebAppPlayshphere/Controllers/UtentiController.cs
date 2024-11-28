@@ -159,7 +159,7 @@ namespace WebAppPlayshphere.Controllers
             if (DAOUtente.GetInstance().Create(e))
             {
                 // Dove lo mando se la registrazione avviene?
-                return RedirectToAction("Index");
+                return RedirectToAction("Login");
             }
             else
             {
