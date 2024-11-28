@@ -33,6 +33,9 @@
                         <a class="nav-link" asp-controller="Videogiochi" asp-action="Catalogo">Catalogo</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" asp-controller="Ordini" asp-action="Elenco">Elenco Ordini</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#">Chi siamo</a>
                     </li>
                     <li class="nav-item">
@@ -55,14 +58,17 @@
                                 <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">Gestione Admin</a>
                             </li>
                         }
-                        else // Utente normale
+                        else // Utente loggato
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Ordini" asp-action="Index">I miei ordini</a>
+                                <a class="nav-link" asp-controller="Utenti" asp-action="Profilo"><i class="fa-solid fa-user fs-3 px-2" style="color:#eb5e28ff;"></i> @utenteLoggato.Username</a>
+                            </li>
+                            <li class="nav-item">
+                                <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Logout">Logout</a>
+                            <a class="nav-link" asp-controller="Utenti" asp-action="Logout">Logout</a>
                         </li>
                     }
                     else
@@ -70,9 +76,10 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Utenti" asp-action="Login"><i class="fa-solid fa-user fs-3 px-2" style="color:#eb5e28ff;"></i> Login</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Utenti" asp-action="Registrazione">Registrati</a>
-                        </li>
+                    <li class="nav-item">
+                        <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
+                    </li>
+
                     }
                 </ul>
             </nav>
