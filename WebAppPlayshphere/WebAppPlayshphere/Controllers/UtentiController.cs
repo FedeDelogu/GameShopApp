@@ -189,6 +189,38 @@ namespace WebAppPlayshphere.Controllers
             return RedirectToAction("Index","Home");
         }
 
+        /* PAGINE PERSONALI DELL'UTENTE */
+        public IActionResult StoricoAcquisti()
+        {
+            if (_utenteLoggato.Anagrafica == null)
+            {
+                Entity AnagraficaVuota = new Anagrafica
+                {
+                    Nome = "",
+                    Cognome = "",
+                    Indirizzo = "",
+                    Telefono = "",
+                    Citta = "",
+                    Cap = "",
+                };
+                _utenteLoggato.Anagrafica = (Anagrafica)AnagraficaVuota;
+            }
+
+            // Recupera le recensioni dell'utente loggato
+            List<Ordine> ordini = DAOOrdine.GetInstance().OrdiniUtente(_utenteLoggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
+
+            // Crea un dizionario che lega l'utente alla sua lista di recensioni
+            var model = new Dictionary<Utente, List<Ordine>>()
+            {
+                { _utenteLoggato, ordini }
+            };
+
+            // Passa il dizionario alla vista
+            return View(model);
+        }
+
+
+
         /* RISERVATO ALL'ADMIN */
 
         [HttpGet]
@@ -216,7 +248,6 @@ namespace WebAppPlayshphere.Controllers
 
             return Json(utenti);
         }
-
 
         [HttpPost]
         public IActionResult BanUtente([FromBody] dynamic requestBan)

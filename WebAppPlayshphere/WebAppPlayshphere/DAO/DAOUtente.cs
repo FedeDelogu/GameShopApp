@@ -120,6 +120,8 @@ namespace WebAppPlayshphere.DAO
                 return null;
         }
 
+
+        /*RISERVATO ALL'ADMIN*/
         // UPDATE BAN UTENTE
         public bool Ban(int id)
         {

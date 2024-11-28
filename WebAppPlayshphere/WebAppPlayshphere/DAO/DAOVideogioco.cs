@@ -11,7 +11,7 @@ namespace WebAppPlayshphere.DAO
         {
 
 
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere5", "LAPTOP-ANDREA");
 
 
 
