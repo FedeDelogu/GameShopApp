@@ -15,7 +15,9 @@ namespace WebAppPlayshphere.DAO
         {
 
 
-            db = new Database("Playsphere", "FEDUCCINI");
+
+            db = new Database("Playsphere", "localhost");
+
 
 
 
@@ -64,6 +66,8 @@ namespace WebAppPlayshphere.DAO
                 Entity e = RecensioneFactory.CreateRecensione(riga);
                 ris.Add(e);
             }
+            //foreach (var rec in ris)
+            //    Console.WriteLine(rec.ToString());
             return ris;
         } // OK
         public List<Entity> RecensioniGioco(int id)
@@ -80,6 +84,7 @@ namespace WebAppPlayshphere.DAO
                 //r.FromDictionary(riga);
                 ris.Add(r);
             }
+            
             return ris;
         }
         public List<Recensione> RecensioniUtente(int id)
@@ -158,6 +163,28 @@ namespace WebAppPlayshphere.DAO
                 Console.WriteLine("nessuna recensione trovata");
             }
             return ris;
+        }
+
+        /* RISERVATO ALL'ADMIN */
+
+        public bool Approve(int id) // APPROVA RECENSIONE
+        {
+
+            var riga = db.Update($"UPDATE Recensioni SET valido = 1 WHERE id = " + id);
+            if (riga)
+                return true;
+
+            return false;
+        }
+        
+        public bool Disapprove(int id) // APPROVA RECENSIONE
+        {
+
+            var riga = db.Update($"UPDATE Recensioni SET valido = 0 WHERE id = " + id);
+            if (riga)
+                return true;
+
+            return false;
         }
     }
 }

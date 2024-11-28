@@ -88,14 +88,22 @@ namespace WebAppPlayshphere.Models
             }
             return Math.Round(ris / rec.Count, 1);
         }
-        /*
+        
         public override void FromDictionary(Dictionary<string, string> riga)
         {
-            //List<Recensione> recensioni = (List<Recensione>)DAORecensione.GetIstance().RecensioniGioco(Id);
-
-            Recensioni = DAORecensione.GetIstance().RecensioniGioco(Id);
-
+            var ris = DAOPiattaforma.GetIstance().FindByGioco(int.Parse(riga["id"]));
+            // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+            foreach (var item in ris)
+            {
+                Piattaforme.Add(
+                    new Piattaforma()
+                    {
+                        Id = ((Piattaforma)item).Id,
+                        Nome = ((Piattaforma)item).Nome
+                    }
+                    );
+            }
             base.FromDictionary(riga);
-        }*/
+        }
     }
 }
