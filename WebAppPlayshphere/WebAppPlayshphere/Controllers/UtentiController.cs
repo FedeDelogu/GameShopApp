@@ -6,6 +6,7 @@ using Utility;
 using WebAppPlayshphere.DAO;
 using WebAppPlayshphere.Models;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace WebAppPlayshphere.Controllers
 {
@@ -85,7 +86,7 @@ namespace WebAppPlayshphere.Controllers
                 {
                     return RedirectToAction("Dashboard","Admin");
                 }
-                return RedirectToAction("Index","Home", new {id=e.Id});
+                return RedirectToAction("Index","Home");
             }
             else
                 return RedirectToAction("Login");
@@ -179,6 +180,8 @@ namespace WebAppPlayshphere.Controllers
             return RedirectToAction("Index","Home");
         }
 
+        /* RISERVATO ALL'ADMIN */
+
         [HttpGet]
         public IActionResult ListaUtenti()
         {
@@ -203,6 +206,51 @@ namespace WebAppPlayshphere.Controllers
             }
 
             return Json(utenti);
+        }
+
+
+        [HttpPost]
+        public IActionResult BanUtente([FromBody] dynamic requestBan)
+        {
+
+            if (requestBan.TryGetProperty("id", out JsonElement idElement))
+            {
+                int iduser = Convert.ToInt32(idElement.ToString());
+
+                // Validazione dei dati
+                if (iduser <= 0) // Verifica se l'ID e il ruolo sono validi
+                {
+                    return BadRequest(new { success = false, message = "Valore id non valido" });
+                }
+                                
+                bool ban = DAOUtente.GetInstance().Ban(iduser); // SE id > 0 allora fa il ban
+
+                return Json(new { success = ban, message = ban ? "Ruolo aggiornato." : "Errore durante l'aggiornamento." });
+            }
+
+            return BadRequest(new { success = false, message = "ID Mancante" });
+        }
+
+        [HttpPost]
+        public IActionResult SbloccaUtente([FromBody] dynamic requestSban)
+        {
+
+            if (requestSban.TryGetProperty("id", out JsonElement idElement))
+            {
+                int iduser = Convert.ToInt32(idElement.ToString());
+
+                // Validazione dei dati
+                if (iduser <= 0) // Verifica se l'ID e il ruolo sono validi
+                {
+                    return BadRequest(new { success = false, message = "Valore id non valido" });
+                }
+
+                bool sban = DAOUtente.GetInstance().Sban(iduser); // SE id > 0 allora fa il ban
+
+                return Json(new { success = sban, message = sban ? "Ruolo aggiornato." : "Errore durante l'aggiornamento." });
+            }
+
+            return BadRequest(new { success = false, message = "ID Mancante" });
         }
 
     }
