@@ -152,14 +152,23 @@ namespace WebAppPlayshphere.Controllers
         }
         public IActionResult Salva(Dictionary<string, string> credenziali)
         {
-            Entity e = new Utente();
-            e.FromDictionary(credenziali);
+            foreach(var l in credenziali)
+            {
+                Console.WriteLine(l.Key+" "+l.Value);
+            }
+
+            Entity e = new Utente
+            {
+               Email= credenziali["Email"],
+               Password = credenziali["Password"],
+            };
+            
             ((Utente)e).Ruolo = 1;
 
             if (DAOUtente.GetInstance().Create(e))
             {
                 // Dove lo mando se la registrazione avviene?
-                return RedirectToAction("Index");
+                return RedirectToAction("Login");
             }
             else
             {
