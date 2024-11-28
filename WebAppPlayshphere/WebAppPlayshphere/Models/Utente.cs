@@ -76,7 +76,7 @@ namespace WebAppPlayshphere.Models
                    $"Password : {Password}\n" +
                    $"Email : {Email}\n" +
                    $"Username : {Username}\n" +
-                   $"Ruolo : {(Ruolo == 1 ? "Admin" : "Utente")}\n" +
+                   $"Ruolo : {(Ruolo == 0 ? "Admin" : "Utente")}\n" +
                    //$"Carrello : {Carrello.ToString()}" +
                    $"{(Ruolo == -1 ? "\nUtente bannato" : "")}\n" +
                    $"Dati anagrafici : {(this.Anagrafica != null ? this.Anagrafica.ToString() : "")}";

@@ -14,7 +14,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-            db = new Database("Playsphere", "FEDUCCINI");
+            db = new Database("Playsphere5", "LAPTOP-ANDREA");
 
         }
 
@@ -33,7 +33,7 @@ namespace WebAppPlayshphere.DAO
             if (riga != null && riga.Count > 0)
             {
                 Entity e = new Utente();
-                //e.FromDictionary(riga);
+                e.FromDictionary(riga);
                 // QUI RECUPERO L ANAGRAFICA
                 Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
                 if (anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
@@ -120,5 +120,25 @@ namespace WebAppPlayshphere.DAO
                 return null;
         }
 
+        // UPDATE BAN UTENTE
+        public bool Ban(int id)
+        {
+
+            var riga = db.Update($"UPDATE Utenti SET ruolo = -1 WHERE id = " + id);
+            if (riga)
+                return true;
+
+            return false;
+        }
+
+        public bool Sban(int id)
+        {
+
+            var riga = db.Update($"UPDATE Utenti SET ruolo = 1 WHERE id = " + id);
+            if (riga)
+                return true;
+
+            return false;
+        }
     }
 }
