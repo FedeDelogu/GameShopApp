@@ -14,8 +14,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-
-            db = new Database("Playsphere", "FEDUCCINI");
+            db = new Database("Playsphere5", "LAPTOP-ANDREA");
 
         }
 
@@ -34,9 +33,9 @@ namespace WebAppPlayshphere.DAO
             if (riga != null && riga.Count > 0)
             {
                 Entity e = new Utente();
-                //e.FromDictionary(riga);
+                e.FromDictionary(riga);
                 // QUI RECUPERO L ANAGRAFICA
-                Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
+                Entity anagrafica = DAOAnagrafica.GetInstance().Find(id);
                 if (anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
                 {
                     ((Utente)e).Anagrafica = (Anagrafica)anagrafica;
@@ -54,7 +53,7 @@ namespace WebAppPlayshphere.DAO
                 $"values" +
                 $"(" +
                 $"'{((Utente)e).Email.Replace("'", "''")}'," +
-                $"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
+                $"HASHBYTES('SHA2_512','{((Utente)e).Password}')," +
                 $"{((Utente)e).Ruolo}" +
                 $")");
         }
@@ -67,8 +66,7 @@ namespace WebAppPlayshphere.DAO
             return db.Update($"Update Utenti set " +
                 $"email = {((Utente)e).Email.Replace("'", "''")}," +
 
-                $"passwordUtente = HASHBYTES('SHA2_512','{((Utente)e).Password}');" +
-                $"passwordUtente = {((Utente)e).Password}," +
+                $"passwordUtente = HASHBYTES('SHA2_512','{((Utente)e).Password}')," +
                 $"ruolo = {((Utente)e).Ruolo}" +
                 $"where = {e.Id};" +
                 $"update Anagrafiche set " +
@@ -86,8 +84,15 @@ namespace WebAppPlayshphere.DAO
         }
         public List<Entity> Read()
         {
-            List<Entity> ris = new();
-            return ris;
+            List<Entity> lista = new List<Entity>();
+            var righe = db.Read($"select * from Utenti");
+            foreach (var riga in righe)
+            {
+                Entity e = new Utente();
+                e.FromDictionary(riga);
+                lista.Add(e);
+            }
+            return lista;
         }
         public bool Find(string username, string password)
         {
@@ -115,5 +120,25 @@ namespace WebAppPlayshphere.DAO
                 return null;
         }
 
+        // UPDATE BAN UTENTE
+        public bool Ban(int id)
+        {
+
+            var riga = db.Update($"UPDATE Utenti SET ruolo = -1 WHERE id = " + id);
+            if (riga)
+                return true;
+
+            return false;
+        }
+
+        public bool Sban(int id)
+        {
+
+            var riga = db.Update($"UPDATE Utenti SET ruolo = 1 WHERE id = " + id);
+            if (riga)
+                return true;
+
+            return false;
+        }
     }
 }

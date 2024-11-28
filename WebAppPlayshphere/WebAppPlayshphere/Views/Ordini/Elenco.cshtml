@@ -1,0 +1,42 @@
+﻿@using Utility
+@using WebAppPlayshphere.Models
+@model List<Utility.Entity>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Elenco</title>
+</head>
+<body>
+    <h1>Elenco di tutti gli ordini</h1>
+
+    <br />
+    <br />
+
+    @foreach (var f in @Model)
+    {
+        <p>ID : @(((Ordine)f).Id)</p>
+        <input type="text" value="@(((Ordine)f).Stato)" />
+
+        <a href="/Ordini/UpdateStato/@f.Id?stato=Consegnato">Modifica</a>
+        <a href="/Ordini/GetByUtente/2">cerca per utente</a>
+        <a href="/Ordini/GetByData/0?data=11-1-2024">cerca per data</a>
+        @foreach(var p in ((Ordine)f).Videogiochi)
+		{
+			<p>Videogioco : @p.Key.Titolo</p>
+            <p>Prezzo : @p.Key.Prezzo</p>
+			<p>Quantità : @p.Value</p>
+            <p>Tot: @(@p.Key.Prezzo * @p.Value)</p>
+		}
+        <p>Totale : @(((Ordine)f).Totale()) euro</p>
+        <p>
+
+            <a href="/Ordini/Dettagli/@f.Id">Dettagli</a>
+        </p>
+
+        <hr />
+        <br />
+    }
+</body>
+</html>

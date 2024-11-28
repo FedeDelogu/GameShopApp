@@ -38,12 +38,11 @@ namespace WebAppPlayshphere.Models
         [Required(ErrorMessage = "La password è obbligatoria.")]
         [StringLength(100, ErrorMessage = "La password deve avere almeno 8 caratteri.", MinimumLength = 8)]
         public string Password { get; set; }
-        [Required(ErrorMessage = "La password di conferma è obbligatoria.")]
-        [Compare("Password", ErrorMessage = "Le password non corrispondono.")]
-        public string ConfermaPassword { get; set; }
 
         [Range(0, 10, ErrorMessage = "Ruolo non valido.")]
         public int Ruolo { get; set; }
+
+        public DateTime Dob {  get; set; }
         public Anagrafica Anagrafica { get; set; }
 
 
@@ -69,6 +68,7 @@ namespace WebAppPlayshphere.Models
                 }
                 return string.Empty;
             }
+            
         }
         public override string ToString()
         {
@@ -76,7 +76,7 @@ namespace WebAppPlayshphere.Models
                    $"Password : {Password}\n" +
                    $"Email : {Email}\n" +
                    $"Username : {Username}\n" +
-                   $"Ruolo : {(Ruolo == 1 ? "Admin" : "Utente")}\n" +
+                   $"Ruolo : {(Ruolo == 0 ? "Admin" : "Utente")}\n" +
                    //$"Carrello : {Carrello.ToString()}" +
                    $"{(Ruolo == -1 ? "\nUtente bannato" : "")}\n" +
                    $"Dati anagrafici : {(this.Anagrafica != null ? this.Anagrafica.ToString() : "")}";
@@ -89,22 +89,26 @@ namespace WebAppPlayshphere.Models
                 return -1;
             }
             DateTime oggi = DateTime.Now;
-            int eta = oggi.Year - this.Anagrafica.Dob.Year;
+            int eta = oggi.Year - Dob.Year;
 
             // SE IL COMPLEANNO NON E' ANCORA PASSATO TOLGO 1 DALL 'ETA'
-            if (oggi < this.Anagrafica.Dob.AddYears(eta))
+            if (oggi < Dob.AddYears(eta))
             {
                 eta--;
             }
 
             return eta;
         }
+
         public override void FromDictionary(Dictionary<string, string> riga)
         {
-            Entity anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(int.Parse(riga["id"]));
+            Console.WriteLine("sono nel fromdictionary");
+            Entity anagrafica = (Anagrafica)DAOAnagrafica.GetInstance().Find(int.Parse(riga["id"]));
             if (anagrafica != null) {
+                Console.WriteLine("anagrafica trovata");
                 Anagrafica = (Anagrafica)anagrafica;
             }
+
             base.FromDictionary(riga);
         }
     }

@@ -6,6 +6,7 @@ using Utility;
 using WebAppPlayshphere.DAO;
 using WebAppPlayshphere.Models;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace WebAppPlayshphere.Controllers
 {
@@ -21,7 +22,7 @@ namespace WebAppPlayshphere.Controllers
         }
 
         // Mi serve per tenere in memoria chi ha fatto login
-        static Utente _utenteLoggato = null;
+        public static Utente _utenteLoggato = null;
         static int tentativiAccesso = -1;
 
         public IActionResult Index()
@@ -37,10 +38,24 @@ namespace WebAppPlayshphere.Controllers
             return View();
         }
 
-        [Authorize]
-        public ActionResult Profilo()
+        public IActionResult Profilo()
         {
-            return View();
+            if( _utenteLoggato.Anagrafica == null )
+            {
+                Entity AnagraficaVuota = new Anagrafica
+                {
+                    Nome = "",
+                    Cognome="",
+                    Indirizzo="",
+                    Telefono="",
+                    Citta="",
+                    Cap = "",
+
+
+                };
+                _utenteLoggato.Anagrafica = (Anagrafica)AnagraficaVuota;
+            }
+            return View(_utenteLoggato);
         }
 
 
@@ -58,17 +73,72 @@ namespace WebAppPlayshphere.Controllers
                 Entity e = DAOUtente.GetInstance().Find(user);
                 // Memorizzo chi ha fatto login
                 _utenteLoggato = (Utente)e;
-
-                HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(_utenteLoggato));
+                Utente utenteFront = new Utente
+                {
+                    Id = _utenteLoggato.Id,
+                    Ruolo = ((Utente)_utenteLoggato).Ruolo,
+                    Email = ((Utente)_utenteLoggato).Email
+                    // Anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(entity.Id)
+                };
+                HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(utenteFront));
                 _logger.LogInformation($"Utente Loggato: {_utenteLoggato.Username} alle {DateTime.Now}");
                 if (((Utente)e).Ruolo == 0)
                 {
-                    return RedirectToAction("Index","Admin");
+                    return RedirectToAction("Dashboard","Admin");
                 }
-                return RedirectToAction("Index","Home", new {id=e.Id});
+                return RedirectToAction("Index","Home");
             }
             else
                 return RedirectToAction("Login");
+        }
+        public IActionResult ModificaAnagrafica(Dictionary<string, string> dati)
+        {
+           
+            var utenteLoggato = JsonConvert.DeserializeObject<Utente>(HttpContext.Session.GetString("UtenteLoggato"));
+
+                foreach(var l in dati)
+                    Console.WriteLine(l.Key +" "+ l.Value);
+
+            // Aggiorna l'anagrafica
+            utenteLoggato.Anagrafica = new Anagrafica
+            {
+                Nome = dati["Nome"],
+                Cognome = dati["Cognome"],
+                Indirizzo = dati["Indirizzo"],
+                Telefono = dati["Telefono"],
+                Citta = dati["Citta"],
+                Stato = dati["Stato"],
+                Cap = dati["Cap"]
+            };
+
+            // Verifica se è un'operazione di aggiornamento o di creazione
+            if (utenteLoggato.Anagrafica.Nome!="")
+            {
+               
+                var succ = DAOAnagrafica.GetInstance().Update(utenteLoggato);
+                if (succ)
+                {
+                    return View("Profilo", utenteLoggato);
+                }
+                else
+                {
+                    return RedirectToAction("Profilo", utenteLoggato);
+                }
+            }
+            else 
+            
+            {
+                // Se l'anagrafica è nuova, usa il metodo Create
+                var succ = DAOAnagrafica.GetInstance().Create(utenteLoggato);
+                if (succ)
+                {
+                    return View("Profilo", utenteLoggato);
+                }
+                else
+                {
+                    return RedirectToAction("Profilo", utenteLoggato);
+                }
+            }
         }
 
         public IActionResult Registrazione()
@@ -105,8 +175,83 @@ namespace WebAppPlayshphere.Controllers
             _utenteLoggato = null;
             // Ripulisco i tentativi di accesso
             tentativiAccesso = -1;
+            HttpContext.Session.Clear();
             // Reindirizzo al Login per il prossimo accesso
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
+
+        /* RISERVATO ALL'ADMIN */
+
+        [HttpGet]
+        public IActionResult ListaUtenti()
+        {
+            var entities = DAOUtente.GetInstance().Read(); // Lista di Entity
+            List<Utente> utenti = new List<Utente>();
+
+            foreach (var entity in entities)
+            {
+                // Mappa ogni entity a un oggetto Utente
+                Utente utente = new Utente
+                {
+                    Id = entity.Id,
+                    Email = ((Utente)entity).Email,
+                    Password = ((Utente)entity).Password,
+                    Ruolo = ((Utente)entity).Ruolo,
+                    Dob = ((Utente)entity).Dob,
+                    Anagrafica = (Anagrafica)DAOAnagrafica.GetInstance().Find(entity.Id)
+                };
+
+                // Aggiungi l'oggetto Utente alla lista
+                utenti.Add(utente);
+            }
+
+            return Json(utenti);
+        }
+
+
+        [HttpPost]
+        public IActionResult BanUtente([FromBody] dynamic requestBan)
+        {
+
+            if (requestBan.TryGetProperty("id", out JsonElement idElement))
+            {
+                int iduser = Convert.ToInt32(idElement.ToString());
+
+                // Validazione dei dati
+                if (iduser <= 0) // Verifica se l'ID e il ruolo sono validi
+                {
+                    return BadRequest(new { success = false, message = "Valore id non valido" });
+                }
+                                
+                bool ban = DAOUtente.GetInstance().Ban(iduser); // SE id > 0 allora fa il ban
+
+                return Json(new { success = ban, message = ban ? "Ruolo aggiornato." : "Errore durante l'aggiornamento." });
+            }
+
+            return BadRequest(new { success = false, message = "ID Mancante" });
+        }
+
+        [HttpPost]
+        public IActionResult SbloccaUtente([FromBody] dynamic requestSban)
+        {
+
+            if (requestSban.TryGetProperty("id", out JsonElement idElement))
+            {
+                int iduser = Convert.ToInt32(idElement.ToString());
+
+                // Validazione dei dati
+                if (iduser <= 0) // Verifica se l'ID e il ruolo sono validi
+                {
+                    return BadRequest(new { success = false, message = "Valore id non valido" });
+                }
+
+                bool sban = DAOUtente.GetInstance().Sban(iduser); // SE id > 0 allora fa il ban
+
+                return Json(new { success = sban, message = sban ? "Ruolo aggiornato." : "Errore durante l'aggiornamento." });
+            }
+
+            return BadRequest(new { success = false, message = "ID Mancante" });
+        }
+
     }
 }
