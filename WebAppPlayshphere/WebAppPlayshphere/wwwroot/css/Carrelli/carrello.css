@@ -1,0 +1,61 @@
+﻿@import url('carrello.css');
+.copertine {
+    float: left;
+    width: 15vw;
+    height: 10vw;
+    max-width: 200px; /* Aggiungi un massimo per evitare che diventi troppo grande */
+    max-height: 120px; /* Aggiungi un massimo per evitare che diventi troppo grande */
+    padding: 10px;
+    object-fit: cover; /* Aggiungi per garantire che l'immagine non si distorca */
+}
+
+#priceCheck {
+    right: 2vw;
+    top: 30vh;
+    position: fixed;
+    text-align: center;
+}
+.logos {
+    float: left;
+    width: 5vw;
+    height: 5vw;
+    max-width: 50px; /* Aggiungi un massimo per evitare che diventi troppo grande */
+    max-height: 50px; /* Aggiungi un massimo per evitare che diventi troppo grande */
+    padding: 10px;
+    object-fit: cover; /* Aggiungi per garantire che l'immagine non si distorca */
+}
+.games {
+    display: flex; /* Usa flexbox per una disposizione dinamica */
+    align-items: center; /* Allinea verticalmente gli oggetti */
+    width: 70%; /* Usa il 100% della larghezza disponibile */
+    height: auto; /* Imposta l'altezza come automatica */
+    margin-top: 20px;
+    border-radius: 10px;
+    background-color: rgba(0,0,10,0.8);
+    color: white;
+    padding: 10px; /* Aggiungi un po' di padding per creare spazio interno */
+}
+
+.info {
+    flex: 1; /* Usa tutto lo spazio disponibile per i dettagli */
+    padding: 10px;
+    font-size: 1.5vw;
+    display: flex; /* Usa flexbox per gestire la disposizione verticale e orizzontale */
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.quantita {
+    margin-left: auto; /* Sposta la quantità il più possibile a destra */
+    text-align: right;
+    margin-right: 2vw;
+    font-weight: bold;
+    font-size: 1.5vw;
+    position: relative;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Allinea titolo e sviluppatori a sinistra */
+}

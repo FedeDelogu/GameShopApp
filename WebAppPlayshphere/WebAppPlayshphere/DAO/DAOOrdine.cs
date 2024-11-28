@@ -9,8 +9,8 @@ namespace WebAppPlayshphere.DAO
         private IDatabase db;
         private DAOOrdine()
         {
-
-            db = new Database("Playsphere5", "LAPTOP-ANDREA");
+            //db = new Database("Playsphere", "FEDUCCINI");
+            db = new Database("Playsphere2", "DESKTOP-S0KBKL3");
 
         }
         private static DAOOrdine instance = null;
@@ -25,6 +25,7 @@ namespace WebAppPlayshphere.DAO
         //metodi da non usare
         public bool Create(Entity e)
         {
+            Console.WriteLine("HIIII"+((Ordine)e).Utente.Id);
             // se l'ordine è stato creato correttamente deve avere almeno un videogioco altrimenti non eseguo l insert
             if (((Ordine)e).Videogiochi.Count == 0)
             {

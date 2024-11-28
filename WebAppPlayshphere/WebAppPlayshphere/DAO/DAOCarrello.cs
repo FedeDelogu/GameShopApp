@@ -12,9 +12,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOCarrello()
         {
-
-            db = new Database("Playsphere2", "localhost");
-
+            db = new Database("Playsphere2", "DESKTOP-S0KBKL3");
         }
         private static DAOCarrello istance = null;
 
@@ -45,55 +43,86 @@ namespace WebAppPlayshphere.DAO
         }
         public Entity Find(int id)
         {
-            var righe = db.Read("SELECT Carrelli.idUtente as idutente, Carrelli.Quantita as quantita, Videogiochi.* " +
-                                  "FROM  Carrelli JOIN Videogiochi on Videogiochi.idVideogioco=Videogiochi.id " +
-                                  "WHERE Carrelli.idUtente=" + id);
-            if (righe == null)
+            string query = "SELECT Videogiochi.* " +
+                           "FROM Carrelli JOIN Videogiochi on Carrelli.idVideogioco=Videogiochi.id " +
+                           $"WHERE Carrelli.idUtente={id}";
+          
+            var righe = db.Read(query);
+            var righe2 = db.Read("SELECT Quantita, idPiattaforma FROM Carrelli WHERE idUtente="+id);
+            
+            if (righe == null || righe.Count == 0)
             {
-                return new Carrello(id, new Dictionary<Videogioco, int>());
+                return new Carrello(id, new Dictionary<Videogioco, int>(), new Dictionary<Videogioco, int>());
             }
-            int idUtente = 0;
+
+            int idUtente = id;
             int quantita = 0;
+            int idPiattaforma = 0;
             Dictionary<Videogioco, int> giochi = new Dictionary<Videogioco, int>();
+            Dictionary<Videogioco, int> piattaforme = new Dictionary<Videogioco, int>();
+            int count = 0;
             foreach (var riga in righe)
             {
-                idUtente = int.Parse(riga["idutente"]);
-                quantita = int.Parse(riga["quantita"]);
-                riga.Remove("idutente");
-                riga.Remove("quantita");
+                Console.WriteLine("Riga: " + string.Join(", ", riga.Select(kvp => $"{kvp.Key}: {kvp.Value}")));
+
+                /*idUtente = riga.ContainsKey("idutente") ? int.Parse(riga["idutente"] ?? "0") : 0;*/
+                quantita = int.Parse(righe2[count]["quantita"]);
+                idPiattaforma = int.Parse(righe2[count]["idpiattaforma"]);
+                count++;
+
+                
+                
                 Entity gioco = new Videogioco();
                 gioco.FromDictionary(riga);
+               
+
                 giochi.Add((Videogioco)gioco, quantita);
+                piattaforme.Add((Videogioco)gioco, idPiattaforma);
+                //giochi.Add((Videogioco)gioco, 10);
             }
 
-            Entity e = new Carrello(idUtente, giochi);
-            return e;
-
+            Entity carrello = new Carrello(idUtente, giochi, piattaforme);
+            //Entity carrello = new Carrello(2, giochi);
+            Console.WriteLine("Carrello costruito correttamente.");
+            return carrello;
         }
-        public bool Insert(int idUtente, int idVideogioco, int quantita)
+
+        public bool Insert(int idUtente, int idVideogioco, int quantita, int idPiattaforma)
         {
-            string query = "";
-            if (((Videogioco)DAOVideogioco.GetIstance().Find(idVideogioco)).Quantita >= quantita + ((Carrello)Find(idUtente)).Videogiochi[(Videogioco)DAOVideogioco.GetIstance().Find(idVideogioco)])
+            Carrello carrello = (Carrello)Find(idUtente);
+            
+            Videogioco videogioco = (Videogioco)DAOVideogioco.GetIstance().Find(idVideogioco);
+            
+            int quantitaInCarrello = 0;
+           
+            if (carrello.Videogiochi.ContainsKey(videogioco))
             {
-                if (db.ReadOne("SELECT * FROM Carrelli WHERE idUtente=" + idUtente + " AND idVideogioco=" + idVideogioco) == null)
+                quantitaInCarrello = carrello.Videogiochi[videogioco];
+            }
+
+            string query = "";
+            if (videogioco.Quantita < quantita + quantitaInCarrello)
+            {
+                Console.WriteLine($"Quantità insufficiente per il videogioco con ID {idVideogioco}. " +
+                                  $"Disponibile: {videogioco.Quantita}, richiesta: {quantita + quantitaInCarrello}");
+                return false;
+            }
+            if (db.ReadOne("SELECT * FROM Carrelli WHERE idUtente=" + idUtente + " AND idVideogioco=" + idVideogioco+" AND idPiattaforma="+idPiattaforma) == null)
                 {
-                    query = $"INSERT INTO Carrelli(idUtente, idVideogioco, quantita) VALUES (" +
-                        $"{idUtente},{idVideogioco},{quantita})";
+                    query = $"INSERT INTO Carrelli(idUtente, idVideogioco, quantita, idPiattaforma) VALUES (" +
+                        $"{idUtente},{idVideogioco},{quantita}, {idPiattaforma})";
                 }
                 else
                 {
-                    query = $"UPDATE Carrelli SET quantita=quantita+{quantita} WHERE idUtente={idUtente} AND idVideogioco={idVideogioco}";
+                    query = $"UPDATE Carrelli SET quantita=quantita+{quantita} WHERE idUtente={idUtente} AND idVideogioco={idVideogioco} AND idPiattaforma={idPiattaforma}";
                 }
                 return db.Update(query);
 
-            }
-            else
-            {
-                return false;
-            }
+            
 
         }
-        private bool Remove(int idVideogioco, int idUtente, int quantita = -1)
+       
+        public bool Remove(int idVideogioco, int idUtente, int quantita = -1)
         {
             string query = "";
             if (quantita == -1)
@@ -114,8 +143,11 @@ namespace WebAppPlayshphere.DAO
         public bool Ordina(Entity e)
         {
             Carrello c = (Carrello)e;
+            Console.WriteLine("ID DEL FARMER: "+e.Id);
             Delete(c.Id);
-            Ordine o = new Ordine(0, c.Videogiochi, "In preparazione", null, DateTime.Now);
+            Utente u = ((Utente)DAOUtente.GetInstance().Find(e.Id));
+            Console.WriteLine(u.ToString());
+            Ordine o = new Ordine(0, c.Videogiochi, "In preparazione", u, DateTime.Now);
             return DAOOrdine.GetInstance().Create(o);
 
         }
