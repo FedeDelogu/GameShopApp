@@ -35,7 +35,7 @@ namespace WebAppPlayshphere.DAO
                 Entity e = new Utente();
                 //e.FromDictionary(riga);
                 // QUI RECUPERO L ANAGRAFICA
-                Entity anagrafica = DAOAnagrafica.GetIstance().Find(id);
+                Entity anagrafica = DAOAnagrafica.GetInstance().Find(id);
                 if (anagrafica != null) // SE L ANAGRAFICA ESISTE LA ASSEGNO ALLA PROPRIETA' ANAGRAFICA DELL UTENTE
                 {
                     ((Utente)e).Anagrafica = (Anagrafica)anagrafica;
@@ -53,7 +53,7 @@ namespace WebAppPlayshphere.DAO
                 $"values" +
                 $"(" +
                 $"'{((Utente)e).Email.Replace("'", "''")}'," +
-                $"HASHBYTES('SHA2_512','{((Utente)e).Password}'),"+
+                $"HASHBYTES('SHA2_512','{((Utente)e).Password}')," +
                 $"{((Utente)e).Ruolo}" +
                 $")");
         }

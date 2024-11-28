@@ -103,7 +103,7 @@ namespace WebAppPlayshphere.Models
         public override void FromDictionary(Dictionary<string, string> riga)
         {
             Console.WriteLine("sono nel fromdictionary");
-            Entity anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(int.Parse(riga["id"]));
+            Entity anagrafica = (Anagrafica)DAOAnagrafica.GetInstance().Find(int.Parse(riga["id"]));
             if (anagrafica != null) {
                 Console.WriteLine("anagrafica trovata");
                 Anagrafica = (Anagrafica)anagrafica;
