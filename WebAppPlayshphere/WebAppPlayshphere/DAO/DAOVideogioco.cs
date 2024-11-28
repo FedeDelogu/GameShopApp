@@ -11,7 +11,9 @@ namespace WebAppPlayshphere.DAO
         {
 
 
-            db = new Database("Playsphere5", "LAPTOP-ANDREA");
+
+            db = new Database("Playsphere2", "localhost");
+
 
 
 
@@ -121,6 +123,18 @@ namespace WebAppPlayshphere.DAO
             e.FromDictionary(righe);
             ((Videogioco)e).Recensioni = DAORecensione.GetIstance().RecensioniGioco(id);
             return e;
+        }
+        public string FindTitolo(int id)
+        {
+            var righe = db.ReadOne("SELECT titolo FROM Videogiochi WHERE id=" + id);
+            if (righe == null)
+            {
+                return null;
+            }
+            Videogioco e = new Videogioco();
+            e.FromDictionary(righe);
+            
+            return e.Titolo;
         }
         public Entity FindByTitolo(string titolo)
         {

@@ -57,6 +57,34 @@ namespace WebAppPlayshphere.Controllers
             }
             return View(_utenteLoggato);
         }
+        public IActionResult Recensioni()
+        {
+            if (_utenteLoggato.Anagrafica == null)
+            {
+                Entity AnagraficaVuota = new Anagrafica
+                {
+                    Nome = "",
+                    Cognome = "",
+                    Indirizzo = "",
+                    Telefono = "",
+                    Citta = "",
+                    Cap = "",
+                };
+                _utenteLoggato.Anagrafica = (Anagrafica)AnagraficaVuota;
+            }
+
+            // Recupera le recensioni dell'utente loggato
+            List<Recensione> recensioni = DAORecensione.GetIstance().RecensioniUtente(_utenteLoggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
+
+            // Crea un dizionario che lega l'utente alla sua lista di recensioni
+            var model = new Dictionary<Utente, List<Recensione>>()
+            {
+                { _utenteLoggato, recensioni }
+            };
+
+            // Passa il dizionario alla vista
+            return View(model);
+        }
 
 
 

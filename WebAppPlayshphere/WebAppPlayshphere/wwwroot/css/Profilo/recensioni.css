@@ -4,10 +4,10 @@
     box-shadow: 0 0 10px 3px black;
 }
 
-#datiUtente {
+#recensioni {
     background-color: var(--eerie-black) !important;
     color: var(--floral-white) !important;
-/*    border-left: 5px solid var(--black-olive);
+    /*    border-left: 5px solid var(--black-olive);
     border-bottom: 5px solid var(--black-olive);
     border-right: 5px solid var(--black-olive);*/
     height: 80vh;
@@ -19,16 +19,34 @@
     color: var(--floral-white) !important;
     border: none !important;
 }
+.card {
+    background-color: var(--eerie-black);
+    box-shadow: 0.5px 0.5px 10px 0.5px var(--floral-white);
+}
 button {
     font-weight: bold !important;
     background-color: var(--flame) !important;
     color: var(--eerie-black) !important;
     border: none !important;
 }
+
 .input-group span {
-    background-color: var(--flame) !important;
-    color: var(--eerie-black) !important;
+    background-color: var(--black-olive) !important;
+    color: var(--floral-white) !important;
     border: none !important;
     width: 20%;
-    font-weight:bold;
+}
+
+.stars {
+    color: #f39c12;
+    font-size: 1.2em;
+}
+
+.stars i {
+    margin-right: 2px;
+}
+
+.stars span {
+    font-size: 1.1em;
+    color: white;
 }
