@@ -59,8 +59,10 @@ namespace WebAppPlayshphere.Controllers
         }
         public IActionResult Recensioni()
         {
+            Console.WriteLine("sono qui in recensioni");
             if (_utenteLoggato.Anagrafica == null)
             {
+                Console.WriteLine("anagrafica vuota");
                 Entity AnagraficaVuota = new Anagrafica
                 {
                     Nome = "",
@@ -72,7 +74,7 @@ namespace WebAppPlayshphere.Controllers
                 };
                 _utenteLoggato.Anagrafica = (Anagrafica)AnagraficaVuota;
             }
-
+            Console.WriteLine("recuperiamo le recensioni");
             // Recupera le recensioni dell'utente loggato
             List<Recensione> recensioni = DAORecensione.GetIstance().RecensioniUtente(_utenteLoggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
 
@@ -235,7 +237,7 @@ namespace WebAppPlayshphere.Controllers
             }
 
             // Recupera le recensioni dell'utente loggato
-            List<Ordine> ordini = DAOOrdine.GetInstance().OrdiniUtente(_utenteLoggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
+            List<Ordine> ordini = DAOOrdine.GetInstance().FindByUtente(_utenteLoggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
 
             // Crea un dizionario che lega l'utente alla sua lista di recensioni
             var model = new Dictionary<Utente, List<Ordine>>()
