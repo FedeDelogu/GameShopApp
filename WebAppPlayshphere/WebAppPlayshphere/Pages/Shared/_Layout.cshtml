@@ -70,7 +70,13 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a asp-controller="Carrelli" asp-action="Dettagli"><i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i></a>
+
+                                @{
+                                    int idUser = @utenteLoggato.Id;
+                                    <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;" onclick="window.location.href='/Carrelli/Dettagli?id=@(idUser)'"></i>
+                                }
+
+
                             </li>
                         }
                     }
@@ -79,9 +85,9 @@
                         <li class="nav-item">
                             <a asp-controller="Utenti" asp-action="Login"><i class="fa-solid fa-user fs-3 px-2" style="color:#eb5e28ff;"></i> </a>
                         </li>
-                    <li class="nav-item">
-                        <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
-                    </li>
+                        <li class="nav-item">
+                            <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
+                         </li>
 
                     }
                 </ul>

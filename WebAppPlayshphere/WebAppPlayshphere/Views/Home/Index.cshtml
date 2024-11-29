@@ -1,6 +1,15 @@
-﻿@{
+﻿@using WebAppPlayshphere.DAO
+@using WebAppPlayshphere.Models
+@using Utility
+
+@{
     Layout = "_Layout";
 }
+
+@{
+    Dictionary<string, Entity> BestCategory = DAOVideogioco.GetIstance().BestInCategory();
+}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,52 +48,53 @@
         </div>
     </div>
     <div class="container mt-5 mb-5">
-        <h2><a href="/Videogiochi/Catalogo" id="disable-style">Sfoglia catalogo <i class="fa-solid fa-chevron-right"></i></a></h2>
+        <h2>Ultime Uscite</h2>
         <div class="row gy-3" id="catalogo">
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                <div class="card w-100 bg-dark text-light">
-                    <div>
-                        <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCpmTwX4ZRF2UTGojLVsxs856EIR-6Aed1TQ&s" alt="borderlands">
+                @{
+
+                    foreach(var item in DAOVideogioco.GetIstance().LastRelease())
+                    {
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                        <div class="card w-100 bg-dark text-light" onclick="window.location.href='/Videogiochi/Dettagli?id=@(item.Id)'">
+                                <div>
+                                    <img class="card-img-top" src="~/images/copertine/@(item.Id).png" alt="@(((Videogioco)item).Titolo)">
+                                </div>
+                                <div class="card-footer d-flex flex-column align-content-center">
+                                <h5>@(((Videogioco)item).Titolo.Length > 25 ? (((Videogioco)item).Titolo).Substring(0, 22) + "..." : ((Videogioco)item).Titolo)</h5>
+                                    <h6>@(((Videogioco)item).Prezzo) Eur</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                }
+                
+        </div>
+    </div>
+    <div class="container mt-5 mb-5">
+        <h2>Preordini</h2>
+        <div class="row gy-3" id="catalogo">
+            @{
+
+                foreach (var item in DAOVideogioco.GetIstance().Preoders())
+                {
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                        <div class="card w-100 bg-dark text-light" onclick="window.location.href='/Videogiochi/Dettagli?id=@(item.Id)'">
+                            <div>
+                                <img class="card-img-top" src="~/images/copertine/@(item.Id).png" alt="@(((Videogioco)item).Titolo)">
+                            </div>
+                            <div class="card-footer d-flex flex-column align-content-center">
+                                <h5>@(((Videogioco)item).Titolo.Length > 25 ? (((Videogioco)item).Titolo).Substring(0, 22) + "..." : ((Videogioco)item).Titolo)</h5>
+                                <h6>@(((Videogioco)item).Prezzo) Eur</h6>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-footer d-flex justify-content-between align-content-center">
-                        <h5>Borderlands</h5>
-                        <h6>30,50 Eur</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                <div class="card w-100 bg-dark text-light">
-                    <div>
-                        <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCpmTwX4ZRF2UTGojLVsxs856EIR-6Aed1TQ&s" alt="borderlands">
-                    </div>
-                    <div class="card-footer d-flex justify-content-between align-content-center">
-                        <h5>Borderlands</h5>
-                        <h6>30,50 Eur</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                <div class="card w-100 bg-dark text-light">
-                    <div>
-                        <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCpmTwX4ZRF2UTGojLVsxs856EIR-6Aed1TQ&s" alt="borderlands">
-                    </div>
-                    <div class="card-footer d-flex justify-content-between align-content-center">
-                        <h5>Borderlands</h5>
-                        <h6>30,50 Eur</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                <div class="card w-100 bg-dark text-light">
-                    <div>
-                        <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCpmTwX4ZRF2UTGojLVsxs856EIR-6Aed1TQ&s" alt="borderlands">
-                    </div>
-                    <div class="card-footer d-flex justify-content-between align-content-center">
-                        <h5>Borderlands</h5>
-                        <h6>30,50 Eur</h6>
-                    </div>
-                </div>
-            </div>
+
+                }
+
+            }
+
         </div>
     </div>
     <div class="container d-flex mt-5 mb-5 " id="info-company">
@@ -98,46 +108,18 @@
         <h2>Sfoglia per categoria </h2>
         <div class="container text-center p-0">
             <div class="row justify-content-evenly mt-3">
-                <div class="col-4 category-col">
-                    <div class="overlay d-flex justify-content-end align-items-end rounded-3">
-                        <h3 class="title-category">RPG</h3>
-                    </div>
-                    <img class="category-img rounded-3" src="https://c4.wallpaperflare.com/wallpaper/708/646/380/mountains-the-elder-scrolls-iv-oblivion-video-games-digital-art-wallpaper-preview.jpg" alt="">
-                </div>
-                <div class="col-4 category-col">
-                    <div class="overlay d-flex justify-content-end align-items-end rounded-3">
-                        <h3 class="title-category">FPS</h3>
-                    </div>
-                    <img class="category-img rounded-3" src="https://c4.wallpaperflare.com/wallpaper/877/505/215/5c1cffe77a28d-wallpaper-preview.jpg" alt="">
-                </div>
-                <div class="col-4 category-col">
-                    <div class="overlay d-flex justify-content-end align-items-end rounded-3">
-                        <h3 class="title-category">Picchiaduro</h3>
-                    </div>
-                    <img class="category-img rounded-3" src="https://c4.wallpaperflare.com/wallpaper/594/15/738/tekken-8-bandai-bandai-namco-entertainment-4k-jin-kazama-hd-wallpaper-preview.jpg" alt="">
-                </div>
-            </div>
-            <div class="row justify-content-evenly mt-3">
-                <div class="col-4 category-col">
-                    <div class="overlay d-flex justify-content-end align-items-end rounded-3">
-                        <h3 class="title-category">RPG</h3>
-                    </div>
-                    <img class="category-img rounded-3" src="https://c4.wallpaperflare.com/wallpaper/708/646/380/mountains-the-elder-scrolls-iv-oblivion-video-games-digital-art-wallpaper-preview.jpg" alt="">
-                </div>
-                <div class="col-4 category-col">
-                    <div class="overlay d-flex justify-content-end align-items-end rounded-3">
-                        <h3 class="title-category">FPS</h3>
-                    </div>
-                    <img class="category-img rounded-3" src="https://c4.wallpaperflare.com/wallpaper/877/505/215/5c1cffe77a28d-wallpaper-preview.jpg" alt="">
-                </div>
-                <div class="col-4 category-col">
-                    <div class="overlay d-flex justify-content-end align-items-end rounded-3">
-                        <h3 class="title-category">Picchiaduro</h3>
-                    </div>
-                    <img class="category-img rounded-3" src="https://c4.wallpaperflare.com/wallpaper/594/15/738/tekken-8-bandai-bandai-namco-entertainment-4k-jin-kazama-hd-wallpaper-preview.jpg" alt="">
-                </div>
-            </div>
-        </div>
+
+                @{
+                    foreach(var item in BestCategory)
+                    {
+                        <div class="col-4 category-col">
+                            <div class="overlay d-flex justify-content-end align-items-end rounded-3" onclick="window.location.href='/Videogiochi/Categoria?categoria=@(item.Key)'">
+                                <h3 class="title-category">@item.Key</h3>
+                            </div>
+                            <img class="category-img rounded-3" src="~/images/copertine/@(item.Value.Id).png" alt="">
+                        </div>
+                    }
+                }
 
     </div>
 </body>

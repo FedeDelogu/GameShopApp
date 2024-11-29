@@ -79,21 +79,21 @@ namespace WebAppPlayshphere.Models
             }
             return ris;
         }
-        public double Valutazione(List<Recensione> rec)
+        public double Valutazione()
         {
             double ris = 0;
-            foreach (var item in rec)
+            foreach (var item in Recensioni)
             {
-                ris += item.Valutazione;
+                ris += ((Recensione)item).Valutazione;
             }
-            return Math.Round(ris / rec.Count, 1);
+            return Math.Round(ris / Recensioni.Count, 1);
         }
         
         public override void FromDictionary(Dictionary<string, string> riga)
         {
             var ris = DAOPiattaforma.GetIstance().FindByGioco(int.Parse(riga["id"]));
             // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
-            foreach (var item in ris)
+            /*foreach (var item in ris)
             {
                 Piattaforme.Add(
                     new Piattaforma()
@@ -102,7 +102,7 @@ namespace WebAppPlayshphere.Models
                         Nome = ((Piattaforma)item).Nome
                     }
                     );
-            }
+            }*/
             base.FromDictionary(riga);
         }
     }

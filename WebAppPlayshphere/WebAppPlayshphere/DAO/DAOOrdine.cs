@@ -10,11 +10,7 @@ namespace WebAppPlayshphere.DAO
         private DAOOrdine()
         {
 
-
-
             db = new Database("Playsphere", "localhost");
-
-
 
         }
         private static DAOOrdine instance = null;
@@ -37,21 +33,27 @@ namespace WebAppPlayshphere.DAO
                 return false;
             }
             // inserisco l'ordine
+            Console.WriteLine($"INSERT INTO Ordini (stato, idUtente, dataOrdine) VALUES( " +
+                          $"'{((Ordine)e).Stato}', {((Ordine)e).Utente.Id}, '{((Ordine)e).DataOrdine.ToString("yyyy-MM-dd")}');");
             bool risultatoQuery = 
-                db.Update($"INSERT INTO Ordini (stato, idUtente) VALUES( " +
-                          $"'{((Ordine)e).Stato}', {((Ordine)e).Utente.Id});");
+                db.Update($"INSERT INTO Ordini (stato, idUtente, dataOrdine) VALUES( " +
+                          $"'{((Ordine)e).Stato}', {((Ordine)e).Utente.Id}, '{((Ordine)e).DataOrdine.ToString("yyyy-MM-dd")}');");
             if (!risultatoQuery)
             {
                 Console.WriteLine("ERRORE INSERT INTO SULLA TABELLA ORDINI");
                 return risultatoQuery;
             }
+
+            var idOrdine = db.ReadOne("SELECT MAX(id) AS idOrdine FROM Ordini");
+
             // inserisco i dettagli dell'ordine
             foreach(var gioco in ((Ordine)e).Videogiochi)
             {
                 risultatoQuery = 
                     db.Update(
+                        // QUI NON HA ANCORA L'ID DELL'ORDINE
                         $"INSERT INTO DettagliOrdini(quantitaTotale, idVideogioco, idOrdine)VALUES(" +
-                        $"{gioco.Value}, {gioco.Key.Id}, {e.Id}");
+                        $"{gioco.Value}, {gioco.Key.Id}, {int.Parse(idOrdine["idordine"])})");
                 if (!risultatoQuery)
                 {
                     Console.WriteLine("ERRORE INSERT INTO SULLA TABELLA DettagliOrdini");
