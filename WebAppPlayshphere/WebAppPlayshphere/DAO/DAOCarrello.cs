@@ -13,8 +13,6 @@ namespace WebAppPlayshphere.DAO
         private DAOCarrello()
         {
 
-
-
             db = new Database("Playsphere", "localhost");
 
         }
@@ -126,16 +124,16 @@ namespace WebAppPlayshphere.DAO
 
         }
        
-        public bool Remove(int idVideogioco, int idUtente, int quantita = -1)
+        public bool Remove(int idVideogioco, int idUtente, int idPiattaforma, int quantita = -1)
         {
             string query = "";
             if (quantita == -1)
             {
-                query = $"DELETE FROM Carrelli WHERE idUtente={idUtente} AND idVideogioco={idVideogioco}";
+                query = $"DELETE FROM Carrelli WHERE idUtente={idUtente} AND idVideogioco={idVideogioco}  AND idPiattaforma={idPiattaforma}";
             }
             else
             {
-                query = $"UPDATE Carrelli SET quantita=quantita-{quantita} WHERE idUtente={idUtente} AND idVideogioco={idVideogioco}";
+                query = $"UPDATE Carrelli SET quantita=quantita-{quantita} WHERE idUtente={idUtente} AND idVideogioco={idVideogioco} AND idPiattaforma={idPiattaforma}";
             }
             return db.Update(query);
         }
@@ -144,7 +142,9 @@ namespace WebAppPlayshphere.DAO
             throw new NotImplementedException();
         }
 
-        public bool Ordina(Entity e)
+
+
+        public Ordine Ordina(Entity e)
         {
             Carrello c = (Carrello)e;
             Console.WriteLine("ID DEL FARMER: "+e.Id);
@@ -152,7 +152,9 @@ namespace WebAppPlayshphere.DAO
             Utente u = ((Utente)DAOUtente.GetInstance().Find(e.Id));
             Console.WriteLine(u.ToString());
             Ordine o = new Ordine(0, c.Videogiochi, "In preparazione", u, DateTime.Now);
-            return DAOOrdine.GetInstance().Create(o);
+            DAOOrdine.GetInstance().Create(o);
+            Console.WriteLine("ORDINE TROVATO: "+((Ordine)DAOOrdine.GetInstance().Read().Last()).ToString());
+            return (Ordine)DAOOrdine.GetInstance().Read().Last();
 
         }
 

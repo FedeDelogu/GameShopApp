@@ -14,9 +14,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-
             db = new Database("Playsphere", "localhost");
-
 
         }
 

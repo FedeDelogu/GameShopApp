@@ -162,6 +162,7 @@
                         .then(ban => {
                             if (ban.success) {
                                 console.log(`Utente con ID ${userId} bannato con successo.`);
+                                alert("Utente Bannato con successo!");
                                 listaUtenti(); // Aggiorna la lista
                                 
                             } else {
@@ -258,6 +259,7 @@
                         .then(sban => {
                             if (sban.success) {
                                 console.log(`Utente con ID ${userId} bannato con successo.`);
+                                alert("Utente Sbloccato con successo!");
                                 listaUtentiBannati(); // Aggiorna la lista
                                 
                             } else {
@@ -359,6 +361,7 @@
                         .then(disapproved => { // usa il json
                             if (disapproved.success) {
                                 console.log(`Recensione con ID ${reviewId} disapprovata con successo.`);
+                                alert("Recensione disapprovata con successo!");
                                 listaRecensioni(); // Aggiorna la lista
                                 
                             } else {
@@ -459,6 +462,7 @@
                         .then(approved => { // usa il json
                             if (approved.success) {
                                 console.log(`Recensione con ID ${reviewId} approvata con successo.`);
+                                alert("Recensione approvata con successo!");
                                 listaRecensioniDaApprovare(); // Aggiorna la lista
                                 
                             } else {
@@ -490,6 +494,7 @@
                         .then(deleted => { // usa il json
                             if (deleted.success) {
                                 console.log(`Recensione con ID ${deleteId} eliminata con successo.`);
+                                alert("Recensione eliminata con successo!");
                                 listaRecensioni(); // Aggiorna la lista
                                 
                             } else {

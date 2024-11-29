@@ -138,7 +138,12 @@ namespace WebAppPlayshphere.Controllers
         {
             Console.WriteLine("ci sei fratello");
             DAOCarrello.GetIstance().Insert(idUtente, idVid, 1, idPiattaforma);
-            return RedirectToAction("Catalogo");
+            return RedirectToAction("Dettagli", new { id = idVid });
+        }
+
+        public IActionResult Categoria(string categoria)
+        {
+            return View(DAOVideogioco.GetIstance().filtroCategoria(categoria));
         }
 
     }
