@@ -7,6 +7,7 @@ using WebAppPlayshphere.DAO;
 using WebAppPlayshphere.Models;
 using Newtonsoft.Json;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WebAppPlayshphere.Controllers
 {
@@ -27,20 +28,24 @@ namespace WebAppPlayshphere.Controllers
 
         public IActionResult Index()
         {
-            // Ogni volta che carico questa pagina sale di 1
-            // Al primo caricamento vale 0
             tentativiAccesso++;
             _logger.LogInformation($"Tentativo {tentativiAccesso} alle {DateTime.Now}");
             return View(tentativiAccesso);
         }
         public IActionResult Login()
         {
+
             return View();
         }
 
         public IActionResult Profilo()
         {
-            if( _utenteLoggato.Anagrafica == null )
+            if (!IsAuthenticated())
+            {
+                // Reindirizza al login se l'utente non è autenticato
+                return RedirectToAction("Login");
+            }
+            if ( _utenteLoggato.Anagrafica == null )
             {
                 Entity AnagraficaVuota = new Anagrafica
                 {
@@ -59,10 +64,15 @@ namespace WebAppPlayshphere.Controllers
         }
         public IActionResult Recensioni()
         {
-            Console.WriteLine("sono qui in recensioni");
+            if (!IsAuthenticated())
+            {
+                // Reindirizza al login se l'utente non è autenticato
+                return RedirectToAction("Login");
+            }
+       
             if (_utenteLoggato.Anagrafica == null)
             {
-                Console.WriteLine("anagrafica vuota");
+                
                 Entity AnagraficaVuota = new Anagrafica
                 {
                     Nome = "",
@@ -74,7 +84,7 @@ namespace WebAppPlayshphere.Controllers
                 };
                 _utenteLoggato.Anagrafica = (Anagrafica)AnagraficaVuota;
             }
-            Console.WriteLine("recuperiamo le recensioni");
+            
             // Recupera le recensioni dell'utente loggato
             List<Recensione> recensioni = DAORecensione.GetIstance().RecensioniUtente(_utenteLoggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
 
@@ -123,7 +133,11 @@ namespace WebAppPlayshphere.Controllers
         }
         public IActionResult ModificaAnagrafica(Dictionary<string, string> dati)
         {
-           
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
             var utenteLoggato = JsonConvert.DeserializeObject<Utente>(HttpContext.Session.GetString("UtenteLoggato"));
 
                 foreach(var l in dati)
@@ -222,6 +236,10 @@ namespace WebAppPlayshphere.Controllers
         /* PAGINE PERSONALI DELL'UTENTE */
         public IActionResult StoricoAcquisti()
         {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
             if (_utenteLoggato.Anagrafica == null)
             {
                 Entity AnagraficaVuota = new Anagrafica
@@ -322,6 +340,11 @@ namespace WebAppPlayshphere.Controllers
 
             return BadRequest(new { success = false, message = "ID Mancante" });
         }
+        private bool IsAuthenticated()
+        {
+            return _utenteLoggato != null;
+        }
+
 
     }
 }

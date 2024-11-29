@@ -6,7 +6,6 @@ namespace WebAppPlayshphere.Models
         public Dictionary<Videogioco, int> Videogiochi { get; set; }
         public Dictionary<Videogioco, int> Piattaforme { get; set; }
 
-        public Dictionary<Videogioco, int> Piattaforme { get; set; }
         public Carrello() { }
 
 
