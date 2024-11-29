@@ -23,5 +23,15 @@ namespace WebAppPlayshphere.Controllers
 
             return View();
         }
+        public IActionResult Termini()
+        {
+
+            return View();
+        }
+        public IActionResult ChiSiamo()
+        {
+
+            return View();
+        }
     }
 }

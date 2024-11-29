@@ -1,6 +1,4 @@
-﻿
-
-.regolamento-container,.privacy-container {
+﻿.termini-container, .privacy-container, .regolamento-container {
     color: var(--floral-white) !important;
     background-color: var(--black-olive);
     border: 1px solid #ddd;
@@ -11,23 +9,23 @@
     max-width: 50%;
 }
 
-.regolamento-title,.privacy-title {
+.termini-title, .privacy-title, .regolamento-title {
     color: var(--flame) !important;
     font-weight: bold;
 }
 
-.regolamento-section,.privacy-section {
+.termini-section, .privacy-section, .regolamento-section {
     margin-bottom: 20px;
 }
 
-    .regolamento-section h4,.privacy-section h4 {
-        color: var(--flame);
-        font-weight: bold;
-    }
+.termini-section h4, .privacy-section h4, .regolamento-section h4 {
+    color: var(--flame);
+    font-weight: bold;
+}
 
-    .regolamento-section ul,.privacy-section ul {
-        padding-left: 20px;
-    }
+.termini-section ul, .privacy-section ul, .regolamento-section ul {
+    padding-left: 0;
+}
 
 .footer {
     text-align: center;
@@ -35,4 +33,3 @@
     font-size: 14px;
     color: var(--floral-white)
 }
-
