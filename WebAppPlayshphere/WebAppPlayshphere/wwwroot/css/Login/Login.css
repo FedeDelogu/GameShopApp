@@ -39,7 +39,9 @@
         #login .email-password::-ms-input-placeholder {
             color: var(--floral-white);
         }
-
+a {
+    text-decoration: none !important;
+}
 .wallpaper {
     background-image: url(https://4kwallpapers.com/images/wallpapers/call-of-duty-black--18321.jpeg);
     background-position: -450px top; /* Sposta il contenuto dell'immagine verso sinistra */
