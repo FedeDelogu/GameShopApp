@@ -86,9 +86,9 @@ namespace WebAppPlayshphere.DAO
             }
             else return null;
         }
-        public List<Entity>FindByUtente(int id)
+        public List<Ordine>FindByUtente(int id)
         {
-            List<Entity> lista = new List<Entity>();
+            List<Ordine> lista = new List<Ordine>();
             var righe = db.Read($"SELECT * FROM Ordini WHERE idUtente = {id}");
             if (righe == null)
             {
@@ -104,12 +104,12 @@ namespace WebAppPlayshphere.DAO
                 var righeDettagli = db.Read($"select * from DettagliOrdini where idOrdine = {o.Id}");
                 foreach (var rigaDettaglio in righeDettagli)
                 {
-                    Entity v = DAOVideogioco.GetIstance().Find(int.Parse(rigaDettaglio["idvideogioco"]));
+                    Entity v = (Ordine)DAOVideogioco.GetIstance().Find(int.Parse(rigaDettaglio["idvideogioco"]));
                     int quantita = int.Parse(rigaDettaglio["quantitatotale"]);
                     ((Ordine)o).Videogiochi.Add((Videogioco)v, quantita);
 
                 }
-                lista.Add(o);
+                lista.Add((Ordine)o);
             }
             return lista;
         }

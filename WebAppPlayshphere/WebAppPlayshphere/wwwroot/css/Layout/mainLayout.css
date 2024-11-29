@@ -62,7 +62,7 @@ main {
     background-color: #33333366;
     backdrop-filter: blur(15px);
     top: 25px;
-    overflow:hidden;
+    /*overflow:hidden;*/
 }
 
 .nav-item {
@@ -94,6 +94,8 @@ main {
 
 input[type=search], form > .btn {
     border-radius: 0;
+    color: var(--eerie-black);
+    background-color: var(--floral-white);
 }
 
 input[type=search] {
@@ -104,6 +106,21 @@ input[type=search] {
 form > .btn {
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
+}
+.dropdown-menu {
+    position: absolute;
+    z-index: 1050;
+    top: 100%; 
+    left: 30%;
+}
+.dropdown-menu-dark{
+    background-color: var(--black-olive);
+}
+.dropdown-menu li a {
+    font-weight: bold !important;
+}
+.dropdown-menu li a:active {
+    background-color:var(--eerie-black) !important;
 }
 
 /* -- FINE HEADER / NAV -- */
@@ -121,11 +138,13 @@ footer {
     border-bottom: 1px solid;
     border-color: var(--timberwolf);
 }
-
-    #links-footer > a:hover {
-        color: var(--flame);
-        transition: color 0.25s;
-    }
+#links-footer a{
+    text-decoration:none;
+}
+#links-footer > a:hover {
+    color: var(--flame);
+    transition: color 0.25s;
+}
 
 #prezzo {
     font-size: 36px;

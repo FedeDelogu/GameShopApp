@@ -1,6 +1,8 @@
 ﻿@using WebAppPlayshphere.DAO
 @model Dictionary<WebAppPlayshphere.Models.Utente, List<WebAppPlayshphere.Models.Ordine>>
-
+@{
+    Layout = "_LayoutProfilo";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,24 +15,6 @@
     <title>Le tue Recensioni</title>
 </head>
 <body class="vh-100" style="overflow-y:hidden">
-    <nav class="navbar navbar-expand-lg px-5">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                <img src="/img/HellsGames.png" alt="Logo" width="64" height="64">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Anagrafica</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Storico Acquisti</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Le tue Recensioni</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
     <section class="container py-4" id="recensioni">
         <h3 class="text-center py-2 fs-1" style="color:var(--floral-white)">I TUOI ACQUISTI</h3>

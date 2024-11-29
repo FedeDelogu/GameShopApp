@@ -91,6 +91,10 @@ namespace WebAppPlayshphere.DAO
             foreach (var riga in righe)
             {
                 Recensione r = new Recensione();
+                foreach (var item in riga)
+                {
+                    Console.WriteLine(item.Key +" "+item.Value);
+                }
                 r.FromDictionary(riga);
                 ris.Add(r);
             }
