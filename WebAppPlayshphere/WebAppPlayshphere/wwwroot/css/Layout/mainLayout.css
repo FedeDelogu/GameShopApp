@@ -94,6 +94,8 @@ main {
 
 input[type=search], form > .btn {
     border-radius: 0;
+    color: var(--eerie-black);
+    background-color: var(--floral-white);
 }
 
 input[type=search] {
