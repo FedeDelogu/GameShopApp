@@ -144,10 +144,12 @@ namespace WebAppPlayshphere.DAO
             {
                 return null;
             }
-            Videogioco e = new Videogioco();
-            e.FromDictionary(righe);
-            
-            return e.Titolo;
+            foreach (var item in righe)
+            {
+                Console.WriteLine(item.Key+" "+item.Value);
+                return item.Value;
+            }
+            return null;
         }
         public Entity FindByTitolo(string titolo)
         {
