@@ -63,10 +63,21 @@ namespace WebAppPlayshphere.Controllers
             return RedirectToAction("Dettagli", new { id=idCarrello });
         }
 
-        public IActionResult Checkout(int id) 
+        public IActionResult Checkout(int id)
         {
-            return View(DAOCarrello.GetIstance().Find(id));
+            // Recupera l'utente dalla sessione
+            var userJson = HttpContext.Session.GetString("utenteLoggato");
+            var user = userJson != null ? JsonConvert.DeserializeObject<Utente>(userJson) : null;
+
+            // Passa l'utente alla vista tramite ViewBag
+            ViewBag.Utente = user;
+
+            // Recupera il carrello e passalo alla vista
+            var carrello = DAOCarrello.GetIstance().Find(id);
+            return View(carrello);
         }
+
+
 
         public IActionResult ModificaAnagrafica(Dictionary<string, string> dati)
         {
@@ -88,7 +99,7 @@ namespace WebAppPlayshphere.Controllers
                 Cap = dati["Cap"]
             };
 
-            UtentiController._utenteLoggato.Anagrafica = new Anagrafica
+             utenteLoggato.Anagrafica = new Anagrafica
              {
                  Nome = dati["Nome"],
                  Cognome = dati["Cognome"],
