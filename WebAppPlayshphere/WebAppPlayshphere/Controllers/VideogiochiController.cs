@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Newtonsoft.Json;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using Utility;
@@ -23,10 +24,17 @@ namespace WebAppPlayshphere.Controllers
             {
                 Entity e = DAOVideogioco.GetIstance().Find(id);
                 if (e != null)
+                {
+                    var utenteLoggato = GetUtenteLoggato();
+
+                    ViewBag.UtenteLoggato = utenteLoggato;
+
                     return View(e);
+                }
                 else
                     return Content("Non c'è niente");
             }
+        
             else
             {
                 Console.WriteLine($"Parametro ID: {id}");
@@ -144,6 +152,15 @@ namespace WebAppPlayshphere.Controllers
         public IActionResult Categoria(string categoria)
         {
             return View(DAOVideogioco.GetIstance().filtroCategoria(categoria));
+        }
+        private Utente GetUtenteLoggato()
+        {
+            var utenteLoggato = HttpContext.Session.GetString("UtenteLoggato");
+            if (utenteLoggato != null)
+            {
+                return JsonConvert.DeserializeObject<Utente>(utenteLoggato);
+            }
+            return null;
         }
 
     }
