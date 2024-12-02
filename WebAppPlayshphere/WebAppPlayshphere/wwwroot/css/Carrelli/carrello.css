@@ -1,0 +1,217 @@
+﻿/* -- GENERALI -- */
+:root {
+    --floral-white: #fffcf2ff;
+    --timberwolf: #ccc5b9ff;
+    --black-olive: #403d39ff;
+    --eerie-black: #252422ff;
+    --flame: #eb5e28ff;
+    --navbar: 60px; /* Altezza della navbar */
+    --sidebar-width: 200px; /* Larghezza della sidebar */
+    --footer-height: 100px; /* Altezza della footer */
+}
+
+/* -- INIZIO CARELLO --*/
+
+.dark-bg {
+    background-color: var(--black-olive) !important;
+}
+
+.btn-primary {
+    background-color: var(--flame) !important;
+    border-color: var(--flame) !important;
+}
+
+span {
+    color: var(--timberwolf)
+}
+
+.fa-trash-can {
+    font-size: 24px;
+    color: var(--timberwolf);
+    padding-left: 10px;
+    border-left: 2px solid var(--timberwolf) !important;
+}
+
+#sidebar {
+    top: 0;
+    position: sticky;
+    font-size: 18px;
+}
+
+#quantita {
+    background: var(--eerie-black);
+    border-color: var(--eerie-black) !important;
+    color: var(--floral-white);
+    padding-inline: 8px;
+    width: 45px;
+    height: 30px;
+    border: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+.custom-number-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-right: 10px;
+}
+
+
+.increment, .decrement {
+    background-color: var(--eerie-black);
+    color: var(--floral-white);
+    border: none;
+    width: 5vh;
+    padding: 3px;
+}
+
+.round {
+    width: 75px;
+    height: 75px;
+    border-radius: 100%;
+    border: solid 5px var(--black-olive);
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.line-active {
+    width: 100px;
+    height: 3px;
+    background-color: var(--timberwolf);
+}
+
+.line-disable {
+    width: 100px;
+    height: 3px;
+    background-color: var(--black-olive);
+}
+
+.info-page {
+    font-size: 26px;
+}
+
+.info-page-disable {
+    font-size: 28px;
+    color: var(--black-olive)
+}
+
+.active > div {
+    color: var(--floral-white) !important;
+}
+
+.disable {
+    color: var(--black-olive);
+    font-size: 28px;
+}
+
+.btn-checkout {
+    background-color: var(--flame) !important;
+    color: var(--eerie-black) !important;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+
+    .btn-checkout:hover {
+        opacity: 0.8;
+        transition: opacity 0.25s ease;
+    }
+
+#return-catalog {
+    color: var(--flame) !important;
+    font-size: 16px;
+}
+
+
+hr {
+    color: var(--timberwolf);
+    border-top: 3px solid;
+}
+
+.totale {
+    text-align: right;
+}
+
+.active {
+    border-color: var(--flame);
+}
+
+.form-label {
+    color: var(--floral-white) !important;
+}
+
+/* -- FINE CARELLO --*/
+
+/*CHECKOUT*/
+
+h1 {
+    color: var(--floral-white)!important;
+}
+
+.form {
+    display: grid;
+    grid-gap: 1rem;
+}
+
+.field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--floral-white);
+    padding: .5rem;
+    border-radius: .25rem;
+    background-color: var(--floral-white);
+}
+
+.field__label {
+    color: var(--black-olive);
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem
+}
+
+.field__input {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    font-weight: bold;
+    font-size: 1rem;
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--floral-white);
+}
+
+.field:focus-within {
+    border-color: var(--flame);
+}
+
+.fields {
+    display: grid;
+    grid-gap: 1rem;
+}
+
+.fields--2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.fields--3 {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* CARELLO VUOTO */
+
+.bi-cart-x-fill{
+    font-size: 150px;
+    color: var(--floral-white);
+}
+
+#empty-cart > h1{
+    font-size: 50px;
+    color: var(--floral-white);
+}

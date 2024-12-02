@@ -4,12 +4,17 @@ namespace WebAppPlayshphere.Models
     public class Carrello : Entity
     {
         public Dictionary<Videogioco, int> Videogiochi { get; set; }
+        public Dictionary<Videogioco, int> Piattaforme { get; set; }
 
         public Carrello() { }
 
-        public Carrello(int id, Dictionary<Videogioco, int> videogiochi) : base(id)
+
+        public Carrello(int id, Dictionary<Videogioco, int> videogiochi, Dictionary<Videogioco,int> piattaforme) : base(id)
+
+
         {
             Videogiochi = videogiochi;
+            Piattaforme = piattaforme;
         }
 
         public double Totale()

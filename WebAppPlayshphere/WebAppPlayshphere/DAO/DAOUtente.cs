@@ -14,7 +14,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-            db = new Database("Playsphere5", "LAPTOP-ANDREA");
+            db = new Database("Playsphere", "localhost");
 
         }
 
@@ -49,11 +49,12 @@ namespace WebAppPlayshphere.DAO
         public bool Create(Entity e)
         {
             return db.Update($"insert into Utenti" +
-                $"(email, passwordUtente,ruolo)" +
+                $"(email, passwordUtente,dob,ruolo)" +
                 $"values" +
                 $"(" +
                 $"'{((Utente)e).Email.Replace("'", "''")}'," +
                 $"HASHBYTES('SHA2_512','{((Utente)e).Password}')," +
+                $"'{((Utente)e).Dob:yyyy-MM-dd}'," + 
                 $"{((Utente)e).Ruolo}" +
                 $")");
         }
@@ -120,6 +121,8 @@ namespace WebAppPlayshphere.DAO
                 return null;
         }
 
+
+        /*RISERVATO ALL'ADMIN*/
         // UPDATE BAN UTENTE
         public bool Ban(int id)
         {

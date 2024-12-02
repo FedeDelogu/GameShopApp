@@ -18,32 +18,32 @@
 
 <body style="overflow-y:hidden">
     <div class="container mb-3">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between vh-100">
             <section id="login" class="d-flex flex-column align-items-center justify-content-center">
                 <h2 class=" text-white">Registrazione</h2>
-                <form class="row justify-content-center my-5">
-                    <div class="mb-3 col-6">
-                        <input type="email" class="form-control email-password" id="email" placeholder="Email" required>
+                <form class="row justify-content-center my-5" method="post" action="/Utenti/Salva">
+                    <div class="mb-3 col-6 ps-0">
+                        <input type="email" class="form-control email-password" id="email" name="Email" placeholder="Email" required>
                     </div>
-                    <div class="mb-3 col-6">
-                        <input type="password" class="form-control email-password" id="password" placeholder="Password" required>
+                    <div class="mb-3 col-6 pe-0">
+                        <input type="password" class="form-control email-password" id="password" name="Password" placeholder="Password" required>
                     </div>
                    
-                    <div class="mb-3 col-6">
-                        <input type="text" class="form-control email-password" id="nome" placeholder="Nome" required>
+                    <div class="mb-3 col-6 ps-0">
+                        <input type="text" class="form-control email-password" id="nome" name="Nome" placeholder="Nome" required>
                     </div>
-                    <div class="mb-3 col-6">
-                        <input type="text" class="form-control email-password" id="cognome" placeholder="Cognome" required>
+                    <div class="mb-3 col-6 pe-0">
+                        <input type="text" class="form-control email-password" id="cognome" name="Cognome" placeholder="Cognome" required>
                     </div>
-                    <div class="mb-3 col-6">
-                        <input type="" class="form-control email-password" id="stato" placeholder="Paese" required>
+                    <div class="mb-3 col-6 ps-0">
+                        <input type="text" class="form-control email-password" id="stato" name="Stato" placeholder="Paese" required>
                     </div>
-                    <div class="mb-3 col-6">
-                        <input type="date" class="form-control email-password" id="dob" required>
+                    <div class="mb-3 col-6 pe-0">
+                        <input type="date" class="form-control email-password" id="dob" name="Dob" required>
                     </div>
                     <div class="mb-3 col-12 form-check">
                         <input type="checkbox" class="form-check-input" id="policy">
-                        <label class="form-check-label text-white" for="policy">Accetto i <a href="#">Termini</a> e le <a href="#">Privacy policy</a></label>
+                        <label class="form-check-label text-white">Accetto i <a href="/Home/Termini">Termini</a> e le <a href="/Home/Privacy">Privacy policy</a></label>
                     </div>
                     <button type="submit" class="btn btn-login col-8 fw-bold rounded-3 my-4">Registrati</button>
                 </form>

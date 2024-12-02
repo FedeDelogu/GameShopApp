@@ -103,10 +103,10 @@ footer {
 
 /*MAIN*/
 #full-img {
-    background-image: url("https://gaming-cdn.com/img/products/5376/pcover/1920x620/5376.jpg?v=1732113803");
     height: 400px;
     width: 100%;
-    position: absolute;
+    max-width: 1440px;
+    margin: auto;
 }
 
 .carousel {
@@ -118,7 +118,7 @@ footer {
 }
 
 #riepilogo-videogioco {
-    margin-top: 20vh;
+    transform: translateY(-15%)
 }
 
 #dettagli-gioco {
@@ -162,14 +162,6 @@ label, p {
     border-color: var(--flame) !important;
 }
 
-#wisthlist {
-    width: 20%;
-}
-
-#carrello {
-    width: 80%;
-}
-
 #links-footer {
     max-width: 50%;
     border-bottom: 1px solid;
@@ -191,7 +183,23 @@ label, p {
     color: var(--floral-white);
     padding-inline: 8px;
 }
-/* PALETTE
-#161a1e, #9a9a9a, var(--flame), #fbfbfb
-inspiration> https://dribbble.com/shots/18253209-Game-Store-Website
-*/
+
+/* RECENSIONI */
+.card{
+    background-color: var(--black-olive) !important;
+    box-shadow: none;
+}
+
+.stars {
+    color: #f39c12;
+    font-size: 1.2em;
+}
+
+.stars i {
+    margin-right: 2px;
+}
+
+.stars span {
+    font-size: 1.1em;
+    color: white;
+}

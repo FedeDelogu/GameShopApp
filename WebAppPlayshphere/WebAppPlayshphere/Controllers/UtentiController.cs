@@ -7,6 +7,7 @@ using WebAppPlayshphere.DAO;
 using WebAppPlayshphere.Models;
 using Newtonsoft.Json;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WebAppPlayshphere.Controllers
 {
@@ -22,85 +23,132 @@ namespace WebAppPlayshphere.Controllers
         }
 
         // Mi serve per tenere in memoria chi ha fatto login
-        public static Utente _utenteLoggato = null;
+       // public static Utente _utenteLoggato = null;
         static int tentativiAccesso = -1;
 
         public IActionResult Index()
         {
-            // Ogni volta che carico questa pagina sale di 1
-            // Al primo caricamento vale 0
             tentativiAccesso++;
             _logger.LogInformation($"Tentativo {tentativiAccesso} alle {DateTime.Now}");
             return View(tentativiAccesso);
         }
         public IActionResult Login()
         {
+
             return View();
         }
 
         public IActionResult Profilo()
         {
-            if( _utenteLoggato.Anagrafica == null )
+            var utenteLoggato = GetUtenteLoggato();
+            if (utenteLoggato == null)
             {
+                return RedirectToAction("Login");
+            }
+
+            if (utenteLoggato.Anagrafica == null)
+            {
+                utenteLoggato.Anagrafica = new Anagrafica
+                {
+                    Nome = "",
+                    Cognome = "",
+                    Indirizzo = "",
+                    Telefono = "",
+                    Citta = "",
+                    Cap = "",
+                };
+            }
+            return View(utenteLoggato);
+        }
+
+        public IActionResult Recensioni()
+        {
+            var utenteloggato = GetUtenteLoggato();
+            if (utenteloggato== null)
+            {
+                // Reindirizza al login se l'utente non è autenticato
+                return RedirectToAction("Login");
+            }
+       
+            if (utenteloggato.Anagrafica == null)
+            {
+                
                 Entity AnagraficaVuota = new Anagrafica
                 {
                     Nome = "",
-                    Cognome="",
-                    Indirizzo="",
-                    Telefono="",
-                    Citta="",
+                    Cognome = "",
+                    Indirizzo = "",
+                    Telefono = "",
+                    Citta = "",
                     Cap = "",
-
-
                 };
-                _utenteLoggato.Anagrafica = (Anagrafica)AnagraficaVuota;
+                utenteloggato.Anagrafica = (Anagrafica)AnagraficaVuota;
             }
-            return View(_utenteLoggato);
+            
+            // Recupera le recensioni dell'utente loggato
+            List<Recensione> recensioni = DAORecensione.GetIstance().RecensioniUtente(utenteloggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
+
+            // Crea un dizionario che lega l'utente alla sua lista di recensioni
+            var model = new Dictionary<Utente, List<Recensione>>()
+            {
+                { utenteloggato, recensioni }
+            };
+
+            // Passa il dizionario alla vista
+            return View(model);
         }
 
 
 
         public IActionResult Accedi(Dictionary<string, string> credenziali)
         {
-            // Le chiavi del dictionary sono i name di HTML
             string user = credenziali["username"];
             string password = credenziali["password"];
             Console.WriteLine($"{user} {password}");
 
             if (DAOUtente.GetInstance().Find(user, password))
             {
-                
                 Entity e = DAOUtente.GetInstance().Find(user);
-                // Memorizzo chi ha fatto login
-                _utenteLoggato = (Utente)e;
                 Utente utenteFront = new Utente
                 {
-                    Id = _utenteLoggato.Id,
-                    Ruolo = ((Utente)_utenteLoggato).Ruolo,
-                    Email = ((Utente)_utenteLoggato).Email
-                    // Anagrafica = (Anagrafica)DAOAnagrafica.GetIstance().Find(entity.Id)
+                    Id = ((Utente)e).Id,
+                    Ruolo = ((Utente)e).Ruolo,
+                    Email = ((Utente)e).Email,
+                   
+                   
                 };
+
+                // Memorizza l'utente nella sessione
                 HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(utenteFront));
-                _logger.LogInformation($"Utente Loggato: {_utenteLoggato.Username} alle {DateTime.Now}");
+                _logger.LogInformation($"Utente Loggato: {utenteFront.Email} alle {DateTime.Now}");
+
                 if (((Utente)e).Ruolo == 0)
                 {
-                    return RedirectToAction("Dashboard","Admin");
+                    return RedirectToAction("Dashboard", "Admin");
                 }
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             else
+            {
                 return RedirectToAction("Login");
+            }
         }
+
         public IActionResult ModificaAnagrafica(Dictionary<string, string> dati)
         {
-           
-            var utenteLoggato = JsonConvert.DeserializeObject<Utente>(HttpContext.Session.GetString("UtenteLoggato"));
+            var utenteloggato = GetUtenteLoggato();
+            if (utenteloggato== null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(utenteloggato));
 
                 foreach(var l in dati)
                     Console.WriteLine(l.Key +" "+ l.Value);
 
             // Aggiorna l'anagrafica
-            utenteLoggato.Anagrafica = new Anagrafica
+            utenteloggato.Anagrafica = new Anagrafica
             {
                 Nome = dati["Nome"],
                 Cognome = dati["Cognome"],
@@ -112,31 +160,31 @@ namespace WebAppPlayshphere.Controllers
             };
 
             // Verifica se è un'operazione di aggiornamento o di creazione
-            if (utenteLoggato.Anagrafica.Nome!="")
+            if (utenteloggato.Anagrafica.Nome!="")
             {
                
-                var succ = DAOAnagrafica.GetInstance().Update(utenteLoggato);
+                var succ = DAOAnagrafica.GetInstance().Update(utenteloggato);
                 if (succ)
                 {
-                    return View("Profilo", utenteLoggato);
+                    return View("Profilo", utenteloggato);
                 }
                 else
                 {
-                    return RedirectToAction("Profilo", utenteLoggato);
+                    return RedirectToAction("Profilo", utenteloggato);
                 }
             }
             else 
             
             {
                 // Se l'anagrafica è nuova, usa il metodo Create
-                var succ = DAOAnagrafica.GetInstance().Create(utenteLoggato);
+                var succ = DAOAnagrafica.GetInstance().Create(utenteloggato);
                 if (succ)
                 {
-                    return View("Profilo", utenteLoggato);
+                    return View("Profilo", utenteloggato);
                 }
                 else
                 {
-                    return RedirectToAction("Profilo", utenteLoggato);
+                    return RedirectToAction("Profilo", utenteloggato);
                 }
             }
         }
@@ -152,14 +200,26 @@ namespace WebAppPlayshphere.Controllers
         }
         public IActionResult Salva(Dictionary<string, string> credenziali)
         {
-            Entity e = new Utente();
-            e.FromDictionary(credenziali);
+            foreach(var l in credenziali)
+            {
+                Console.WriteLine(l.Key+" "+l.Value);
+            }
+            
+            Entity e = new Utente
+            {
+               Email= credenziali["Email"],
+               Password = credenziali["Password"],
+               Dob = DateTime.Parse(credenziali["Dob"]) // Imposta la data di nascita direttamente
+
+
+            };
+            
             ((Utente)e).Ruolo = 1;
 
             if (DAOUtente.GetInstance().Create(e))
             {
                 // Dove lo mando se la registrazione avviene?
-                return RedirectToAction("Index");
+                return RedirectToAction("Login");
             }
             else
             {
@@ -170,15 +230,48 @@ namespace WebAppPlayshphere.Controllers
 
         public IActionResult Logout()
         {
-            _logger.LogInformation($"Logout {_utenteLoggato.Username} alle {DateTime.Now}");
-            // 'Sloggo' l'utente resettando la variabile statica
-            _utenteLoggato = null;
-            // Ripulisco i tentativi di accesso
-            tentativiAccesso = -1;
-            HttpContext.Session.Clear();
-            // Reindirizzo al Login per il prossimo accesso
-            return RedirectToAction("Index","Home");
+            _logger.LogInformation($"Logout alle {DateTime.Now}");
+            HttpContext.Session.Clear(); // Pulisce tutta la sessione
+            return RedirectToAction("Index", "Home");
         }
+
+
+        /* PAGINE PERSONALI DELL'UTENTE */
+        public IActionResult StoricoAcquisti()
+        {
+            var utenteloggato = GetUtenteLoggato();
+            if (utenteloggato== null)
+            {
+                return RedirectToAction("Login");
+            }
+            if (utenteloggato.Anagrafica == null)
+            {
+                Entity AnagraficaVuota = new Anagrafica
+                {
+                    Nome = "",
+                    Cognome = "",
+                    Indirizzo = "",
+                    Telefono = "",
+                    Citta = "",
+                    Cap = "",
+                };
+                utenteloggato.Anagrafica = (Anagrafica)AnagraficaVuota;
+            }
+
+            // Recupera le recensioni dell'utente loggato
+            List<Ordine> ordini = DAOOrdine.GetInstance().FindByUtente(utenteloggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
+
+            // Crea un dizionario che lega l'utente alla sua lista di recensioni
+            var model = new Dictionary<Utente, List<Ordine>>()
+            {
+                { utenteloggato, ordini }
+            };
+
+            // Passa il dizionario alla vista
+            return View(model);
+        }
+
+
 
         /* RISERVATO ALL'ADMIN */
 
@@ -207,7 +300,6 @@ namespace WebAppPlayshphere.Controllers
 
             return Json(utenti);
         }
-
 
         [HttpPost]
         public IActionResult BanUtente([FromBody] dynamic requestBan)
@@ -252,6 +344,17 @@ namespace WebAppPlayshphere.Controllers
 
             return BadRequest(new { success = false, message = "ID Mancante" });
         }
+        private Utente GetUtenteLoggato()
+        {
+            var utenteLoggato = HttpContext.Session.GetString("UtenteLoggato");
+            if (utenteLoggato != null)
+            {
+                return JsonConvert.DeserializeObject<Utente>(utenteLoggato);
+            }
+            return null;
+        }
+
+
 
     }
 }

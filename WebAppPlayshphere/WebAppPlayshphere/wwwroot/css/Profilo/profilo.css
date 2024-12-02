@@ -13,6 +13,7 @@
     height: 80vh;
     box-shadow: 0 0 10px 1px var(--floral-white);
 }
+
 .input-group input {
     background-color: var(--black-olive) !important;
     color: var(--floral-white) !important;
@@ -25,8 +26,9 @@ button {
     border: none !important;
 }
 .input-group span {
-    background-color: var(--black-olive) !important;
-    color: var(--floral-white) !important;
+    background-color: var(--flame) !important;
+    color: var(--eerie-black) !important;
     border: none !important;
     width: 20%;
+    font-weight:bold;
 }

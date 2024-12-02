@@ -19,29 +19,53 @@
 <body>
 
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center align-content-center">
+        <div class="d-flex justify-content-between align-items-center align-content-center vh-100">
             <section id="login" class="d-flex flex-column align-items-center align-content-center justify-content-center">
                 <h2 class=" text-white">Login</h2>
                 <form class="row justify-content-center my-5" method="POST" action="/Utenti/Accedi">
 
-                    <div class="mb-3 col-8">
-                        <input type="text" class="form-control email-password" name="username" id="username" placeholder="Enter your email" required>
+                    <div class="mb-3 col-8 p-0">
+                        <input type="text" class="form-control email-password" name="username" id="username" placeholder="Inserisci la tua email" required>
                     </div>
-                    <div class="mb-3 col-8">
-                        <input type="password" class="form-control email-password" name="password" id="password" placeholder="********" required>
+                    <div class="mb-3 col-8 p-0">
+
+                        <div class="input-group mb-3">
+                            <input type="password" class="form-control email-password" name="password" id="password" placeholder="********" aria-label="Recipient's username" aria-describedby="button-addon2" required>
+                            <button type="button" id="button-addon2" class="btn rounded-end-2" style="background-color:var(--flame) !important" onclick="togglePassword('password')">
+                                <i class="bi bi-eye-slash" style="color:var(--eerie-black) !important"></i>
+                            </button>
+                        </div>
+
+                            
+                        <script>
+                            function togglePassword(nomeIdInput)
+                            {
+                                // Salva l'elemento input della password
+                                const passwordField = document.getElementById(nomeIdInput);
+                                // Cambia il tipo di input tra "password" e "text"
+                                if (passwordField.type === "password")
+                                {
+                                    passwordField.type = "text";
+                                }
+                                else
+                                {
+                                    passwordField.type = "password";
+                                }
+                            }
+                        </script>
                     </div>
                     <div class="mb-3 col-8 form-check">
                         <input type="checkbox" class="form-check-input" id="rememberMe">
-                        <label class="form-check-label text-white" for="rememberMe">Remember me</label>
+                        <label class="form-check-label text-white" for="rememberMe">Ricordati</label>
                     </div>
                     <button type="submit" class="btn btn-login rounded-3 col-8 fw-bold">Login</button>
                 </form>
 
 
 
-                <div class="d-flex justify-content-between mt-3 w-75">
+                <div class="d-flex justify-content-between mt-3 col-8">
                     <a href="/Utenti/Registrazione">Registrati</a>
-                    <a href="#" class="text-white">Forgot password?</a>
+                    <a href="#" class="text-white">Password dimenticata?</a>
                 </div>
                 <a class="arrow-back d-flex align-items-center fs-4 my-4" id="register-manual" href="/Home/Index">« Torna alla Home</a>
 
@@ -54,5 +78,6 @@
     </div>
 </body>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </html>

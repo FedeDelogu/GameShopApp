@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebAppPlayshphere</title>
+    <link rel="icon" type="image/x-icon" href="~/img/HellsGames.png">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Layout/mainLayout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebAppPlayshphere.styles.css" asp-append-version="true" />
@@ -27,29 +28,28 @@
             <nav class="navbar">
                 <ul class="nav nav-underline">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")" 
+                        aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Videogiochi" asp-action="Catalogo">Catalogo</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Videogiochi" && ViewContext.RouteData.Values["action"].ToString() == "Catalogo" ? "active" : "")" asp-controller="Videogiochi" asp-action="Catalogo">Catalogo</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Ordini" asp-action="Elenco">Elenco Ordini</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Chi siamo</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "ChiSiamo" ? "active" : "")"
+                           asp-controller="Home" asp-action="ChiSiamo">Chi siamo</a>
                     </li>
                     <li class="nav-item">
                         <form class="d-flex" role="search">
                             <input class="form-control form-control-sm border-0 rounded-start-2" type="search" placeholder="Cerca un videogioco" aria-label="Search">
-                            <button class="btn btn-outline-light border-0" type="submit">
-                                <i class="fa-solid fa-search fs-4" style="color:#403d39ff;"></i>
+                            <button class="btn btn-outline-light border-0" style="color:var(--eerie-black); background-color:var(--floral-white)" type="submit">
+                                <i class="fa-solid fa-search fs-4"></i>
                             </button>
                         </form>
                     </li>
                 </ul>
             </nav>
             <nav class="navbar" id="profile-box">
-                <ul class="nav nav-underline">
+                <ul class="nav nav-underline align-items-center">
                     @if (utenteLoggato != null)
                     {
                         if (utenteLoggato.Ruolo == 0) // Admin
@@ -61,35 +61,45 @@
                         else // Utente loggato
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Utenti" asp-action="Profilo"><i class="fa-solid fa-user fs-3 px-2" style="color:#eb5e28ff;"></i> @utenteLoggato.Username</a>
+                                <div class="dropdown">
+                                    <a href="#" role="button" style="text-decoration:none" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-user fs-3 px-2  align-middle" style="color:#eb5e28ff;"></i> @utenteLoggato.Username</a>
+                                    <ul class="dropdown-menu dropdown-menu-dark">
+                                        <li><a style="text-decoration:none;" class="dropdown-item" asp-controller="Utenti" asp-action="Profilo">Profilo</a></li>
+                                        <li><hr class="dropdown-divider" style="color:var(--timberwolf)"></li>
+                                        <li><a style="text-decoration:none;" class="dropdown-item" asp-controller="Utenti" asp-action="Logout">Logout</a></li>
+                                    </ul>
+                                </div>
                             </li>
                             <li class="nav-item">
-                                <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
+
+                                @{
+                                    int idUser = @utenteLoggato.Id;
+                                    <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;" onclick="window.location.href='/Carrelli/Dettagli?id=@(idUser)'"></i>
+                                }
+
+
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Utenti" asp-action="Logout">Logout</a>
-                        </li>
                     }
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Utenti" asp-action="Login"><i class="fa-solid fa-user fs-3 px-2" style="color:#eb5e28ff;"></i> Login</a>
+                            <a asp-controller="Utenti" asp-action="Login"><i class="fa-solid fa-user fs-3 px-2" style="color:#eb5e28ff;"></i> </a>
                         </li>
-                    <li class="nav-item">
-                        <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
-                    </li>
+                        <li class="nav-item">
+                            <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;"></i>
+                         </li>
 
                     }
                 </ul>
             </nav>
         </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+    
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -103,9 +113,9 @@
             <div class="d-flex aling-items-center">
                 <div class="container d-flex justify-content-sm-around align-items-center py-4" id="links-footer">
                     <a asp-controller="Home" asp-action="Index">Home</a>
-                    <a>Regolamento</a>
-                    <a>FAQs</a>
-                    <a>Chi siamo</a>
+                    <a asp-controller="Home" asp-action="Regolamento">Regolamento</a>
+                    <a href="#faqs">FAQs</a>
+                    <a asp-controller="Home" asp-action="ChiSiamo">Chi siamo</a>
                 </div>
             </div>
             <div class="d-flex-align-items-center">

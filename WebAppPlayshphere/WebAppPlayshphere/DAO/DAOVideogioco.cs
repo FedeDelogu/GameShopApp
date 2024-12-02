@@ -1,4 +1,5 @@
-﻿using Utility;
+﻿using System.Linq;
+using Utility;
 using WebAppPlayshphere.Models;
 
 namespace WebAppPlayshphere.DAO
@@ -9,12 +10,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOVideogioco()
         {
-
-
             db = new Database("Playsphere", "localhost");
-
-
-
         }
         private static DAOVideogioco istance = null;
 
@@ -120,7 +116,33 @@ namespace WebAppPlayshphere.DAO
             Entity e = new Videogioco();
             e.FromDictionary(righe);
             ((Videogioco)e).Recensioni = DAORecensione.GetIstance().RecensioniGioco(id);
+            // recupero tutte le piattaforme del gioco
+            var ris = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+            // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+            foreach (var item in ris) {
+                ((Videogioco)e).Piattaforme.Add(
+                    new Piattaforma()
+                    {
+                        Id = ((Piattaforma)item).Id,
+                        Nome = ((Piattaforma)item).Nome
+                    }
+                    );
+            }
             return e;
+        }
+        public string FindTitolo(int id)
+        {
+            var righe = db.ReadOne("SELECT titolo FROM Videogiochi WHERE id=" + id);
+            if (righe == null)
+            {
+                return null;
+            }
+            foreach (var item in righe)
+            {
+                Console.WriteLine(item.Key+" "+item.Value);
+                return item.Value;
+            }
+            return null;
         }
         public Entity FindByTitolo(string titolo)
         {
@@ -132,9 +154,164 @@ namespace WebAppPlayshphere.DAO
             Entity e = new Videogioco();
             e.FromDictionary(righe);
             ((Videogioco)e).Recensioni = DAORecensione.GetIstance().RecensioniGioco(e.Id);
+            // recupero tutte le piattaforme del gioco
+            var ris = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+            // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+            foreach (var item in ris)
+            {
+                ((Videogioco)e).Piattaforme.Add(
+                    new Piattaforma()
+                    {
+                        Id = ((Piattaforma)item).Id,
+                        Nome = ((Piattaforma)item).Nome
+                    }
+                    );
+            }
             return e;
         }
 
+        // PER TROVARE I GIOCHI MIGLIORI DI OGNI CATEGORIA
+        public Dictionary<string, Entity> BestInCategory()
+        {
+            Dictionary<string, Entity> list = new Dictionary<string, Entity>();
+            List<string> generi = new();
+            var righe = db.Read("SELECT generi FROM Videogiochi");
+            foreach(var riga in righe)
+            {
+                string[] valori = riga["generi"].Split(",");
+                foreach(string s in valori)
+                {
+                    if (!generi.Contains(s.Trim()))
+                    {
+                        generi.Add(s.Trim());
+                        Console.WriteLine("GENERI: " + s.Trim());
+                    }
+                }
+            }
+
+            List<Entity> videogiochi = Read();
+            foreach(string s in generi)
+            {
+                var vGenere = videogiochi.Where(v => ((Videogioco)v).Generi.Contains(s)).ToList();
+                var bestVideogioco = vGenere.OrderByDescending(v => ((Videogioco)v).Valutazione());
+                foreach(var v in bestVideogioco)
+                {
+                    if (!list.Values.Contains(v))
+                    {
+                        list.Add(s, v);
+                        break;
+                    }
+                }
+            }
+
+            return list;
+
+        }
+
+        public List<Entity> filtroCategoria(string categoria)
+        {
+            var righe = db.Read($"SELECT * FROM Videogiochi WHERE Generi LIKE '%{categoria}%'");
+            if (righe == null)
+            {
+                Console.WriteLine("riga nulla");
+                return null;
+            }
+            List<Entity> ris = new List<Entity>();
+            foreach (var riga in righe)
+            {
+                Entity e = new Videogioco();
+                e.FromDictionary(riga);
+                // recupero tutte le piattaforme del gioco
+                List<Entity> piattaforme = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+                if (DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id) == null)
+                {
+                    Console.WriteLine("ERRORE RECUPERO PIATTAFORME");
+                }
+                // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+                foreach (var item in piattaforme)
+                {
+                    ((Videogioco)e).Piattaforme.Add(
+                        new Piattaforma()
+                        {
+                            Id = ((Piattaforma)item).Id,
+                            Nome = ((Piattaforma)item).Nome
+                        }
+                    );
+                }
+                ris.Add(e);
+            }
+            return ris;
+        }
+
+        public List<Entity> LastRelease()
+        {
+            var righe = db.Read("select TOP 4 * from Videogiochi where DATEDIFF(Day, GETDATE(), rilascio) <= 0 order by rilascio desc");
+            if (righe == null)
+            {
+                Console.WriteLine("riga nulla");
+                return null;
+            }
+            List<Entity> ris = new List<Entity>();
+            foreach (var riga in righe)
+            {
+                Entity e = new Videogioco();
+                e.FromDictionary(riga);
+                // recupero tutte le piattaforme del gioco
+                List<Entity> piattaforme = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+                if (DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id) == null)
+                {
+                    Console.WriteLine("ERRORE RECUPERO PIATTAFORME");
+                }
+                // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+                foreach (var item in piattaforme)
+                {
+                    ((Videogioco)e).Piattaforme.Add(
+                        new Piattaforma()
+                        {
+                            Id = ((Piattaforma)item).Id,
+                            Nome = ((Piattaforma)item).Nome
+                        }
+                    );
+                }
+                ris.Add(e);
+            }
+            return ris;
+        }
+
+        public List<Entity> Preoders()
+        {
+            var righe = db.Read("select TOP 4 * from Videogiochi where DATEDIFF(Day, GETDATE(), rilascio) > 0 order by rilascio desc");
+            if (righe == null)
+            {
+                Console.WriteLine("riga nulla");
+                return null;
+            }
+            List<Entity> ris = new List<Entity>();
+            foreach (var riga in righe)
+            {
+                Entity e = new Videogioco();
+                e.FromDictionary(riga);
+                // recupero tutte le piattaforme del gioco
+                List<Entity> piattaforme = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+                if (DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id) == null)
+                {
+                    Console.WriteLine("ERRORE RECUPERO PIATTAFORME");
+                }
+                // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+                foreach (var item in piattaforme)
+                {
+                    ((Videogioco)e).Piattaforme.Add(
+                        new Piattaforma()
+                        {
+                            Id = ((Piattaforma)item).Id,
+                            Nome = ((Piattaforma)item).Nome
+                        }
+                    );
+                }
+                ris.Add(e);
+            }
+            return ris;
+        }
 
         public bool Update(Entity e)
         {

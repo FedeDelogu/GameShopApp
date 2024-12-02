@@ -10,12 +10,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOPiattaforma()
         {
-
-
             db = new Database("Playsphere", "localhost");
-
-
-
         }
         private static DAOPiattaforma istance = null;
 
@@ -39,7 +34,10 @@ namespace WebAppPlayshphere.DAO
 
         public Entity Find(int id)
         {
-            throw new NotImplementedException();
+            var riga = db.ReadOne("SELECT * FROM Piattaforme WHERE id="+id);
+            Entity e = new Piattaforma();
+            e.FromDictionary(riga);
+            return e;
         }
 
         public List<Entity> Read()
@@ -77,7 +75,7 @@ namespace WebAppPlayshphere.DAO
             {
                 Piattaforma piattaforma = new Piattaforma
                 {
-                    Id = Convert.ToInt32(riga["id"]),
+                    Id = Convert.ToInt32(riga["idpiattaforma"]),
                     Nome = riga["nome"].ToString()
                 };
                 ris.Add(piattaforma);
