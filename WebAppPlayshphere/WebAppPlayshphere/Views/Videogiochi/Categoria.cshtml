@@ -16,11 +16,18 @@
 </head>
 <body>
 
-    <div class="container my-5 row">
-        <div class="col-9 d-flex justify-content-center">
+    <div class="container my-5">
+        <div class="col d-flex justify-content-center">
             <!-- CATALOGO -->
             <section id="catalogo">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4">
+                @{
+                    var categoria = Context.Request.Query["categoria"];
+                }
+
+                <h1 style="color:var(--floral-white)" class="my-3">
+                    Videogiochi per il genere: <span style="color:var(--flame)">@categoria</span>
+                </h1>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4 mt-3">
                     @foreach (var v in Model)
                     {
                         var titolo = (((Videogioco)v).Titolo);
@@ -46,6 +53,4 @@
         </div>
     </div>
 </body>
-<script src="/js/Sidebar/Sidebar.js" crossorigin="anonymous"></script>
-
 </html>

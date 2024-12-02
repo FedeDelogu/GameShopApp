@@ -66,7 +66,7 @@
                                     <div id="action" class="col-6 d-flex align-items-center m-2 justify-content-between">
                                         <!-- Selettore quantità -->
                                         <div class="custom-number-input">
-                                            <label class="label-qnt me-2" for="quantita-@(item.Key.Id)">Quantità:</label>
+                                            <label class="label-qnt me-2" style="color:var(--floral-white)" for="quantita-@(item.Key.Id)">Quantità:</label>
                                             <select id="quantita-@(item.Key.Id)" name="quantita-@(item.Key.Id)" class="quantity-select" onchange="updateQuantity(@(item.Key.Id), @(Model.Id), @(((Carrello)Model).Piattaforme[item.Key]))">
                                                 @for (int i = 1; i <= 10; i++) // Numero massimo di opzioni
                                                 {
@@ -83,7 +83,7 @@
                                 <!-- Prezzo -->
                                 <div class="d-flex align-items-end justify-content-end w-100">
                                     <div class="m-3">
-                                        <span id="prezzo">@prezzo</span>
+                                        <span id="prezzo">@prezzo €</span>
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +121,7 @@
 
                                                 <div class="d-flex justify-content-between">
                                                 <span>@titolo x @quantita</span>
-                                                <span>@(quantita * prezzoGioco) Eur</span>
+                                                <span>@(quantita * prezzoGioco) €</span>
                                                 </div>
                                 }        
                             }
@@ -131,7 +131,7 @@
                                 <hr>
                                 <div class="col d-flex justify-content-between">
                                     <span>TOTALE</span>
-                                    <span>@(((Carrello)Model).Totale() + "€")</span>
+                                    <span>@(((Carrello)Model).Totale() + " €")</span>
                                 </div>
                             <div class="col d-flex justify-content-between">
                                         <button class="btn btn-checkout col fw-bold my-2" onclick="window.location.href='/Carrelli/Checkout?id=@(Model.Id)'">Procedi al pagamento </button>

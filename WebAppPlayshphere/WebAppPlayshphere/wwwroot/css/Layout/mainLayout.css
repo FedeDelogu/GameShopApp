@@ -128,7 +128,8 @@ form > .btn {
 /* -- FOOTER -- */
 footer {
     background-color: var(--black-olive);
-    position: sticky !important;
+    position: fixed !important;
+    bottom: 0;
     width: 100%;
     z-index: 500;
 }

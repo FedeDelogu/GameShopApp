@@ -148,7 +148,7 @@ hr {
 /*CHECKOUT*/
 
 h1 {
-    color: var(--floral-white);
+    color: var(--floral-white)!important;
 }
 
 .form {
@@ -202,4 +202,16 @@ h1 {
 
 .fields--3 {
     grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* CARELLO VUOTO */
+
+.bi-cart-x-fill{
+    font-size: 150px;
+    color: var(--floral-white);
+}
+
+#empty-cart > h1{
+    font-size: 50px;
+    color: var(--floral-white);
 }

@@ -142,7 +142,7 @@
 
                                                     <div class="d-flex justify-content-between">
                                                         <span>@titolo x @quantita</span>
-                                                        <span>@(quantita * prezzoGioco) Eur</span>
+                                                        <span>@(quantita * prezzoGioco) €</span>
                                                     </div>
                                                 }
                                             }
@@ -152,7 +152,7 @@
                                     <hr>
                                     <div class="col d-flex justify-content-between">
                                         <span>TOTALE</span>
-                                        <span>@(((Carrello)Model).Totale() + "€")</span>
+                                        <span>@(((Carrello)Model).Totale() + " €")</span>
                                     </div>
                                     <div class="col d-flex justify-content-between">
                                         <button class="btn btn-checkout col fw-bold my-2" onclick="window.location.href='/Carrelli/Ordina?id=@(Model.Id)'">Paga ora</button>

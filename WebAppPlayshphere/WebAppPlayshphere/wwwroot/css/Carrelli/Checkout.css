@@ -15,7 +15,7 @@ html, body {
     background: radial-gradient(circle, rgb(41, 29, 24) 0%, var(--eerie-black) 100%);
 }
 
-h2 {
+h2,h1 {
     color: var(--floral-white) !important;
 }
 
