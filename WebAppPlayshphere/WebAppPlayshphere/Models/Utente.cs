@@ -31,15 +31,11 @@ namespace WebAppPlayshphere.Models
             Carrello = carrello;
         }*/
 
-        [Required(ErrorMessage = "L'email è obbligatoria.")]
-        [EmailAddress(ErrorMessage = "L'email non è valida.")]
+       
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "La password è obbligatoria.")]
-        [StringLength(100, ErrorMessage = "La password deve avere almeno 8 caratteri.", MinimumLength = 8)]
         public string Password { get; set; }
 
-        [Range(0, 10, ErrorMessage = "Ruolo non valido.")]
         public int Ruolo { get; set; }
 
         public DateTime Dob {  get; set; }

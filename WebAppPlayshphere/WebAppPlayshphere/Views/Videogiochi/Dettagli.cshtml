@@ -81,8 +81,8 @@
                     </div>
                     <div class="container-fluid mt-3">
                         <div class="d-flex flex-row align-items-center d-flex justify-content-between">
-                            <input type="button" class="btn btn-primary p-2" id="carrello" value="Aggiungi al carrello" onclick="aggiungiAlCarr(@(Model.Id), @(UtentiController._utenteLoggato==null?-1:UtentiController._utenteLoggato.Id))">
-                        </div>
+                        <input type="button" class="btn btn-primary p-2" id="carrello" value="Aggiungi al carrello" onclick="aggiungiAlCarr(@(Model.Id), @(ViewBag.UtenteLoggato != null ? ViewBag.UtenteLoggato.Id : -1))">
+                    </div>
                     </div>
                 </div>
             </div>
