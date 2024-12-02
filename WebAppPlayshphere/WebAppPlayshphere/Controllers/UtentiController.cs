@@ -41,10 +41,14 @@ namespace WebAppPlayshphere.Controllers
         public IActionResult Profilo()
         {
             var utenteLoggato = GetUtenteLoggato();
+            Console.WriteLine(utenteLoggato.ToString());
             if (utenteLoggato == null)
             {
                 return RedirectToAction("Login");
             }
+
+            // Recupera l'anagrafica dell'utente loggato
+            utenteLoggato.Anagrafica = (Anagrafica)DAOAnagrafica.GetInstance().Find(utenteLoggato.Id);
 
             if (utenteLoggato.Anagrafica == null)
             {
@@ -244,6 +248,7 @@ namespace WebAppPlayshphere.Controllers
             {
                 return RedirectToAction("Login");
             }
+
             if (utenteloggato.Anagrafica == null)
             {
                 Entity AnagraficaVuota = new Anagrafica
@@ -259,7 +264,7 @@ namespace WebAppPlayshphere.Controllers
             }
 
             // Recupera le recensioni dell'utente loggato
-            List<Ordine> ordini = DAOOrdine.GetInstance().FindByUtente(utenteloggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
+            List<Ordine> ordini = DAOOrdine.GetInstance().OrdiniUtente(utenteloggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
 
             // Crea un dizionario che lega l'utente alla sua lista di recensioni
             var model = new Dictionary<Utente, List<Ordine>>()
@@ -354,6 +359,19 @@ namespace WebAppPlayshphere.Controllers
             return null;
         }
 
+        [HttpGet("Utenti/GetIdUtenteLoggato")]
+        public IActionResult GetIdUtenteLoggato()
+        {
+            var utente = GetUtenteLoggato();  // Recupera l'utente loggato dalla sessione
+
+            // Verifica che l'utente esista e che abbia un Id
+            if (utente == null || utente.Id == 0)
+            {
+                return NotFound();  // Se non c'è nessun utente loggato, restituisci un errore
+            }
+
+            return Json(new { Id = utente.Id });  // Restituisci solo l'ID dell'utente come JSON
+        }
 
 
     }

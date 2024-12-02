@@ -24,7 +24,34 @@
 <body>
     <div id="full-img">
     </div>
-    
+    @{
+    // Controllo se c'è un utente loggato
+    var utenteLoggatoJson = Context.Session.GetString("UtenteLoggato");
+    dynamic utenteLoggato = string.IsNullOrEmpty(utenteLoggatoJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject(utenteLoggatoJson);
+
+    @if (utenteLoggato != null)
+    {
+        var userId = utenteLoggato.Id;
+        <div class="modal fade" id="modalAddCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Videogioco aggiunto al carrello!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                        <button type="button" onclick="window.location.href='/Carrelli/Dettagli?id=@(userId)'" class="btn btn-primary">Vai al carrello</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    }
+
         <div class="container" id="riepilogo-videogioco">
             <div class="container d-flex justify-content-between">
                 <div id="carouselExampleIndicators  rounded-5" class="carousel slide">
@@ -63,7 +90,7 @@
 
                 <div class="container-fluid mt-3 container-fluid mt-3 d-flex flex-row align-items-center d-flex justify-content-center">
                     <div class="w-100">
-                            <input type="button" class="btn btn-primary p-2 w-100" id="carrello" value="Aggiungi al carrello" onclick="aggiungiAlCarr(@(Model.Id), @(UtentiController._utenteLoggato==null?-1:UtentiController._utenteLoggato.Id))">
+                            <input type="button" data-bs-toggle="modal" data-bs-target="#modalAddCart" class="btn btn-primary p-2 w-100" id="carrello" value="Aggiungi al carrello" onclick="aggiungiAlCarr(@(Model.Id))">
                         </div>
                     </div>
                 </div>
@@ -85,18 +112,19 @@
         <div class="disable" id="idvideogioco">@(((Videogioco)Model).Id)</div>
 </body>
 <script>
-    function aggiungiAlCarr(idVideogioco, idUtente) {
-        var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
-        var url = "";
-        if (idUtente == -1) {
-            url = "/Utenti/Login";
-        } else {
-            url = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
-            alert("Videogioco aggiunto con successo!");
-        }
+    // function aggiungiAlCarr(idVideogioco, idUtente) {
+    //     var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
+    //     var idUtente = await getIdUtente();
+    //     var url = "";
+    //     if (idUtente == -1) {
+    //         url = "/Utenti/Login";
+    //     } else {
+    //         url = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
+    //         alert("Videogioco aggiunto con successo!");
+    //     }
 
-        window.location.href = url;
-    }
+    //     window.location.href = url;
+    // }
 
     // check quantita
     let qnt = document.getElementById("stock").textContent;
@@ -112,9 +140,6 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/5101093cd6.js" crossorigin="anonymous"></script>
-</html>
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/5101093cd6.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
@@ -137,5 +162,61 @@
 
     // Esegui la funzione al caricamento della pagina
     window.onload = getRecensioniGioco;
+
+    // Funzione per aggiungere il videogioco al carrello
+async function aggiungiAlCarr(idVideogioco) {
+    // Ottieni l'ID utente in modo asincrono
+    var idUtente = await getIdUtente();
+
+    // Controlla quale console è stata selezionata
+    var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
+
+    var url = "";
+    if (idUtente == null || idUtente == undefined) {
+        // Se l'utente non è loggato, redirigi alla pagina di login
+        url = "/Utenti/Login";
+    } else {
+        // Altrimenti, costruisci l'URL per aggiungere il gioco al carrello
+        url = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
+        alert("Videogioco aggiunto con successo!");
+    }
+
+    // Redirigi l'utente all'URL costruito
+    window.location.href = url;
+}
+
+async function getIdUtente() {
+    try {
+        const response = await fetch(`/Utenti/GetIdUtenteLoggato`);
+        
+        // Controlla se la risposta è OK
+        if (!response.ok) {
+            throw new Error('Errore nel recupero dell\'utente: ' + response.status);
+        }
+
+        // Verifica se la risposta è JSON
+        const contentType = response.headers.get("Content-Type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("La risposta non è in formato JSON");
+        }
+
+        // Ottieni la risposta come JSON
+        const user = await response.json();
+        
+        console.log("Risposta dell'API:", user);  // Stampa l'intero oggetto per il debug
+
+        if (user != undefined) {
+            console.log("ID Utente loggato:", user["id"]);
+            return user["id"];  // Restituisci l'ID se esiste
+        } else {
+            console.error("ID utente mancante nella risposta.");
+            return null;  // Se non c'è ID, ritorna null
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+    }
+}
+
+
 </script>
 </html>

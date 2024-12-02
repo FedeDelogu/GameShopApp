@@ -31,7 +31,7 @@
 
         </div>
         @{
-            var user = ViewBag.Utente;
+            var user = (Utente)DAOUtente.GetInstance().Find(Model.Id);
         }
         <div class="row">
             <div class="col-8 mr-2 p-0">
@@ -155,7 +155,7 @@
                                         <span>@(((Carrello)Model).Totale() + " €")</span>
                                     </div>
                                     <div class="col d-flex justify-content-between">
-                                        <button class="btn btn-checkout col fw-bold my-2" onclick="window.location.href='/Carrelli/Ordina?id=@(Model.Id)'">Paga ora</button>
+                                        <button class="btn btn-checkout col fw-bold my-2" onclick="window.location.href='/Carrelli/Completed?id=@(Model.Id)'">Paga ora</button>
                                     </div>
                                     <div class="col d-flex justify-content-center">
                                         <span id="or">Oppure</span>
