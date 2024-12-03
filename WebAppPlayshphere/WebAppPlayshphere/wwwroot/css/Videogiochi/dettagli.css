@@ -184,6 +184,7 @@ label, p {
     padding-inline: 8px;
 }
 
+
 /* RECENSIONI */
 .card{
     background-color: var(--black-olive) !important;
@@ -202,4 +203,5 @@ label, p {
 .stars span {
     font-size: 1.1em;
     color: white;
+
 }
