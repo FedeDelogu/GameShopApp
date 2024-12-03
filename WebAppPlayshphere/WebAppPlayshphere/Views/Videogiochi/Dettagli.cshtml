@@ -110,7 +110,7 @@
             <h2>Recensioni</h2>
         </div>
         <div class="disable" id="idvideogioco">@(((Videogioco)Model).Id)</div>
-</body>
+        </body>
 <script>
     // function aggiungiAlCarr(idVideogioco, idUtente) {
     //     var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
@@ -161,7 +161,7 @@
     }
 
     // Esegui la funzione al caricamento della pagina
-    window.onload = getRecensioniGioco;
+    document.addEventListener('DOMContentLoaded', getRecensioniGioco);
 
     // Funzione per aggiungere il videogioco al carrello
 async function aggiungiAlCarr(idVideogioco) {
