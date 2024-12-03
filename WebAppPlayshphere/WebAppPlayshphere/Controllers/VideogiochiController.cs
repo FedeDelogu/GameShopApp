@@ -5,6 +5,7 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using Utility;
 using WebAppPlayshphere.DAO;
+using WebAppPlayshphere.Factory;
 using WebAppPlayshphere.Models;
 
 namespace WebAppPlayshphere.Controllers
@@ -15,6 +16,33 @@ namespace WebAppPlayshphere.Controllers
         {
             return View();
         }
+
+        public IActionResult AggiungiRecensione([FromForm] Dictionary<string, string> recensione)
+        {
+            foreach (var item in recensione)
+            {
+                Console.WriteLine(item.Key + " " + item.Value);
+            }
+            Entity e = new Recensione();
+            if (recensione != null)
+            {
+                if (recensione["valido"] == "1")
+                {
+                    recensione["valido"] = "true";
+                }
+
+                e = RecensioneFactory.CreateRecensione(recensione);
+                if (DAORecensione.GetIstance().Create(e))
+                {
+                    Console.WriteLine("Recensione creata");
+                    int id = Convert.ToInt32(recensione["idvideogioco"]);
+                    Console.WriteLine("id da passare " + id);
+                    return RedirectToAction("Dettagli", new { id = id });
+                }
+            }
+            return Content("ROTTO TUTTO");
+        }
+
 
         public IActionResult Dettagli(int id)
         {

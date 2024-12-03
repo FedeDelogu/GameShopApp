@@ -48,7 +48,6 @@
                 </div>
             </div>
         }
-    }
 
         <div class="container" id="riepilogo-videogioco">
             <div class="container d-flex justify-content-between">
@@ -61,7 +60,7 @@
                 </div>
                 <div class="container pb-3" id="dettagli-gioco">
                     <div class="container-fluid mt-3 rounded-5">
-                        <a id="return-catalog" href="/Videogiochi/Catalogo">< Torna al catalogo</a>
+                        <a id="return-catalog" href="/Videogiochi/Catalogo"> Torna al catalogo</a>
                         <h1>@(((Videogioco)Model).Titolo)</h1>
                     </div>
                     @{
@@ -107,23 +106,45 @@
         <div class="container" id="recensioni">
             <h2>Recensioni</h2>
         </div>
+
+        <div class="container mt-3 mb-5">
+
+        @if(utenteLoggato != null)
+        {
+            var userId = utenteLoggato.Id;
+            
+                <h3 style="color:var(--floral-white)">Inserisci una recensione</h3>
+                <form action="/Videogiochi/AggiungiRecensione" method="post">
+                    <input type="number" hidden="" readonly="" name="idvideogioco" value="9">
+                    <input type="number" hidden="" readonly="" name="idutente" value="10">
+                    <input type="number" hidden="" readonly="" name="valido" value="1">
+                    <textarea name="commento" id="commento"></textarea>
+                    <div class="d-flex align-items-center justify-content-end">
+                    <span class="me-2" style="color:var(--floral-white)">Inserisci la tua valutazione</span>
+                    <select name="valutazione" id="valutazione">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <input type="submit" class="btn btn-primary" value="Invia recensione">
+                </div>
+                </form>
+        } else
+        {
+            <div id="form-recensione" class="mt-5">
+                <p>Per rencensire il gioco devi prima 
+                <a onclick="window.location.href='/Utenti/Login'">accedere al tuo account!</a></p>
+            </div>
+        }
+
+        </div>
+}
         <div class="disable" id="idvideogioco">@(((Videogioco)Model).Id)</div>
         </body>
 <script>
-    // function aggiungiAlCarr(idVideogioco, idUtente) {
-    //     var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
-    //     var idUtente = await getIdUtente();
-    //     var url = "";
-    //     if (idUtente == -1) {
-    //         url = "/Utenti/Login";
-    //     } else {
-    //         url = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
-    //         alert("Videogioco aggiunto con successo!");
-    //     }
-
-    //     window.location.href = url;
-    // }
-
+   
     // check quantita
     let qnt = document.getElementById("stock").textContent;
     document.addEventListener('DOMContentLoaded', function () {
