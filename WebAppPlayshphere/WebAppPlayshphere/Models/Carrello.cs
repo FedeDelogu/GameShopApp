@@ -24,7 +24,7 @@ namespace WebAppPlayshphere.Models
             {
                 totale += (item.Key.Prezzo * item.Value);
             }
-            return totale;
+            return Math.Round(totale,2);
 
         }
         public override string ToString()

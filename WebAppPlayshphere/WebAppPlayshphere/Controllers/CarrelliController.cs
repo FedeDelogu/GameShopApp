@@ -50,7 +50,7 @@ namespace WebAppPlayshphere.Controllers
 
             if (quantitaCorrente > qt)
             {
-                DAOCarrello.GetIstance().Remove(id, idCarrello,quantitaCorrente - qt);
+                DAOCarrello.GetIstance().Remove(id, idCarrello,idPiattaforma, quantitaCorrente - qt);
             }
             else
             {
