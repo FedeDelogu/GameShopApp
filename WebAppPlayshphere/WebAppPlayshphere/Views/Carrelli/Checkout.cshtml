@@ -1,0 +1,176 @@
+﻿@using WebAppPlayshphere.Models;
+@using WebAppPlayshphere.Controllers;
+@using WebAppPlayshphere.DAO;
+@using Utility;
+@model Utility.Entity;
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="~/css/Carrelli/carrello.css" rel="stylesheet" />
+    <title>Checkout</title>
+</head>
+<body>
+    <div class="container">
+        <div class="container-fluid d-flex justify-content-lg-center mb-5 align-items-center">
+            <div class="round d-flex justify-content-center align-items-center active me-3">1</div>
+            <div class="me-3"><span class="info-page">Riepilogo ordine</span></div>
+            <div class="line-active"></div>
+
+            <div class="round d-flex justify-content-center align-items-center active me-3">2</div>
+            <div class="disbale me-3"><span class="info-page">Pagamento</span></div>
+            <div class="line-disable"></div>
+
+            <div class="round d-flex justify-content-center align-items-center disable me-3">3</div>
+            <div class="disbale me-3"><span class="info-page-disable">Ordine effettuato</span></div>
+
+        </div>
+        @{
+            var user = (Utente)DAOUtente.GetInstance().Find(Model.Id);
+        }
+        <div class="row">
+            <div class="col-8 mr-2 p-0">
+                <div class="container-fluid px-0 dark-bg w-100 mb-3 rounded-end-3">
+                    <div class="container py-4">
+                        <h1>Dati di fatturazione</h1>
+                        <hr />
+
+                        <form method="post" action="/Carrelli/ModificaAnagrafica">
+                            <div class="row justify-content-center py-3 gy-3">
+                                <div class="col-8 col-sm-5">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Nome:</span>
+
+                                        <input type="text" class="form-control" name="Nome" value="@(user.Anagrafica.Nome)">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-8 col-sm-5">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Cognome:</span>
+
+                                        <input type="text" class="form-control" name="Cognome" value="@(user.Anagrafica.Cognome)">
+
+                                    </div>
+                                </div>
+                                <div class="col-8 col-sm-5">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Email:</span>
+
+                                        <input type="email" class="form-control rounded-end-2" name="Email" value="@(user.Email)">
+
+                                    </div>
+                                </div>
+                                <div class="col-8 col-sm-5">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Indirizzo:</span>
+
+                                        <input type="text" class="form-control" name="Indirizzo" value="@(user.Anagrafica.Indirizzo)">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-8 col-sm-5">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">CAP:</span>
+
+                                        <input type="number" class="form-control rounded-end-2" name="Cap" value="@(user.Anagrafica.Cap)">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-8 col-sm-5">
+                                    <div class="input-group mb-3">
+
+                                        <span class="input-group-text">Città :</span>
+                                        <input type="text" class="form-control" name="Citta" value="@(user.Anagrafica.Citta)">
+
+
+
+                                    </div>
+                                </div>
+                                <div class="col-8 col-sm-5">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Paese:</span>
+
+                                        <input type="text" class="form-control" name="Stato" value="@(user.Anagrafica.Stato)">
+
+                                    </div>
+                                </div>
+                                <div class="col-8 col-sm-5">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">Cell:</span>
+
+                                        <input type="number" class="form-control rounded-end-2" name="Telefono" value="@(user.Anagrafica.Telefono)">
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Modifica</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @{
+
+                if (((Carrello)Model).Videogiochi.Count > 0)
+                {
+                    <!-- sidebar -->
+
+                    <div class="col-4">
+                        <div class="container-fluid px-0 dark-bg w-100 mb-3 rounded-3" id="sidebar">
+                            <div class="container d-flex justify-content-center py-4">
+                                <div class="d-flex w-100 flex-column">
+                                    <div class="col d-flex justify-content-between">
+                                        <div class="w-100">
+                                            @{
+                                                foreach (var item in ((Carrello)Model).Videogiochi)
+                                                {
+
+                                                    string titolo = item.Key.Titolo;
+                                                    double prezzoGioco = item.Key.Prezzo;
+                                                    int quantita = item.Value;
+
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>@titolo x @quantita</span>
+                                                        <span>@(quantita * prezzoGioco) €</span>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+
+                                    </div>
+                                    <hr>
+                                    <div class="col d-flex justify-content-between">
+                                        <span>TOTALE</span>
+                                        <span>@(((Carrello)Model).Totale() + " €")</span>
+                                    </div>
+                                    <div class="col d-flex justify-content-between">
+                                        <button class="btn btn-checkout col fw-bold my-2" onclick="window.location.href='/Carrelli/Completed?id=@(Model.Id)'">Paga ora</button>
+                                    </div>
+                                    <div class="col d-flex justify-content-center">
+                                        <span id="or">Oppure</span>
+                                    </div>
+                                    <div class="col d-flex justify-content-center">
+                                        <a id="return-catalog" class="mt-2" onclick="window.location.href='/Videogiochi/Catalogo'">Torna al catalogo</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+    </div>
+</body>
+<script>
+</script>
+</html>

@@ -1,4 +1,5 @@
 ﻿@using WebAppPlayshphere.Models
+@using WebAppPlayshphere.Controllers;
 @model Utility.Entity
 @{
     Layout = "_Layout";
@@ -11,7 +12,7 @@
     <link rel="stylesheet" href="/css/Videogiochi/dettagli.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <title>@(((Videogioco)Model).Titolo)</title>
+    <title>@(((Videogioco)Model).Id) - @(((Videogioco)Model).Titolo)</title>
 <style>
     #full-img{
      background-image: url("/images/copertine/@(Model.Id).png") !important;
@@ -23,39 +24,44 @@
 <body>
     <div id="full-img">
     </div>
-    
-    <main>
+    @{
+        // Controllo se c'è un utente loggato
+        var utenteLoggatoJson = Context.Session.GetString("UtenteLoggato");
+        dynamic utenteLoggato = string.IsNullOrEmpty(utenteLoggatoJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject(utenteLoggatoJson);
+
+        @if (utenteLoggato != null)
+        {
+            var userId = utenteLoggato.Id;
+            <div class="modal fade" id="modalAddCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" style="color:var(--black-olive)!important" id="exampleModalLabel">Aggiunto al carrello!</h1>
+                        </div>
+                        <div class="modal-body">
+                            @(((Videogioco)Model).Titolo) è stato correttamente aggiunto al carrello!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="redirectToDetail" class="btn btn-primary" data-bs-dismiss="modal">Chiudi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
         <div class="container" id="riepilogo-videogioco">
             <div class="container d-flex justify-content-between">
                 <div id="carouselExampleIndicators  rounded-5" class="carousel slide">
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    </div>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <img src="~/images/copertine/@(Model.Id).png" width="1024" height="300" class="d-block w-100" alt="...">
                         </div>
-                        <div class="carousel-item">
-                            <img src="~/images/copertine/@(Model.Id).png" width="1024" height="300" class="d-block w-100" alt="...">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="~/images/copertine/@(Model.Id).png" width="1024" height="300" class="d-block w-100" alt="...">
-                        </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
                 <div class="container pb-3" id="dettagli-gioco">
                     <div class="container-fluid mt-3 rounded-5">
-                        <a id="return-catalog">< Torna al catalogo</a>
+                        <a id="return-catalog" href="/Videogiochi/Catalogo">< Torna al catalogo</a>
                         <h1>@(((Videogioco)Model).Titolo)</h1>
                     </div>
                     @{
@@ -72,87 +78,66 @@
                         </select>
                     </div>
                     <div class="container-fluid mt-3">
-                        @{
-                            Console.WriteLine("CONSOLE DI STO GIOCO DI MERDA: "+((Videogioco)Model).Piattaforme.Count);
-                        }
-                        <p>Disponibilità: <span id="stock">Disponibile</span></p>
+                    <p>Disponibilità: <span id="stock">@(((Videogioco)Model).Quantita > 0 ? "Disponibile" : "Non Disponibile")</span></p>
                     </div>
                     <div class="container-fluid mt-3">
                         <div class="d-flex flex-row align-items-center">
-                            <span id="price">@(((Videogioco)Model).Prezzo)</span>
-                            <input type="number" id="quantita" value="1" min="0">
+                            <span id="price">@(((Videogioco)Model).Prezzo) €</span>
                         </div>
                     </div>
-                    <div class="container-fluid mt-3">
-                        <div class="d-flex flex-row align-items-center d-flex justify-content-between">
-                            <input type="button" class="btn btn-primary p-2" id="wishlist" value="Wishlist">
-                            <input type="button" class="btn btn-primary p-2" id="carrello" value="Aggiungi al carrello" onclick="aggiungiAlCarr(@(Model.Id), 18)">
+
+                <div class="container-fluid mt-3 container-fluid mt-3 d-flex flex-row align-items-center d-flex justify-content-center">
+                    <div class="w-100">
+                            <input type="button" data-bs-toggle="modal" data-bs-target="#modalAddCart" class="btn btn-primary p-2 w-100" id="carrello" value="Aggiungi al carrello" onclick="aggiungiAlCarr(@(Model.Id))">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="container mt-3 mb-3">
+        <div class="container mt-3 mb-5">
             <h2>Descrizione</h2>
             <p>@(((Videogioco)Model).Descrizione)</p>
         </div>
         <!--  VA INSERITO NEL DB IL LINK DI YT -->
-        <div class="container mt-3 mb-3">
+        <div class="container mt-3 mb-5">
             <h2>Trailer</h2>
             <iframe width="100%" height="600" src="@(((Videogioco)Model).Link)" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
         <div class="container" id="recensioni">
+            <h2>Recensioni</h2>
         </div>
-    </main>
-    <script>
-        function aggiungiAlCarr(idVideogioco, idUtente) {
-            var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
-            window.location.href = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
-        }
-    </script>
+        <div class="disable" id="idvideogioco">@(((Videogioco)Model).Id)</div>
 </body>
+<script>
+    // function aggiungiAlCarr(idVideogioco, idUtente) {
+    //     var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
+    //     var idUtente = await getIdUtente();
+    //     var url = "";
+    //     if (idUtente == -1) {
+    //         url = "/Utenti/Login";
+    //     } else {
+    //         url = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
+    //         alert("Videogioco aggiunto con successo!");
+    //     }
 
-<!-- FOOTER -->
-<footer>
-    <div class="container">
-        <div class="d-flex aling-items-center">
-            <div class="container d-flex justify-content-sm-around align-items-center py-4" id="links-footer">
-                <a>Home</a>
-                <a>Regolamento</a>
-                <a>FAQs</a>
-                <a>Chi siamo</a>
-            </div>
-        </div>
-        <div class="d-flex-align-items-center">
-            <div class="container d-flex justify-content-sm-around align-items-center py-1">
-                <span id="company">Pandemonium ©</span>
-            </div>
-        </div>
-    </div>
-</footer>
+    //     window.location.href = url;
+    // }
+
+    // check quantita
+    let qnt = document.getElementById("stock").textContent;
+    document.addEventListener('DOMContentLoaded', function () {
+        if(qnt.toLowerCase() == 'disponibile'){
+            document.getElementById("stock").style = "color: green";
+        }
+        else {
+            document.getElementById("stock").style = "color: red";
+        }
+
+        });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/5101093cd6.js" crossorigin="anonymous"></script>
-</html>
-
-<!-- FOOTER -->
-<footer>
-    <div class="container">
-        <div class="d-flex aling-items-center">
-            <div class="container d-flex justify-content-sm-around align-items-center py-4" id="links-footer">
-                <a>Home</a>
-                <a>Regolamento</a>
-                <a>FAQs</a>
-                <a>Chi siamo</a>
-            </div>
-        </div>
-        <div class="d-flex-align-items-center">
-            <div class="container d-flex justify-content-sm-around align-items-center py-1">
-                <span id="company">Pandemonium ©</span>
-            </div>
-        </div>
-    </div>
-</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/5101093cd6.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
@@ -175,5 +160,68 @@
 
     // Esegui la funzione al caricamento della pagina
     window.onload = getRecensioniGioco;
+
+    // Funzione per aggiungere il videogioco al carrello
+    async function aggiungiAlCarr(idVideogioco) {
+        // Ottieni l'ID utente in modo asincrono
+        var idUtente = await getIdUtente();
+
+        // Controlla quale console è stata selezionata
+        var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
+
+        var url = "";
+
+        if (idUtente == null || idUtente == undefined) {
+            // Se l'utente non è loggato, redirigi alla pagina di login
+            url = "/Utenti/Login";
+            window.location.href = url; // Reindirizza subito
+            return; // Interrompe l'esecuzione della funzione
+        } else {
+            // Costruisci l'URL per aggiungere il gioco al carrello
+            url = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
+
+            // Reindirizza per aggiungere al carrello e poi apri il modale
+            var modalElement = new bootstrap.Modal(document.getElementById("modalAddCart"));
+            modalElement.show();
+
+            document.getElementById("redirectToDetail").addEventListener("click", function () {
+                window.location.href = url; // Ricarica la pagina corrente
+            });
+        }
+    }
+
+async function getIdUtente() {
+    try {
+        const response = await fetch(`/Utenti/GetIdUtenteLoggato`);
+        
+        // Controlla se la risposta è OK
+        if (!response.ok) {
+            throw new Error('Errore nel recupero dell\'utente: ' + response.status);
+        }
+
+        // Verifica se la risposta è JSON
+        const contentType = response.headers.get("Content-Type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("La risposta non è in formato JSON");
+        }
+
+        // Ottieni la risposta come JSON
+        const user = await response.json();
+        
+        console.log("Risposta dell'API:", user);  // Stampa l'intero oggetto per il debug
+
+        if (user != undefined) {
+            console.log("ID Utente loggato:", user["id"]);
+            return user["id"];  // Restituisci l'ID se esiste
+        } else {
+            console.error("ID utente mancante nella risposta.");
+            return null;  // Se non c'è ID, ritorna null
+        }
+    } catch (error) {
+        console.error("Errore:", error);
+    }
+}
+
+
 </script>
 </html>

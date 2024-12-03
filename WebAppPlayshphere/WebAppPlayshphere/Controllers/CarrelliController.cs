@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Reflection;
 using WebAppPlayshphere.DAO;
 using WebAppPlayshphere.Models;
 namespace WebAppPlayshphere.Controllers
@@ -7,22 +10,27 @@ namespace WebAppPlayshphere.Controllers
     {
         public IActionResult Dettagli(int id)
         {
-            Console.WriteLine("ID PASSATO DIO LADRO!!!: "+id);
             return View(DAOCarrello.GetIstance().Find(id));
         }
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult Ordina(int id)
+        public IActionResult Completed(int id)
         {
-            DAOCarrello.GetIstance().Ordina(DAOCarrello.GetIstance().Find(id));
-            return RedirectToAction("Completed");
+            Ordine ord = DAOCarrello.GetIstance().Ordina(DAOCarrello.GetIstance().Find(id));
+            foreach (var v in ord.Videogiochi) 
+            {
+                Console.WriteLine("LISTA: " + v.Key.Titolo);
+            }
+            return View(ord);
         }
-        public IActionResult Completed()
-        {
-            return View();
-        }//viva
+
+        //public IActionResult Completed(Ordine o)
+        //{
+        //    return View(o);
+        //}//viva
+
         public IActionResult UpdateUnits(int qt, int id, int idCarrello,int idPiattaforma)
         {
             Carrello c = (Carrello)DAOCarrello.GetIstance().Find(idCarrello);
@@ -42,7 +50,7 @@ namespace WebAppPlayshphere.Controllers
 
             if (quantitaCorrente > qt)
             {
-                DAOCarrello.GetIstance().Remove(id, idCarrello,quantitaCorrente - qt);
+                DAOCarrello.GetIstance().Remove(id, idCarrello,idPiattaforma, quantitaCorrente - qt);
             }
             else
             {
@@ -54,8 +62,90 @@ namespace WebAppPlayshphere.Controllers
             // Reindirizza all'azione "Dettagli" passando il parametro id
             return RedirectToAction("Dettagli", new { id = idCarrello });
         }
+        public IActionResult Rimuovi(int id, int idVid, int  idPiattaforma)
+        {
+            int idCarrello = id;
+            DAOCarrello.GetIstance().Remove(idVid, id, idPiattaforma);
+            return RedirectToAction("Dettagli", new { id=idCarrello });
+        }
 
-       
+        public IActionResult Checkout(int id)
+        {
+            // Recupera l'utente dalla sessione
+            var userJson = HttpContext.Session.GetString("utenteLoggato");
+            var user = userJson != null ? JsonConvert.DeserializeObject<Utente>(userJson) : null;
+
+            // Recupera il carrello e passalo alla vista
+            var carrello = DAOCarrello.GetIstance().Find(id);
+            return View(carrello);
+        }
+
+
+
+        public IActionResult ModificaAnagrafica(Dictionary<string, string> dati)
+        {
+            // Recupera l'utente dalla sessione
+            var userJson = HttpContext.Session.GetString("UtenteLoggato");
+            var utenteLoggato = userJson != null ? JsonConvert.DeserializeObject<Utente>(userJson) : null;
+
+            foreach (var l in dati)
+                Console.WriteLine(l.Key + " " + l.Value);
+            //Console.WriteLine(utenteLoggato.ToString());
+            // Aggiorna l'anagrafica
+            utenteLoggato.Anagrafica=new Anagrafica
+            {
+                Nome = dati["Nome"],
+                Cognome = dati["Cognome"],
+                Indirizzo = dati["Indirizzo"],
+                Telefono = dati["Telefono"],
+                Citta = dati["Citta"],
+                Stato = dati["Stato"],
+                Cap = dati["Cap"]
+            };
+
+             utenteLoggato.Anagrafica = new Anagrafica
+             {
+                 Nome = dati["Nome"],
+                 Cognome = dati["Cognome"],
+                 Indirizzo = dati["Indirizzo"],
+                 Telefono = dati["Telefono"],
+                 Citta = dati["Citta"],
+                 Stato = dati["Stato"],
+                 Cap = dati["Cap"]
+             };
+
+            // Verifica se è un'operazione di aggiornamento o di creazione
+            if (utenteLoggato.Anagrafica.Nome != "")
+            {
+
+                var succ = DAOAnagrafica.GetInstance().Update(utenteLoggato);
+                if (succ)
+                {
+                    HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(utenteLoggato));
+                    Console.WriteLine(utenteLoggato.Anagrafica.ToString());
+                    return RedirectToAction("Checkout", new { id = utenteLoggato.Id, });
+                }
+                else
+                {
+                    return Content("HAI SBAGLIATO QUALCOSA");
+                }
+            }
+            else
+
+            {
+                // Se l'anagrafica è nuova, usa il metodo Create
+                var succ = DAOAnagrafica.GetInstance().Create(utenteLoggato);
+                if (succ)
+                {
+                    HttpContext.Session.SetString("UtenteLoggato", JsonConvert.SerializeObject(utenteLoggato));
+                    return RedirectToAction("Checkout");
+                }
+                else
+                {
+                    return Content("HAI SBAGLIATO QUALCOSA");
+                }
+            }
+        }
 
     }
 }

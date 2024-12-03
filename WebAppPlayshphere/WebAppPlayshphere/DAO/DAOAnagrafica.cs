@@ -11,7 +11,6 @@ namespace WebAppPlayshphere.DAO
         private DAOAnagrafica()
         {
 
-
             db = new Database("Playsphere", "localhost");
 
         }

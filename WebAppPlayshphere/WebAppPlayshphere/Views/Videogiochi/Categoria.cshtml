@@ -1,0 +1,56 @@
+﻿@using Utility
+@using WebAppPlayshphere.Models
+@model List<Utility.Entity>
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/Catalogo/catalogo.css" rel="stylesheet" />
+
+    <title>Catalogo</title>
+</head>
+<body>
+
+    <div class="container my-5">
+        <div class="col d-flex justify-content-center">
+            <!-- CATALOGO -->
+            <section id="catalogo">
+                @{
+                    var categoria = Context.Request.Query["categoria"];
+                }
+
+                <h1 style="color:var(--floral-white)" class="my-3">
+                    Videogiochi per il genere: <span style="color:var(--flame)">@categoria</span>
+                </h1>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4 mt-3">
+                    @foreach (var v in Model)
+                    {
+                        var titolo = (((Videogioco)v).Titolo);
+                        var prezzo = (((Videogioco)v).Prezzo);
+
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-3" onclick="window.location.href='/Videogiochi/Dettagli?id=@(v.Id)'">
+                            <div class="card w-100 bg-dark text-light">
+                                <div>
+                                    <img class="card-img-top" src="/images/copertine/@(v.Id).png" alt="@(((Videogioco)v).Titolo)">
+                                </div>
+                                <div class="card-footer h-100 d-flex flex-column justify-content-between">
+                                    <h5>@titolo</h5>
+                                    <h6 class="text-end fw-bold" style="color:var(--flame)">@prezzo Eur</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </section>
+            <!--FINE CATALOGO -->
+        </div>
+    </div>
+</body>
+</html>

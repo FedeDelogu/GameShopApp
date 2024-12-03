@@ -10,62 +10,155 @@
 <html>
 <head>
     <link rel="stylesheet" href="~/css/Carrelli/carrello.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <meta charset="utf-8" />
     <title>Carrello</title>
 </head>
 <body>
-    <div id="priceCheck">
-        <h2>Totale</h2>
-        <p style="color: white">@(((Carrello)Model).Totale() + "€")</p>
-        <button onclick="window.location.href='/Carrelli/Ordina?id=@(Model.Id)'">Vai al pagamento ></button>
-    </div>
-    @foreach (var item in ((Carrello)Model).Videogiochi)
-    {
-        string titolo = item.Key.Titolo;
-        int quantita = item.Value;  // Recupera la quantità del gioco
-        titolo = titolo.Replace("''", "'");  // Gestisce gli apici nel titolo
+    <div class="container">
+        @{
+            if (((Carrello)Model).Videogiochi.Count > 0)
+            {
+                <!-- Progress bar -->
+                <div class="container-fluid d-flex justify-content-lg-center mb-5 align-items-center">
+                    <div class="round d-flex justify-content-center align-items-center active me-3">1</div>
+                    <div class="me-3"><span class="info-page">Riepilogo ordine</span></div>
+                    <div class="line-disable"></div>
 
-        DateTime dataUscita = item.Key.Rilascio; // Recupera la data di uscita
-        bool isPreOrder = dataUscita > DateTime.Now; // Controlla se è un pre-order
+                    <div class="round d-flex justify-content-center align-items-center disable me-3">2</div>
+                    <div class="disable me-3"><span class="info-page-disable">Riepilogo ordine</span></div>
+                    <div class="line-disable"></div>
 
-        <div class="games">
-            <img src="~/images/copertine/@(item.Key.Id).png" class="copertine" />
-            <div class="info">
-                <p>@(titolo)</p>
-                <p>@(item.Key.Sviluppatori)</p>
-                <p>Data di uscita: @(dataUscita.ToString("dd/MM/yyyy"))</p>
-                @if (isPreOrder)
-                {
-                    <p style="color: orange; font-weight: bold;">Pre-order</p>
-                }
-            </div>
+                    <div class="round d-flex justify-content-center align-items-center disable me-3">3</div>
+                    <div class="disable me-3"><span class="info-page-disable">Riepilogo ordine</span></div>
+                </div>
+            }
+        }
 
-            <div class="quantita">
-                <label for="quantita-@(item.Key.Id)">Quantità:</label>
-                <select id="quantita-@(item.Key.Id)" name="quantita-@(item.Key.Id)" class="quantity-select" onchange="updateQuantity(@(item.Key.Id), @(Model.Id), @(((Carrello)Model).Piattaforme[item.Key]))">
-                    @for (int i = 1; i <= 10; i++)  // Puoi regolare il numero massimo di opzioni qui
-                    {
-                        <option value="@i" @(i == quantita ? "selected" : "")>@i</option>
-                    }
-                </select>
-                <h1>Logo</h1>
+        <!-- Lista dei giochi -->
+        <div class="row">
+            <div class="col mr-2 p-0">
                 @{
-                    
-                    Console.WriteLine(((Piattaforma)DAOPiattaforma.GetIstance().Find(((Carrello)Model).Piattaforme[item.Key])).Nome);
+                    if (((Carrello)Model).Videogiochi.Count > 0)
+                    {
+                    foreach (var item in ((Carrello)Model).Videogiochi)
+                    {
+                        string titolo = item.Key.Titolo;
+                        double prezzo = item.Key.Prezzo;
+                        int quantita = item.Value; // Quantità del gioco
+                        titolo = titolo.Replace("''", "'"); // Gestione apici
+                        DateTime dataUscita = item.Key.Rilascio;
+                        bool isPreOrder = dataUscita > DateTime.Now; // È un pre-ordine?
+
+                        <div class="container-fluid px-0 dark-bg w-100 mb-3 rounded-end-3">
+                            <div class="d-flex">
+                                <!-- Immagine -->
+                                <div id="img">
+                                    <img src="~/images/copertine/@(item.Key.Id).png" class="copertine" width="250" height="175" />
+                                </div>
+
+                                <!-- Dettagli -->
+                                <div class="d-flex flex-column justify-content-between w-100">
+                                    <div id="dettagli" class="m-2">
+                                        <h2>@titolo</h2>
+                                        <span>Piattaforma selezionata: </span><img src="/images/loghi/@(((Carrello)Model).Piattaforme[item.Key]).png" width="30" height="30" />
+                                    </div>
+                                    <div id="action" class="col-6 d-flex align-items-center m-2 justify-content-between">
+                                        <!-- Selettore quantità -->
+                                        <div class="custom-number-input">
+                                            <label class="label-qnt me-2" style="color:var(--floral-white)" for="quantita-@(item.Key.Id)">Quantità:</label>
+                                            <select id="quantita-@(item.Key.Id)" name="quantita-@(item.Key.Id)" class="quantity-select" onchange="updateQuantity(@(item.Key.Id), @(Model.Id), @(((Carrello)Model).Piattaforme[item.Key]))">
+                                                @for (int i = 1; i <= 10; i++) // Numero massimo di opzioni
+                                                {
+                                                    <option value="@i" @(i == quantita ? "selected" : "")>@i</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <!-- Icona cestino -->
+                                        <i class="fa-solid fa-trash-can" onclick="window.location.href='/Carrelli/Rimuovi?id=@(Model.Id)&idVid=@(item.Key.Id)&idPiattaforma=@(((Carrello)Model).Piattaforme[item.Key])'"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Prezzo -->
+                                <div class="d-flex align-items-end justify-content-end w-100">
+                                    <div class="m-3">
+                                        <span id="prezzo">@(Math.Round(prezzo,2)) €</span>
+                                    </div>
+                                </div>
+                            </div>
+                            </div> <!-- Chiude container-fluid -->
+                        }}
+                    else
+                    {
+                        <div class="d-flex flex-column justify-content-center align-items-center" id="empty-cart">
+                            <i class="bi bi-cart-x-fill"></i>
+                            <h1>Il carrello è vuoto!</h1>
+                        </div>
+                    }
                 }
-                <img src="/images/loghi/@(((Carrello)Model).Piattaforme[item.Key]).png" width="50" height="50"/>
             </div>
-        </div>
-    }
+
+        @{
+
+            if (((Carrello)Model).Videogiochi.Count > 0)
+            {
+            <!-- sidebar -->
+
+            <div class="col-4">
+                <div class="container-fluid px-0 dark-bg w-100 mb-3 rounded-3" id="sidebar">
+                    <div class="container d-flex justify-content-center py-4">
+                        <div class="d-flex w-100 flex-column">
+                            <div class="col d-flex justify-content-between">
+                                    <div class="w-100">
+                                    @{
+                                        foreach (var item in ((Carrello)Model).Videogiochi)
+                                        {
+                                        
+                                            string titolo = item.Key.Titolo;
+                                            double prezzoGioco = item.Key.Prezzo;
+                                            int quantita = item.Value;
+
+                                                <div class="d-flex justify-content-between">
+                                                <span>@titolo x @quantita</span>
+                                                <span>@(Math.Round(quantita * prezzoGioco,2)) €</span>
+                                                </div>
+                                }        
+                            }
+                                    </div>
+
+                                </div>
+                                <hr>
+                                <div class="col d-flex justify-content-between">
+                                    <span>TOTALE</span>
+                                    <span>@(((Carrello)Model).Totale() + " €")</span>
+                                </div>
+                            <div class="col d-flex justify-content-between">
+                                        <button class="btn btn-checkout col fw-bold my-2" onclick="window.location.href='/Carrelli/Checkout?id=@(Model.Id)'">Procedi al pagamento </button>
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                                <span id="or">Oppure</span>
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                                        <a id="return-catalog" class="mt-2" onclick="window.location.href='/Videogiochi/Catalogo'">Torna al catalogo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        }
+    </div>
+
     <script>
         function updateQuantity(gameId, userId, piattaforma) {
-            // Ottieni la quantità selezionata dal select
+            // Ottieni la quantità selezionata
             var selectedQuantity = document.getElementById("quantita-" + gameId).value;
 
-            // Invia una richiesta AJAX al controller per aggiornare la quantità
-            var url = '/Carrelli/UpdateUnits?qt=' + selectedQuantity + '&id=' + gameId + '&idCarrello=' + userId+"&idPiattaforma="+piattaforma;
+            // Invia una richiesta AJAX al controller
+            var url = '/Carrelli/UpdateUnits?qt=' + selectedQuantity + '&id=' + gameId + '&idCarrello=' + userId + "&idPiattaforma=" + piattaforma;
             window.location.href = url;
         }
     </script>
 </body>
-</html> 
+</html>
