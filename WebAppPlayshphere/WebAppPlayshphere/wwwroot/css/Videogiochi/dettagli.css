@@ -195,3 +195,12 @@ label, p {
 #161a1e, #9a9a9a, var(--flame), #fbfbfb
 inspiration> https://dribbble.com/shots/18253209-Game-Store-Website
 */
+#rating label:hover ~ label,
+#rating label:hover {
+    color: gold;
+    cursor: pointer;
+}
+
+#rating input:checked ~ label {
+    color: gold;
+}
