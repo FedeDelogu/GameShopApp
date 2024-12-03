@@ -215,3 +215,7 @@ h1 {
     font-size: 50px;
     color: var(--floral-white);
 }
+footer{
+    position:absolute;
+    bottom:0;
+}
