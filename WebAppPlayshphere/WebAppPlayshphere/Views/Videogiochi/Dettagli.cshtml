@@ -25,31 +25,29 @@
     <div id="full-img">
     </div>
     @{
-    // Controllo se c'è un utente loggato
-    var utenteLoggatoJson = Context.Session.GetString("UtenteLoggato");
-    dynamic utenteLoggato = string.IsNullOrEmpty(utenteLoggatoJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject(utenteLoggatoJson);
+        // Controllo se c'è un utente loggato
+        var utenteLoggatoJson = Context.Session.GetString("UtenteLoggato");
+        dynamic utenteLoggato = string.IsNullOrEmpty(utenteLoggatoJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject(utenteLoggatoJson);
 
-    @if (utenteLoggato != null)
-    {
-        var userId = utenteLoggato.Id;
-        <div class="modal fade" id="modalAddCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Videogioco aggiunto al carrello!
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                        <button type="button" onclick="window.location.href='/Carrelli/Dettagli?id=@(userId)'" class="btn btn-primary">Vai al carrello</button>
+        @if (utenteLoggato != null)
+        {
+            var userId = utenteLoggato.Id;
+            <div class="modal fade" id="modalAddCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" style="color:var(--black-olive)!important" id="exampleModalLabel">Aggiunto al carrello!</h1>
+                        </div>
+                        <div class="modal-body">
+                            @(((Videogioco)Model).Titolo) è stato correttamente aggiunto al carrello!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="redirectToDetail" class="btn btn-primary" data-bs-dismiss="modal">Chiudi</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
+        }
     }
 
         <div class="container" id="riepilogo-videogioco">
@@ -164,26 +162,33 @@
     window.onload = getRecensioniGioco;
 
     // Funzione per aggiungere il videogioco al carrello
-async function aggiungiAlCarr(idVideogioco) {
-    // Ottieni l'ID utente in modo asincrono
-    var idUtente = await getIdUtente();
+    async function aggiungiAlCarr(idVideogioco) {
+        // Ottieni l'ID utente in modo asincrono
+        var idUtente = await getIdUtente();
 
-    // Controlla quale console è stata selezionata
-    var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
+        // Controlla quale console è stata selezionata
+        var consoleSelezionata = parseInt(document.getElementById("piattaforma").value);
 
-    var url = "";
-    if (idUtente == null || idUtente == undefined) {
-        // Se l'utente non è loggato, redirigi alla pagina di login
-        url = "/Utenti/Login";
-    } else {
-        // Altrimenti, costruisci l'URL per aggiungere il gioco al carrello
-        url = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
-        alert("Videogioco aggiunto con successo!");
+        var url = "";
+
+        if (idUtente == null || idUtente == undefined) {
+            // Se l'utente non è loggato, redirigi alla pagina di login
+            url = "/Utenti/Login";
+            window.location.href = url; // Reindirizza subito
+            return; // Interrompe l'esecuzione della funzione
+        } else {
+            // Costruisci l'URL per aggiungere il gioco al carrello
+            url = "/Videogiochi/AggiungiCarrello?idVid=" + idVideogioco + "&idUtente=" + idUtente + "&idPiattaforma=" + consoleSelezionata;
+
+            // Reindirizza per aggiungere al carrello e poi apri il modale
+            var modalElement = new bootstrap.Modal(document.getElementById("modalAddCart"));
+            modalElement.show();
+
+            document.getElementById("redirectToDetail").addEventListener("click", function () {
+                window.location.href = url; // Ricarica la pagina corrente
+            });
+        }
     }
-
-    // Redirigi l'utente all'URL costruito
-    window.location.href = url;
-}
 
 async function getIdUtente() {
     try {
