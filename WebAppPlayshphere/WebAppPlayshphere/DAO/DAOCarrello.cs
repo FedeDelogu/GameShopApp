@@ -166,7 +166,7 @@ namespace WebAppPlayshphere.DAO
                 mail.Body = "Il tuo ordine è stato completato con successo! \n" +
                     "Dettagli ordine\n" +
                      o.ToString();
-
+                //ciao
                 // Configura il client SMTP per Gmail
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587); // Server e porta Gmail
                 smtpClient.Credentials = new NetworkCredential("hellsgames2024@gmail.com", "fkit fiur dpsv bqgr"); // Credenziali Gmail
