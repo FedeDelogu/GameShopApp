@@ -12,38 +12,59 @@
 
     <h1>Aggiungi Videogioco</h1>
 
-    <form action="/Videogiochi/Aggiungi" onsubmit="" method="post">
+    <form action="/Videogiochi/Aggiungi" id="add-videogame" method="post">
 
         <input type="text" value="@Model.Id" name="id" readonly hidden />
-        Titolo: <input type="text" value="@(((Videogioco)Model).Titolo)" id="titolo" name="titolo" /><br />
-        Sviluppatore: <input type="text" value="@(((Videogioco)Model).Sviluppatori)" id="sviluppatori" name="sviluppatori" /><br />
-        Descrizione: <input type="text" value="@(((Videogioco)Model).Descrizione)" id="descrizione" name="descrizione" /><br />
-        Generi: <input type="text" value="@(((Videogioco)Model).Generi)" id="generi" name="generi" /><br />
-        Pegi: <input type="text" value="@(((Videogioco)Model).Pegi)" id="pegi" name="pegi" /><br />
-        Publisher: <input type="text" value="@(((Videogioco)Model).Publisher)" id="publisher" name="publisher" /><br />
-        Data di rilascio: <input type="text" value="@(((Videogioco)Model).Rilascio)" id="rilascio" name="rilascio" /><br />
-        Prezzo: <input type="text" value="@(((Videogioco)Model).Prezzo)" id="prezzo" name="prezzo" /><br />
-        Link: <input type="text" value="@(((Videogioco)Model).Link)" id="link" name="link" /><br />
-        Quantita: <input type="text" value="@(((Videogioco)Model).Quantita)" id="quantita" name="quantita" /><br />
+
+        Titolo:
+        <input type="text" placeholder="Es. FC25, The Witcher 3" value="@(((Videogioco)Model).Titolo)" id="titolo" name="titolo" /><br />
+
+        Sviluppatore:
+        <input type="text" placeholder="Es. CDProjectRed, 2K" value="@(((Videogioco)Model).Sviluppatori)" id="sviluppatori" name="sviluppatori" /><br />
+
+        Descrizione:
+        <input type="text" placeholder="Es. Questo è un gioco di avventura ambientato..." value="@(((Videogioco)Model).Descrizione)" id="descrizione" name="descrizione" /><br />
+
+        Generi:
+        <input type="text" placeholder="Es. Azione, Sparatutto" value="@(((Videogioco)Model).Generi)" id="generi" name="generi" /><br />
+
+        Pegi:
+        <input type="text" placeholder="Es. 3, 16" value="@(((Videogioco)Model).Pegi)" id="pegi" name="pegi" /><br />
+
+        Publisher:
+        <input type="text" placeholder="Es. Activision, Bandai" value="@(((Videogioco)Model).Publisher)" id="publisher" name="publisher" /><br />
+
+        Data di rilascio:
+        <input type="text" placeholder="Es. 12-12-2023" value="@(((Videogioco)Model).Rilascio.ToString("dd-MM-yyyy"))" id="rilascio" name="rilascio" /><br />
+
+        Prezzo:
+        <input type="text" placeholder="Es. 59.99" value="@(((Videogioco)Model).Prezzo)" id="prezzo" name="prezzo" /><br />
+
+        Link:
+        <input type="text" placeholder="Es. https://www.youtube.com/embed/qx0A921z8mA?si=XsbVmpqAsN-Tpoo1" value="@(((Videogioco)Model).Link)" id="link" name="link" /><br />
+
+        Quantità:
+        <input type="text" placeholder="Es. 100" value="@(((Videogioco)Model).Quantita)" id="quantita" name="quantita" /><br />
+
+        Piattaforme:
         @{
-            @foreach (var v in ((DAOPiattaforma.GetIstance().Read())))
+            foreach (var v in DAOPiattaforma.GetIstance().Read())
             {
-                if (((Piattaforma)v).Nome != null || ((Piattaforma)v).Nome != "")
+                if (!string.IsNullOrEmpty(((Piattaforma)v).Nome))
                 {
                     <div>
                         <input type="checkbox" id="@(((Piattaforma)v).Id)"
                                name="piattaforme"
                                value="@(((Piattaforma)v).Nome)"
                         @(((Videogioco)Model).Piattaforme.Any(p => p.Nome == ((Piattaforma)v).Nome) ? "checked" : "") />
-                        <label for="@((Piattaforma)v).Id">"@(((Piattaforma)v).Nome)"</label>
+                        <label for="@(((Piattaforma)v).Id)">@(((Piattaforma)v).Nome)</label>
                     </div>
                 }
             }
         }
-
         <br />
 
-        <input type="submit" value="SALVA" />
+        <input type="submit" class="btn btn-primary" value="SALVA" />
 
     </form>
 </body>
