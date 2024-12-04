@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Newtonsoft.Json;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Text.Json;
 using Utility;
 using WebAppPlayshphere.DAO;
 using WebAppPlayshphere.Factory;
@@ -189,6 +190,47 @@ namespace WebAppPlayshphere.Controllers
                 return JsonConvert.DeserializeObject<Utente>(utenteLoggato);
             }
             return null;
+        }
+
+        /*RISERVATI ALL'ADMIN*/
+
+        public IActionResult CatalogoJson()
+        {
+            if (DAOVideogioco.GetIstance().Read() == null)
+            {
+                Console.WriteLine("ERRORE CATALOGO");
+                return View("Home/Index");
+            }
+            List<Entity> listaGiochi = DAOVideogioco.GetIstance().Read();
+            List<Videogioco> videogiochi = new List<Videogioco>();
+            foreach (var v in listaGiochi)
+            {
+                videogiochi.Add((Videogioco)v);
+            }
+            return Json(videogiochi);
+        }
+
+        [HttpPost]
+        public IActionResult EliminaProdotto([FromBody] dynamic requestDelete)
+        {
+
+            if (requestDelete.TryGetProperty("id", out JsonElement idElement))
+            {
+                int idDelete = Convert.ToInt32(idElement.ToString());
+
+                // Validazione dei dati
+                if (idDelete <= 0) // Verifica se l'ID e il ruolo sono validi
+                {
+                    return BadRequest(new { success = false, message = "Valore id non valido" });
+                }
+
+                bool delete = DAOVideogioco.GetIstance().Delete(idDelete); // SE id > 0 allora fa il ban
+
+                return Json(new { success = delete, message = delete ? "Recensione Eliminata." : "Errore durante l'aggiornamento." });
+            }
+
+            return BadRequest(new { success = false, message = "ID Mancante" });
+
         }
 
     }
