@@ -131,7 +131,6 @@ namespace WebAppPlayshphere.Controllers
                 }
             }
             else
-
             {
                 // Se l'anagrafica è nuova, usa il metodo Create
                 var succ = DAOAnagrafica.GetInstance().Create(utenteLoggato);

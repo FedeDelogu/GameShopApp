@@ -1,0 +1,100 @@
+﻿@using Utility
+@using WebAppPlayshphere.Models
+@using WebAppPlayshphere.DAO
+@model dynamic
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Chat</title>
+</head>
+<body>
+    <div id="chatWindow" style="border: 1px solid black; height: 200px; overflow-y: scroll;">
+        <!-- Messaggi caricati dal modello -->
+        @{
+            if (Model.chat.Messaggi.Count > 0 || Model.chat.Messaggi != null)
+            {
+                foreach (var messaggio in Model.chat.Messaggi)
+                {
+                    <div>@Model.utente.Username: @messaggio.Contenuto</div>
+                }
+            }
+        }
+        @{
+            var utenteLoggatoJson = Context.Session.GetString("UtenteLoggato");
+            dynamic utenteloggato = string.IsNullOrEmpty(utenteLoggatoJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject(utenteLoggatoJson);
+            var username = utenteloggato.Username;
+            var idUtente = utenteloggato.Id;
+        }
+    </div>
+    <input name="idchat" id="idchat" value="@Model.chat.Id" readonly></input>
+    <input type="text" id="idutente" value="@idUtente" readonly />
+    <input type="text" id="userInput" value="@username" readonly />
+    <input type="text" id="messageInput" placeholder="Scrivi un messaggio" />
+    <button onclick="sendMessage()">Invia</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        connection.on("ReceiveMessage", (user, message) => {
+            const chatWindow = document.getElementById("chatWindow");
+            const newMessage = document.createElement("div");
+            newMessage.textContent = `${user}: ${message}`;
+            chatWindow.appendChild(newMessage);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        });
+
+        connection.on("AccessoNegato", (message) => {
+            alert(message);
+        });
+
+        async function accediChat() {
+
+            const chatId = document.getElementById("idchat").value;
+			//const userId = document.getElementById("idutente").textContent;
+            const userId = document.getElementById("idutente").value;
+
+
+            if (connection.state !== signalR.HubConnectionState.Connected) {
+                try {
+                    await connection.start();
+                } catch (err) {
+                    console.error("Errore nella connessione SignalR:", err);
+                    return;
+                }
+            }
+
+            try {
+                await connection.invoke("AccediChat", userId, chatId);
+                console.log("Connesso alla chat con ID:", chatId);
+            } catch (err) {
+                console.error("Errore durante l'accesso alla chat:", err);
+            }
+        }
+
+        async function sendMessage() {
+            const user = document.getElementById("userInput").value;
+            const message = document.getElementById("messageInput").value;
+
+            if (!message) {
+                alert("Inserisci un messaggio.");
+                return;
+            }
+
+            try {
+                await connection.invoke("SendMessage", user, "1", message);
+                document.getElementById("messageInput").value = "";
+            } catch (err) {
+                console.error("Errore durante l'invio del messaggio:", err);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", accediChat);
+    </script>
+</body>
+</html>
