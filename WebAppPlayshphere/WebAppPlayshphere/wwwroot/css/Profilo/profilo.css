@@ -10,6 +10,7 @@
 /*    border-left: 5px solid var(--black-olive);
     border-bottom: 5px solid var(--black-olive);
     border-right: 5px solid var(--black-olive);*/
+    overflow-y:auto;
     height: 80vh;
     box-shadow: 0 0 10px 1px var(--floral-white);
 }
