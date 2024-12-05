@@ -25,7 +25,29 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Create(Entity e)
         {
-            return db.Update($"INSERT INTO Chat (dataCreazione) VALUES ('{((Chat)e).DataCreazione}');");
+            // inserisco la chat nel db
+            bool risultato = db.Update($"INSERT INTO Chat (dataCreazione) VALUES ('{((Chat)e).DataCreazione}');");
+            if (!risultato)
+            {
+                Console.WriteLine("ERRORE CREAZIONE CHAT (DAOCHAT)");
+                return false;
+            }
+            // recupero l id della chat appena creata
+            var chat = FindByData(((Chat)e).DataCreazione);
+            if (chat == null)
+            {
+                Console.WriteLine("ERRORE RECUPERO CHAT APPENA CREATA (DAOCHAT)");
+                return false;
+            }
+            ((Chat)e).Id = chat.Id;
+            // associo l utente alla chat
+            risultato = AddPartecipante(((Chat)e).Id, ((Chat)e).IdUtente);
+            if (!risultato)
+            {
+                Console.WriteLine("ERRORE AGGIUNTA PARTECIPANTE");
+            }
+            
+            return risultato;
         }
         public List<Entity> Read()
         {
@@ -71,6 +93,19 @@ namespace WebAppPlayshphere.DAO
                 return null;
             }
             ((Chat)e).DataCreazione = DateTime.Parse(righe2["datacreazione"]);
+            return e;
+        }
+        public Entity FindByData(DateTime datacreazione)
+        {
+            string query = $"SELECT * FROM Chat WHERE dataCreazione = '{datacreazione.ToString("yyyy-MM-dd HH:mm:ss")}'";
+
+            var righe = db.ReadOne(query);
+            if (righe == null)
+            {
+                return null;
+            }
+            Entity e = new Chat();
+            e.FromDictionary(righe);
             return e;
         }
 

@@ -24,6 +24,8 @@ namespace WebAppPlayshphere.Hubs
             Console.WriteLine($"UTENTE CON RUOLO : {ruolo}.");
             string connectionId = Context.ConnectionId;
 
+            Console.WriteLine($"CONNECTIONID = {connectionId}");
+
             await semaphore.WaitAsync();
             try
             {
@@ -54,8 +56,19 @@ namespace WebAppPlayshphere.Hubs
             }
         }
 
-        public async Task SendMessage(string user, string chatId, string message)
+        public async Task SendMessage(string user, string chatId, string userId, string message)
         {
+            Console.WriteLine($"CHAT ID PASSATO A SENDMESSAGE : {chatId}");
+            bool ris = DAOMessaggi.GetInstance().Create(new Messaggio
+            {
+                IdChat = int.Parse(chatId),
+                IdUtente = int.Parse(userId),
+                Contenuto = message
+            });
+            if (!ris)
+            {
+                Console.WriteLine("ERRORE NELL INSERIMENTO DEL MESSAGGIO");
+            }
             if (!chatAttive.ContainsKey(chatId))
             {
                 await Clients.Caller.SendAsync("AccessoNegato", "Chat non trovata.");

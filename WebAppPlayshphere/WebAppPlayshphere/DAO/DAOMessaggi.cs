@@ -25,7 +25,7 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Create(Entity e)
         {
-            throw new NotImplementedException();
+            return db.Update($"INSERT INTO Messaggi (idChat, idUtente, contenuto) VALUES ({((Messaggio)e).IdChat}, {((Messaggio)e).IdUtente}, '{((Messaggio)e).Contenuto}');");
         }
 
         public bool Delete(int id)

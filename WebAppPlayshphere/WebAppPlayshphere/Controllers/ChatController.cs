@@ -12,76 +12,50 @@ namespace WebAppPlayshphere.Controllers
         {
             bool risultatoQuery = false;
             bool primaChat = false;
-            if (DAOMessaggi.GetInstance().FindByUtente(3) != null)
-            {
-                foreach (var v in DAOMessaggi.GetInstance().FindByUtente(3))
-                {
-                    Console.WriteLine("MESSAGGIO: " + ((Messaggio)v).Contenuto);
-                }
-            }
-            else
-            {
-                Console.WriteLine("messaggi == null");
-            }
-            //Chat chat = (Chat)DAOChat.GetInstance().Find(1);
             if (HttpContext.Session.GetString("UtenteLoggato") != null)
             {
-                // devo controllare se la chat esiste
-                // mi serve : idutente, id della chat
-                // per adesso ho l idutente
-
                 string u = HttpContext.Session.GetString("UtenteLoggato");
                 Utente utente = JsonConvert.DeserializeObject<Utente>(u);
                 Chat chat = (Chat)DAOChat.GetInstance().FindByUtente(utente.Id);
-                /*
-                if (chat == null) // la chat non esiste va creata
+                if (chat == null)
                 {
-                    primaChat = true;
                     chat = new Chat();
                     chat.DataCreazione = DateTime.Now;
+                    chat.IdUtente = utente.Id;
                     risultatoQuery = DAOChat.GetInstance().Create(chat);
+                    // ERRORE CREAZIONE CHAT
                     if (!risultatoQuery)
                     {
-                        Console.WriteLine("Errore nella creazione della chat");
-                        //return null;
+                        Console.WriteLine("Errore nella creazione della chat (CHAT CONTROLLER)");
                     }
-                    else
+                    var c = DAOChat.GetInstance().FindByUtente(utente.Id);
+                    if (c == null)
                     {
-                        var c = DAOChat.GetInstance().FindByUtente(utente.Id);
-                        if (c == null)
-                        {
-                            Console.WriteLine("ERRORE NELLA RICERCA DELLA CHAT");
-                            return null;
-                        }
-                        chat.Id = c.Id;
-
+                        Console.WriteLine("ERRORE NEL RECUPERO DELLA CHAT APPENA CREATA (CHAT CONTROLLER)");
+                        return null;
                     }
-                    // aggiungo il partecipante
-                    risultatoQuery = DAOChat.GetInstance().AddPartecipante(chat.Id, utente.Id);
-                    if (!risultatoQuery)
-                    {
-                        Console.WriteLine("Errore aggiunta del partecipante");
-                    }
-                }*/
-                // se la chat esiste
-                //else
-                //{
+                    // ASSEGNO L ID DELLA CHAT APPENA CREATA ALL OGGETTO CHAT
+                    chat.Id = c.Id;
+                } // fine if (chat == null)
+                else // RAMO CON CHAT GIA ESISTENTE
+                {
                     Console.WriteLine($"UTENTE ID PER CERCARE I MESSAGGI {utente.Id}");
-                    if(DAOMessaggi.GetInstance().FindByUtente(utente.Id) == null)
+                    // CONTROLLO CHE CI SIANO MESSAGGI PER L UTENTE
+                    if (DAOMessaggi.GetInstance().FindByUtente(utente.Id) != null)
                     {
-                        Console.WriteLine("MESSAGGI NULLI");
+                        // SE CI SONO MESSAGGI LI AGGIUNGO ALLA CHAT
+                        foreach (var v in DAOMessaggi.GetInstance().FindByUtente(utente.Id))
+                        {
+                            chat.Messaggi.Add((Messaggio)v);
+                        }
                     }
-                    foreach (var v in DAOMessaggi.GetInstance().FindByUtente(utente.Id))
-                    {
-                        chat.Messaggi.Add((Messaggio)v);
-                    }
-                //}
+                }
                 var utente_e_chat = new {
                     utente = utente,
                     chat = chat,
                 };
                 return View(utente_e_chat);
-            }
+            }// fine if (utenteloggato != null)
             return View("/Home/Index");
         }
         public IActionResult InviaMex(Messaggio messaggio)
@@ -98,7 +72,7 @@ namespace WebAppPlayshphere.Controllers
         {
             Utente utente = (Utente)DAOUtente.GetInstance().Find(int.Parse(idutente));
             Chat chat = (Chat)DAOChat.GetInstance().FindByUtente(utente.Id);
-            if (DAOMessaggi.GetInstance().FindByUtente(int.Parse(idutente)) != null) // ramo con messaggi
+            if (DAOMessaggi.GetInstance().FindByUtente(int.Parse(idutente)) != null) // caht con messaggi
             {
                 if(DAOMessaggi.GetInstance().FindByUtente(int.Parse(idutente)).Count == 0)
                 {
@@ -114,7 +88,7 @@ namespace WebAppPlayshphere.Controllers
                     };
                     return View("Chat", utente_e_chat);
                 }
-                else
+                else // chat senza messaggi
                 {
                     foreach (var v in DAOMessaggi.GetInstance().FindByUtente(utente.Id))
                     {
@@ -128,7 +102,7 @@ namespace WebAppPlayshphere.Controllers
                     return View("Chat", utente_e_chat);
                 }
             }
-            return Content("TUTTO ROTTO PORCO DIO"); // DA CANCELLARE !!!!!!!!!
+            return Content("ERRORE SISTEMA"); // DA CANCELLARE !!!!!!!!!
 
         }
     }
