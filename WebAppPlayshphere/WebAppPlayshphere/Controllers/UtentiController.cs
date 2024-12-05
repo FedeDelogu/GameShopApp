@@ -8,6 +8,9 @@ using WebAppPlayshphere.Models;
 using Newtonsoft.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Net;
 
 namespace WebAppPlayshphere.Controllers
 {
@@ -222,6 +225,46 @@ namespace WebAppPlayshphere.Controllers
 
             if (DAOUtente.GetInstance().Create(e))
             {
+                try
+                {
+                    // Crea il messaggio email
+                    Utente u = (Utente)e;
+                    MailMessage mail = new MailMessage();
+                    mail.From = new MailAddress("hellsgames2024@gmail.com"); // Indirizzo mittente
+                    mail.To.Add(u.Email); // Indirizzo destinatario
+                    mail.Subject = "Registrazione Completata";
+                    mail.Body = $"Benvenut* {u.Username} nella famiglia Hell's Games™ \n" +
+                        "Goditi il nostro servizio infernale, navigando nell'ade dei nostri prezzi superbi!!!.\n";
+                    
+                    // Percorso del file immagine locale
+                    //string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "img/HellsGames.png");
+                    string imagePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "img", "HellsGames.png");
+
+                    if (System.IO.File.Exists(imagePath)) // Controlla che il file esista
+                    {
+                        Attachment attachment = new Attachment(imagePath, MediaTypeNames.Image.Jpeg); // Specifica il tipo MIME
+                        mail.Attachments.Add(attachment);
+                    }
+                    else
+                    {
+                        Console.WriteLine("File immagine non trovato!");
+                    }
+
+
+                    // Configura il client SMTP per Gmail
+                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587); // Server e porta Gmail
+                    smtpClient.Credentials = new NetworkCredential("hellsgames2024@gmail.com", "fkit fiur dpsv bqgr"); // Credenziali Gmail
+                    smtpClient.EnableSsl = true; // Abilita SSL/TLS
+
+                    // Invia l'email
+                    smtpClient.Send(mail);
+                    Console.WriteLine("Email inviata con successo!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Errore durante l'invio dell'email: " + ex.Message);
+                }
+
                 // Dove lo mando se la registrazione avviene?
                 return RedirectToAction("Login");
             }
