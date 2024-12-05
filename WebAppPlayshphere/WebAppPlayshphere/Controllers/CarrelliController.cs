@@ -23,13 +23,9 @@ namespace WebAppPlayshphere.Controllers
             {
                 Console.WriteLine("LISTA: " + v.Key.Titolo);
             }
+
             return View(ord);
         }
-
-        //public IActionResult Completed(Ordine o)
-        //{
-        //    return View(o);
-        //}//viva
 
         public IActionResult UpdateUnits(int qt, int id, int idCarrello,int idPiattaforma)
         {
@@ -90,7 +86,6 @@ namespace WebAppPlayshphere.Controllers
 
             foreach (var l in dati)
                 Console.WriteLine(l.Key + " " + l.Value);
-            //Console.WriteLine(utenteLoggato.ToString());
             // Aggiorna l'anagrafica
             utenteLoggato.Anagrafica=new Anagrafica
             {
