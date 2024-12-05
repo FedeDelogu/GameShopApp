@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.SignalR;
+using WebAppPlayshphere.Hubs;
+using WebAppPlayshphere.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSignalR(); // singal r ( per la chat)
 builder.Services.AddRazorPages();
 builder.Services.AddControllers(); // servizio per i controller MVC
 builder.Services.AddEndpointsApiExplorer(); // necessario per Swagger
@@ -38,6 +41,7 @@ app.Use(async (context, next) =>
     await next();
 });
 
+app.MapHub<ChatHub>("/chathub"); // 
 
 //app.UseHttpsRedirection();
 app.UseSession();

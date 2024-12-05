@@ -1,0 +1,29 @@
+﻿@using Utility
+@using WebAppPlayshphere.Models
+@model List<dynamic>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Elenco</title>
+</head>
+<body>
+    <h1>Elenco chat</h1>
+
+    <br />
+    <br />
+
+    @foreach (var f in Model)
+    {
+        //var idchat = f.chat.Id;
+        <p>ID : @f.chat.Id</p>
+        <p>data : @f.chat.DataCreazione</p>
+        <p>utente : @f.utente.Username</p>
+        <button onclick="window.location.href='/Chat/ChatAdmin/0/?idchat=@f.chat.Id&idutente=@f.utente.Id'">Chat</button>
+        <hr />
+        <br />
+
+    }
+</body>
+</html>

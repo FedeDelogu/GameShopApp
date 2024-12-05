@@ -112,6 +112,7 @@ namespace WebAppPlayshphere.Controllers
 
             if (DAOUtente.GetInstance().Find(user, password))
             {
+                Console.WriteLine($"Utente trovato , utente : {user}, password : {password}");
                 Entity e = DAOUtente.GetInstance().Find(user);
                 Utente utenteFront = new Utente
                 {

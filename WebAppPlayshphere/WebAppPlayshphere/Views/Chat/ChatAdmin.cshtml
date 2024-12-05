@@ -1,0 +1,138 @@
+﻿@using Utility
+@using WebAppPlayshphere.Models
+@using WebAppPlayshphere.DAO
+@model dynamic
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Chat</title>
+</head>
+<body>
+    <button type="button" onclick="inviaMex()">Test richiesta GET</button>
+    <p name="idutente" class="idutente" hidden>@Model.utente.Id</p>
+    <div id="chatWindow" style="border: 1px solid black; height: 200px; overflow-y: scroll;">
+        <!-- DIV PER VEDERE I MESSAGGI -->
+        @{
+            if (Model.chat.Messaggi.Count > 0 || Model.chat.Messaggi != null)
+            {
+                foreach (var messaggio in Model.chat.Messaggi)
+                {
+                    <div>@Model.utente.Username: @messaggio.Contenuto</div>
+                }
+            }
+        }
+    </div>
+    <input type="text" id="userInput" value="admin" readonly />
+    <input type="text" id="messageInput" placeholder="Scrivi un messaggio" />
+    <button onclick="sendMessage()">Invia</button>
+    <br />
+    <button onclick="accediChat()">Accedi</button>
+    <br />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        // CONFIGURAZIONE DI SIGNALR
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        connection.on("ReceiveMessage", (userid, message) => {
+            alert("Messaggio ricevuto");
+            const chatWindow = document.getElementById("chatWindow");
+            const newMessage = document.createElement("div");
+            newMessage.textContent = `${userid}: ${message}`;
+            chatWindow.appendChild(newMessage);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        });
+
+        connection.on("AccessoNegato", (message) => {
+            const chatWindow = document.getElementById("chatWindow");
+            const newMessage = document.createElement("div");
+            newMessage.textContent = `Sistema: ${message}`;
+            chatWindow.appendChild(newMessage);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        });
+
+        async function accediChat() {
+            let userid = $(".idutente").text();
+            let chatId = "1";
+
+            if (connection.state !== signalR.HubConnectionState.Connected) {
+                try {
+                    await connection.start();
+                    console.log("Connessione SignalR stabilita con successo.");
+                } catch (err) {
+                    console.error("Errore nella connessione SignalR: " + err);
+                    return;
+                }
+            }
+
+            try {
+                await connection.invoke("AccediChat", userid, chatId);
+                console.log(`Utente ${userid} connesso alla chat ${chatId}`);
+            } catch (err) {
+                console.error("Errore durante l'accesso alla chat: " + err);
+            }
+        }
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        // FUNZIONE PER INVIARE I MESSAGGI
+        async function sendMessage() {
+            alert("Invio messaggio");
+            const user = document.getElementById("userInput").value;
+            const message = document.getElementById("messageInput").value;
+
+            if (!user || !message) {
+                alert("Inserisci sia un nome utente che un messaggio.");
+                return;
+            }
+
+            if (connection.state !== signalR.HubConnectionState.Connected) {
+                try {
+                    await connection.start();
+                    console.log("Connessione SignalR stabilita.");
+                } catch (err) {
+                    console.error("Errore durante il tentativo di riconnessione: " + err);
+                    return;
+                }
+            }
+
+            try {
+                await connection.invoke("SendMessage", user, message, "1");
+                document.getElementById("messageInput").value = "";
+            } catch (err) {
+                console.error("Errore durante l'invio del messaggio: " + err);
+            }
+        }
+
+        // FUNZIONE PER INVIARE MESSAGGI DI TEST
+        function inviaMex() {
+            const xhr = new XMLHttpRequest();
+            const url = 'https://localhost:7049/Chat/InviaMex';
+            const messaggio = {
+                IdUtente: 1,
+                Contenuto: "Ciao, questo è un messaggio di esempio"
+            };
+
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    console.log(JSON.stringify(response, null, 2));
+                } else {
+                    console.error('Errore nella richiesta:', xhr.status);
+                }
+            };
+            xhr.send(JSON.stringify(messaggio));
+        }
+
+        // INIZIALIZZAZIONE
+        document.addEventListener('DOMContentLoaded', accediChat);
+    </script>
+</body>
+</html>
