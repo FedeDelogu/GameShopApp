@@ -13,7 +13,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAORecensione()
         {
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere2", "localhost");
         }
         private static DAORecensione istance = null;
 
@@ -27,6 +27,7 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Create(Entity e)
         {
+            Console.WriteLine($"CREATE DAORECENSIONE id gioco da inserire : {((Recensione)e).IdVideogioco}");
             Recensione r = (Recensione)e;
             string commento = r.Commento;
             commento.Replace("'", "''");
