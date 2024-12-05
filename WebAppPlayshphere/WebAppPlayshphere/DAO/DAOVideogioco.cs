@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOVideogioco()
         {
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere3", "localhost");
         }
         private static DAOVideogioco istance = null;
 
@@ -220,6 +220,40 @@ namespace WebAppPlayshphere.DAO
             foreach (var riga in righe)
             {
                 Entity e = new Videogioco();
+                e.FromDictionary(riga);
+                // recupero tutte le piattaforme del gioco
+                List<Entity> piattaforme = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+                if (DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id) == null)
+                {
+                    Console.WriteLine("ERRORE RECUPERO PIATTAFORME");
+                }
+                // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+                foreach (var item in piattaforme)
+                {
+                    ((Videogioco)e).Piattaforme.Add(
+                        new Piattaforma()
+                        {
+                            Id = ((Piattaforma)item).Id,
+                            Nome = ((Piattaforma)item).Nome
+                        }
+                    );
+                }
+                ris.Add(e);
+            }
+            return ris;
+        }
+        public List<Videogioco> Ricerca(string ricerca)
+        {
+            var righe = db.Read($"SELECT * FROM Videogiochi WHERE Titolo LIKE '%{ricerca}%'");
+            if (righe == null)
+            {
+                Console.WriteLine("riga nulla");
+                return null;
+            }
+            List<Videogioco> ris = new List<Videogioco>();
+            foreach (var riga in righe)
+            {
+                Videogioco e = new Videogioco();
                 e.FromDictionary(riga);
                 // recupero tutte le piattaforme del gioco
                 List<Entity> piattaforme = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);

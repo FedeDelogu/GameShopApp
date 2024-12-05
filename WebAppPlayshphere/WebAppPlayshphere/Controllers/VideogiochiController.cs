@@ -176,7 +176,23 @@ namespace WebAppPlayshphere.Controllers
             DAOCarrello.GetIstance().Insert(idUtente, idVid, 1, idPiattaforma);
             return RedirectToAction("Dettagli", new { id = idVid });
         }
-
+        public IActionResult Filtra(string ricerca)
+        {
+            List<Videogioco> vg = new List<Videogioco>();
+            if (ricerca == "")
+            {
+                List<Entity> ris = DAOVideogioco.GetIstance().Read();
+                foreach(Entity e in ris)
+                {
+                    vg.Add((Videogioco)e);
+                }
+            }
+            else
+            {
+                vg = DAOVideogioco.GetIstance().Ricerca(ricerca);
+            }
+            return Json(vg);
+        }
         public IActionResult Categoria(string categoria)
         {
             return View(DAOVideogioco.GetIstance().filtroCategoria(categoria));

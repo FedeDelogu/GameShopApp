@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using WebAppPlayshphere.Settings;
 using System.Net.Mail;
 using System.Net;
+using System.Net.Mime;
 
 namespace WebAppPlayshphere.DAO
 {
@@ -164,9 +165,30 @@ namespace WebAppPlayshphere.DAO
                 mail.To.Add(u.Email); // Indirizzo destinatario
                 mail.Subject = "Ordine Completato";
                 mail.Body = "Il tuo ordine è stato completato con successo! \n" +
-                    "Dettagli ordine\n" +
-                     o.ToString();
-                //ciao
+                    "Dettagli ordine\n";
+                mail.Body += "Data: " + o.DataOrdine+ "\n-------------------------------------\n";
+                foreach(var item in c.Videogiochi)
+                {
+                    mail.Body += item.Key.Titolo + "x" + item.Value + "  " + (item.Key.Prezzo*item.Value)+"\n";
+                }
+                mail.Body += "\nTotale: " + c.Totale()+"\n";
+                mail.Body += "-------------------------------------\nGrazie per aver acquistato da noi >:)";
+
+                // Percorso del file immagine locale
+                //string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "img/HellsGames.png");
+                string imagePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "img", "HellsGames.png");
+
+                if (System.IO.File.Exists(imagePath)) // Controlla che il file esista
+                {
+                    Attachment attachment = new Attachment(imagePath, MediaTypeNames.Image.Jpeg); // Specifica il tipo MIME
+                    mail.Attachments.Add(attachment);
+                }
+                else
+                {
+                    Console.WriteLine("File immagine non trovato!");
+                }
+
+               
                 // Configura il client SMTP per Gmail
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587); // Server e porta Gmail
                 smtpClient.Credentials = new NetworkCredential("hellsgames2024@gmail.com", "fkit fiur dpsv bqgr"); // Credenziali Gmail
