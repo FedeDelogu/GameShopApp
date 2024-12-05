@@ -38,14 +38,14 @@
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "ChiSiamo" ? "active" : "")"
                            asp-controller="Home" asp-action="ChiSiamo">Chi siamo</a>
                     </li>
-                    <li class="nav-item">
+@*                     <li class="nav-item">
                         <form class="d-flex" role="search">
                             <input class="form-control form-control-sm border-0 rounded-start-2" type="search" placeholder="Cerca un videogioco" aria-label="Search">
                             <button class="btn btn-outline-light border-0" style="color:var(--eerie-black); background-color:var(--floral-white)" type="submit">
                                 <i class="fa-solid fa-search fs-4"></i>
                             </button>
                         </form>
-                    </li>
+                    </li> *@
                 </ul>
             </nav>
             <nav class="navbar" id="profile-box">
@@ -77,6 +77,14 @@
                                 @{
                                     int idUser = @utenteLoggato.Id;
                                     <i class="fa-solid fa-cart-shopping fs-3" style="color:#eb5e28ff;" onclick="window.location.href='/Carrelli/Dettagli?id=@(idUser)'"></i>
+                                }
+
+
+                            </li>
+                            <li class="nav-item">
+
+                                @{
+                                    idUser = @utenteLoggato.Id;
                                     <i class="fa-solid fa-comments fs-3" style="color:#eb5e28ff;" onclick="window.location.href='/Chat/Chat'"></i>
                                 }
 
@@ -119,7 +127,6 @@
                 <div class="container d-flex justify-content-sm-around align-items-center py-4" id="links-footer">
                     <a asp-controller="Home" asp-action="Index">Home</a>
                     <a asp-controller="Home" asp-action="Regolamento">Regolamento</a>
-                    <a href="#faqs">FAQs</a>
                     <a asp-controller="Home" asp-action="ChiSiamo">Chi siamo</a>
                 </div>
             </div>

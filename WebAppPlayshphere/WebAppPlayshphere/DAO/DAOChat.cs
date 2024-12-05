@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
         private DAOChat()
         {
 
-            db = new Database("Playsphere2", "localhost");
+            db = new Database("Playsphere", "localhost");
 
         }
         private static DAOChat istance = null;
