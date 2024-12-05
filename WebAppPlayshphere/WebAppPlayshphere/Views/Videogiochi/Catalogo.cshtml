@@ -49,6 +49,8 @@
                             </select>
                         </li>
                     </ul>
+                    <input class="form-control form-control-sm border-0 rounded-start-2" type="search" placeholder="Cerca un videogioco" aria-label="Search" id="searchBox">
+
 
                 </div>
             </div>
@@ -71,6 +73,7 @@
                                         <h5>@titolo</h5>
                                         <h6 class="text-end fw-bold" style="color:var(--flame)">@prezzo Eur</h6>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -85,5 +88,86 @@
     </div>
 </body>
 <script src="/js/Sidebar/Sidebar.js" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("fyufhtdgfdrgdgndgfdyjdyk");
+        var barra = document.getElementById("searchBox");
+        console.log("sei quiiiiiii");
+        barra.addEventListener('input', function () {
+            console.log("ciaooooo");
+            const query = barra.value.trim(); // Ottieni il valore dell'input senza spazi extra
+
+
+            filterGames(query); // Chiama la funzione per fare la richiesta AJAX
+
+        });
+    });
+
+    // Funzione per fare la richiesta AJAX
+    function filterGames(query) {
+        const xhr = new XMLHttpRequest(); // Crea un oggetto XMLHttpRequest
+
+        // Configura la richiesta
+        xhr.open('GET', `/Videogiochi/Filtra?ricerca=` + query, true);
+
+        // Definisci la funzione di callback
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log("ci siamo");
+                var videogiochi = JSON.parse(xhr.responseText);
+                videogiochi.forEach(videogioco => {
+                    console.log(videogioco); // Verifica il contenuto di ogni videogioco
+                });
+
+                displayResults(videogiochi);
+            } else {
+                console.error('Errore durante la richiesta:', xhr.status, xhr.statusText);
+            }
+        };
+
+        // Gestisci eventuali errori
+        xhr.onerror = function () {
+            console.error('Errore di rete durante la richiesta.');
+        };
+
+        xhr.send(); // Invia la richiesta
+    }
+    function displayResults(videogiochi) {
+        const resultsDiv = document.getElementById("catalogo"); // Assicurati di avere un elemento con id "catalogo" dove inserire i risultati
+        resultsDiv.innerHTML = ""; // Svuota i risultati precedenti
+
+        if (videogiochi.length > 0) {
+            // Crea un contenitore 'row' per la griglia
+            const row = document.createElement('div');
+            row.classList.add('row', 'row-cols-1', 'row-cols-md-2', 'row-cols-lg-3', 'row-cols-xl-4', 'gy-4');
+
+            videogiochi.forEach(videogioco => {
+                const card = `
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3" onclick="window.location.href='/Videogiochi/Dettagli?id=${videogioco.id}'">
+            <div class="card w-100 bg-dark text-light">
+                <div>
+                    <img class="card-img-top" src="/images/copertine/${videogioco.id}.png" alt="${videogioco.titolo}">
+                </div>
+                <div class="card-footer h-100 d-flex flex-column justify-content-between">
+                    <h5>${videogioco.titolo}</h5>
+                    <h6 class="text-end fw-bold" style="color:var(--flame)">${videogioco.prezzo} Eur</h6>
+                </div>
+            </div>
+        </div>
+    `;
+
+
+                // Aggiungi ogni card alla riga
+                row.innerHTML += card;
+            });
+
+            // Aggiungi la riga al contenitore del catalogo
+            resultsDiv.appendChild(row);
+        } else {
+            resultsDiv.innerHTML = "Nessun risultato trovato.";
+        }
+    }
+
+</script>
 
 </html>

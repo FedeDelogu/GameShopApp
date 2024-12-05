@@ -112,11 +112,10 @@
         @if(utenteLoggato != null)
         {
             var userId = utenteLoggato.Id;
-            
                 <h3 style="color:var(--floral-white)">Inserisci una recensione</h3>
                 <form action="/Videogiochi/AggiungiRecensione" method="post">
-                    <input type="number" hidden="" readonly="" name="idvideogioco" value="9">
-                    <input type="number" hidden="" readonly="" name="idutente" value="10">
+                    <input type="number" hidden="" readonly="" name="idvideogioco" value="@(((Videogioco)Model).Id)">
+                    <input type="number" hidden="" readonly="" name="idutente" value="@userId">
                     <input type="number" hidden="" readonly="" name="valido" value="1">
                     <textarea name="commento" id="commento"></textarea>
                     <div class="d-flex align-items-center justify-content-end">
