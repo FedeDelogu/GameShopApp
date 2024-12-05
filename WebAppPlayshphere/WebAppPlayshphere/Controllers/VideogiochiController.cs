@@ -194,6 +194,88 @@ namespace WebAppPlayshphere.Controllers
             }
             return Json(vg);
         }
+
+        public IActionResult FiltraPiattaforma(int idPiattaforma)
+        {
+            List<Videogioco> vg = DAOVideogioco.GetIstance().GetByPiattaforma(idPiattaforma);
+
+            return Json(vg);
+        }
+
+        public IActionResult FiltraGeneri(string generi)
+        {
+            List<Videogioco> vg = new List<Videogioco>();
+            if (generi == "")
+            {
+                List<Entity> ris = DAOVideogioco.GetIstance().Read();
+                foreach (Entity e in ris)
+                {
+                    vg.Add((Videogioco)e);
+                }
+            }
+            else
+            {
+                vg = DAOVideogioco.GetIstance().RicercaGeneri(generi);
+                Console.WriteLine("Lunghezza vg: " + vg.Count);
+            }
+            return Json(vg);
+        }
+
+
+        public IActionResult OrdinaPer(string operazione)
+        {
+            List<Videogioco> ris = new();
+            List<Entity> giochi = new List<Entity>();
+            string query = "";
+            switch (operazione)
+            {
+                case "1":
+                    query = "Prezzo DESC";
+                    break;
+                case "2":
+                    query = "Prezzo ASC";
+                    break;
+                case "3":
+                    query = "Rilascio DESC";
+                    break;
+                case "4":
+                    query = "Rilascio ASC";
+                    break;
+                default:
+                    Console.WriteLine("sei nel default");
+                    giochi = DAOVideogioco.GetIstance().Read();
+                    break;
+               
+            }
+            if (query == "") {
+                if (operazione != "")
+                {
+                    if (operazione == "5")
+                    {
+                        Console.WriteLine("sei nel decrescente");
+                        giochi=giochi.OrderByDescending(e => ((Videogioco)e).Valutazione()).ToList();
+                    }
+                    else
+                    {
+                        Console.WriteLine("sei nel crescente");
+                        giochi=giochi.OrderBy(e => ((Videogioco)e).Valutazione()).ToList();
+                    }
+                    foreach(var gioco in giochi)
+                    {
+                        Console.WriteLine("VALUTAZIONE: "+((Videogioco)gioco).Valutazione());
+                        ris.Add((Videogioco)gioco);
+                    }
+                }
+            }
+            else
+            {
+                ris=DAOVideogioco.GetIstance().Order(query);
+            }
+            
+            return Json(ris);
+        }
+
+
         public IActionResult Categoria(string categoria)
         {
             return View(DAOVideogioco.GetIstance().filtroCategoria(categoria));

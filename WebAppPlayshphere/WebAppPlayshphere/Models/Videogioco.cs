@@ -86,12 +86,14 @@ namespace WebAppPlayshphere.Models
             {
                 ris += ((Recensione)item).Valutazione;
             }
-            return Math.Round(ris / Recensioni.Count, 1);
+            return Recensioni.Count>0?Math.Round(ris / Recensioni.Count, 1):0;
         }
         
         public override void FromDictionary(Dictionary<string, string> riga)
         {
+            base.FromDictionary(riga);
             var ris = DAOPiattaforma.GetIstance().FindByGioco(int.Parse(riga["id"]));
+            Recensioni = DAORecensione.GetIstance().RecensioniGioco(Id);
             // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
             /*foreach (var item in ris)
             {
@@ -103,7 +105,7 @@ namespace WebAppPlayshphere.Models
                     }
                     );
             }*/
-            base.FromDictionary(riga);
+            
         }
     }
 }
