@@ -1,0 +1,23 @@
+﻿:root {
+    --floral-white: #fffcf2ff;
+    --timberwolf: #ccc5b9ff;
+    --black-olive: #403d39ff;
+    --eerie-black: #252422ff;
+    --flame: #eb5e28ff;
+    --navbar: 60px; /* Altezza della navbar */
+    --sidebar-width: 200px; /* Larghezza della sidebar */
+    --footer-height: 100px; /* Altezza della footer */
+}
+.navbar {
+    background-color: var(--black-olive) !important;
+    color: var(--floral-white) !important;
+    box-shadow: 0 0 10px 3px black;
+}
+#chatWindow {
+    background-color: var(--eerie-black) !important;
+    color: var(--floral-white) !important;
+    border: 1px solid var(--timberwolf);
+    height: 60vh;
+    overflow-y:auto;
+    color:var(--floral-white)!important;
+}
