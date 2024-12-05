@@ -36,15 +36,23 @@ namespace WebAppPlayshphere.Hubs
 
                 var (utenteConnesso, adminConnesso) = chatAttive[chatId];
 
-                if (ruolo == "utente" && utenteConnesso != null ||
-                    ruolo == "admin" && adminConnesso != null)
+                // Se è un utente e l'utente è già connesso (controllo con userId)
+                if (ruolo == "utente" && utenteConnesso != null && utenteConnesso != userId)
                 {
-                    await Clients.Caller.SendAsync("AccessoNegato", $"Un {ruolo} è già connesso.");
+                    await Clients.Caller.SendAsync("AccessoNegato", "Un altro utente è già connesso a questa chat.");
                     return;
                 }
 
+                // Se è un admin e c'è già un altro admin connesso (consideriamo admin unico per il sito)
+                if (ruolo == "admin" && adminConnesso != null && adminConnesso != connectionId)
+                {
+                    await Clients.Caller.SendAsync("AccessoNegato", "Un admin è già connesso.");
+                    return;
+                }
+
+                // Aggiorna le connessioni nel dizionario
                 chatAttive[chatId] = ruolo == "utente"
-                    ? (connectionId, adminConnesso)
+                    ? (userId, adminConnesso)
                     : (utenteConnesso, connectionId);
 
                 await Groups.AddToGroupAsync(connectionId, chatId);
