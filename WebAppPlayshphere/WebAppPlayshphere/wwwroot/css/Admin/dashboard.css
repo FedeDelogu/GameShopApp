@@ -55,12 +55,91 @@ body, html {
     transition: transform 0.25s ease;
 }
 
-    .btn-primary:hover {
-        transform: scale(1.05);
-        transition: transform 0.25s ease;
-        background-color: var(--floral-white);
-        color: var(--eerie-black) !important;
-    }
+.btn-primary:hover {
+    transform: scale(1.05);
+    transition: transform 0.25s ease;
+    background-color: var(--floral-white);
+    color: var(--eerie-black) !important;
+}
+
+.btn-login {
+    background-color: var(--flame);
+    border: none;
+    color: var(--eerie-black);
+    width: 70%;
+    margin: auto;
+    transition: transform 0.25s ease;
+}
+
+.btn-login:hover {
+    transform: scale(1.05);
+    transition: transform 0.25s ease;
+    background-color: var(--flame);
+    color: var(--eerie-black) !important;
+}
+
+.btn-delete {
+    background-color: red;
+    border: none;
+    color: white;
+    margin: auto;
+    transition: transform 0.25s ease;
+}
+
+.btn-delete:hover {
+    transform: scale(1.05);
+    transition: transform 0.25s ease;
+    background-color: red;
+    color: white;
+}
+
+.btn-disapproved {
+    background-color: orange;
+    border: none;
+    color: black;
+    margin: auto;
+    transition: transform 0.25s ease;
+}
+
+.btn-disapproved:hover {
+    transform: scale(1.05);
+    transition: transform 0.25s ease;
+    background-color: orange;
+    color: black;
+}
+
+.btn-approved {
+    background-color: green;
+    border: none;
+    color: white;
+    margin: auto;
+    transition: transform 0.25s ease;
+}
+
+.btn-approved:hover {
+    transform: scale(1.05);
+    transition: transform 0.25s ease;
+    background-color: green;
+    color: white;
+}
+
+.btn-info, .btn-danger {
+    transition: transform 0.25s ease;
+}
+
+.btn-info:hover, .btn-danger:hover {
+    transform: scale(1.05);
+    transition: transform 0.25s ease;
+}
+
+a:hover{
+    cursor:pointer;
+}
+
+form#add-videogame{
+    display:flex;
+    flex-direction: column;
+}
 
 a.active {
     background-color: var(--floral-white) !important;
@@ -74,4 +153,9 @@ a.active {
 
 .main-content {
     background-color: var(--floral-white);
+}
+
+#logo-dashboard{
+    background-color: white;
+    padding: 10px;
 }

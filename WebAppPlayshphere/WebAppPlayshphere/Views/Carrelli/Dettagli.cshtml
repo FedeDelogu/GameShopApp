@@ -83,7 +83,7 @@
                                 <!-- Prezzo -->
                                 <div class="d-flex align-items-end justify-content-end w-100">
                                     <div class="m-3">
-                                        <span id="prezzo">@prezzo €</span>
+                                        <span id="prezzo">@(Math.Round(prezzo,2)) €</span>
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +121,7 @@
 
                                                 <div class="d-flex justify-content-between">
                                                 <span>@titolo x @quantita</span>
-                                                <span>@(quantita * prezzoGioco) €</span>
+                                                <span>@(Math.Round(quantita * prezzoGioco,2)) €</span>
                                                 </div>
                                 }        
                             }
