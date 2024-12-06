@@ -197,7 +197,16 @@ namespace WebAppPlayshphere.Controllers
 
         public IActionResult FiltraPiattaforma(int idPiattaforma)
         {
-            List<Videogioco> vg = DAOVideogioco.GetIstance().GetByPiattaforma(idPiattaforma);
+            List<Videogioco> vg = new List<Videogioco>();
+            if (idPiattaforma == -1)
+            {
+                List<Entity> ris = DAOVideogioco.GetIstance().Read();
+                foreach (Entity e in ris) {
+                    vg.Add((Videogioco)e);
+                }
+                return Json(vg);
+            }
+             vg = DAOVideogioco.GetIstance().GetByPiattaforma(idPiattaforma);
 
             return Json(vg);
         }
