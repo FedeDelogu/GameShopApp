@@ -117,6 +117,10 @@ namespace WebAppPlayshphere.Controllers
             {
                 Console.WriteLine($"Utente trovato , utente : {user}, password : {password}");
                 Entity e = DAOUtente.GetInstance().Find(user);
+                if(((Utente)e).Ruolo == -1)
+                {
+                    return RedirectToAction("Login");
+                }
                 Utente utenteFront = new Utente
                 {
                     Id = ((Utente)e).Id,
