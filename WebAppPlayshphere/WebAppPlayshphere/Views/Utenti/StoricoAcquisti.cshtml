@@ -8,20 +8,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/Profilo/profilo.css">
+    <link rel="stylesheet" href="/css/Profilo/recensioni.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Layout/mainLayout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebAppPlayshphere.styles.css" asp-append-version="true" />
     <title>Le tue Recensioni</title>
 </head>
 <body class="vh-100" style="overflow-y:hidden">
-
-    <section class="container py-4" id="recensioni">
+        <section class="container py-4 px-5 rounded-bottom-5" id="storicoAcquisti">
         <h3 class="text-center py-2 fs-1" style="color:var(--floral-white)">I TUOI ACQUISTI</h3>
         @foreach (var kvp in Model)
         {
             <h5 class="text-center py-1">
-                <span style="color:var(--floral-white)">Benvenuto, </span><span class="fw-bold" style="color:var(--flame)">@kvp.Key.Username</span>!
+                    Benvenuto <span class="fw-bold" style="color:var(--flame)">@kvp.Key.Username</span>!
             </h5>
 
             @if (kvp.Value != null && kvp.Value.Any())
@@ -30,27 +29,29 @@
                     @foreach (var ordine in kvp.Value)
                     {
                         <div class="col-md-4">
-                            <div class="card text-white bg-dark h-100">
-                                <div class="card-body shadow">
-                                    <h5 class="card-title" style="color:var(--flame)">
+                                <div class="card rounded-4 text-white bg-dark h-100">
+                                <div class="card-body">
+                                        <h5 class="fw-bold" style="color:var(--flame)">
                                         ID Ordine: @ordine.Id
                                     </h5>
+                                    <div class="fw-bold">
+                                        <div class="card-text">
+                                            Data dell'ordine: @ordine.DataOrdine.ToString("dd/MM/yyyy")
+                                        </div>
+                                        <div class="card-text">
+                                            Stato dell'ordine: @ordine.Stato
+                                        </div>
+                                    </div>
                                     <p class="card-text">
-                                        Data dell'ordine: @ordine.DataOrdine.ToString("dd/MM/yyyy")
-                                    </p>
-                                    <p class="card-text">
-                                        Stato dell'ordine: @ordine.Stato
-                                    </p>
-                                    <p class="text-muted small">
-                                        @{
-                                            foreach(var v in ordine.Videogiochi.Keys)
-                                            {
-                                                <p class="card-text">
                                                 Giochi acquistati:
-                                                        @v.Titolo
-                                                </p>
-                                            }
-                                        }
+                                                <ul class="py-1">
+                                                    @{
+                                                        foreach(var v in ordine.Videogiochi.Keys)
+                                                        {
+                                                            <li>- @v.Titolo</li>
+                                                        }
+                                                    }
+                                                </ul>
                                     </p>
                                 </div>
                             </div>
@@ -60,7 +61,7 @@
             }
             else
             {
-                <p class="text-center mt-3 text-muted">Non hai ordini.</p>
+                <p class="text-center mt-3">Non hai ordini.</p>
             }
         }
     </section>

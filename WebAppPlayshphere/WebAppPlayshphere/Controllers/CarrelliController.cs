@@ -16,15 +16,17 @@ namespace WebAppPlayshphere.Controllers
         {
             return View();
         }
-        public IActionResult Ordina(int id)
+        public IActionResult Completed(int id)
         {
             Ordine ord = DAOCarrello.GetIstance().Ordina(DAOCarrello.GetIstance().Find(id));
-            return RedirectToAction("Completed",  ord);
+            foreach (var v in ord.Videogiochi) 
+            {
+                Console.WriteLine("LISTA: " + v.Key.Titolo);
+            }
+
+            return View(ord);
         }
-        public IActionResult Completed(Ordine o)
-        {
-            return View(o);
-        }//viva
+
         public IActionResult UpdateUnits(int qt, int id, int idCarrello,int idPiattaforma)
         {
             Carrello c = (Carrello)DAOCarrello.GetIstance().Find(idCarrello);
@@ -44,7 +46,7 @@ namespace WebAppPlayshphere.Controllers
 
             if (quantitaCorrente > qt)
             {
-                DAOCarrello.GetIstance().Remove(id, idCarrello,quantitaCorrente - qt);
+                DAOCarrello.GetIstance().Remove(id, idCarrello,idPiattaforma, quantitaCorrente - qt);
             }
             else
             {
@@ -69,9 +71,6 @@ namespace WebAppPlayshphere.Controllers
             var userJson = HttpContext.Session.GetString("utenteLoggato");
             var user = userJson != null ? JsonConvert.DeserializeObject<Utente>(userJson) : null;
 
-            // Passa l'utente alla vista tramite ViewBag
-            ViewBag.Utente = user;
-
             // Recupera il carrello e passalo alla vista
             var carrello = DAOCarrello.GetIstance().Find(id);
             return View(carrello);
@@ -81,14 +80,14 @@ namespace WebAppPlayshphere.Controllers
 
         public IActionResult ModificaAnagrafica(Dictionary<string, string> dati)
         {
-
-            var utenteLoggato = JsonConvert.DeserializeObject<Utente>(HttpContext.Session.GetString("UtenteLoggato"));
+            // Recupera l'utente dalla sessione
+            var userJson = HttpContext.Session.GetString("UtenteLoggato");
+            var utenteLoggato = userJson != null ? JsonConvert.DeserializeObject<Utente>(userJson) : null;
 
             foreach (var l in dati)
                 Console.WriteLine(l.Key + " " + l.Value);
-
             // Aggiorna l'anagrafica
-            utenteLoggato.Anagrafica = new Anagrafica
+            utenteLoggato.Anagrafica=new Anagrafica
             {
                 Nome = dati["Nome"],
                 Cognome = dati["Cognome"],
@@ -127,7 +126,6 @@ namespace WebAppPlayshphere.Controllers
                 }
             }
             else
-
             {
                 // Se l'anagrafica è nuova, usa il metodo Create
                 var succ = DAOAnagrafica.GetInstance().Create(utenteLoggato);

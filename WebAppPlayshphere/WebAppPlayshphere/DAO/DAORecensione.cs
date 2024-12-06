@@ -27,6 +27,7 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Create(Entity e)
         {
+            Console.WriteLine($"CREATE DAORECENSIONE id gioco da inserire : {((Recensione)e).IdVideogioco}");
             Recensione r = (Recensione)e;
             string commento = r.Commento;
             commento.Replace("'", "''");

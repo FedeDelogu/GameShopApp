@@ -1,17 +1,80 @@
 ﻿@using WebAppPlayshphere.Models
+@using WebAppPlayshphere.DAO
 @model Ordine
 @using Utility
+@{
+    Layout = "_Layout";
+}
 
+@{
+    foreach(var item in Model.Videogiochi)
+    {
+        var titolo = item.Key.Titolo;
+        var piattaforma = item.Key.Piattaforme;
+        var qnt = item.Value;
+    }
+}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <link href="~/css/Carrelli/carrello.css" rel="stylesheet" />
+    <title>Acquisto completato</title>
 </head>
 <body style="">
-    <h1>ACQUISTO COMPLETATO!!!</h1>
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMK5bMz1OKF9AONWZFgj5vPzZvdZNE97-x9A&s" style="mix-blend-mode: color-burn" />
-    <span>@(Model.DataOrdine.ToString("dd/MM/yyyy"))</span>
+    <div class="container">
+    <div class="container-fluid d-flex justify-content-lg-center mb-5 align-items-center">
+        <div class="round d-flex justify-content-center align-items-center active me-3">1</div>
+        <div class="me-3"><span class="info-page">Riepilogo ordine</span></div>
+        <div class="line-active"></div>
+        
+        <div class="round d-flex justify-content-center align-items-center active me-3">2</div>
+        <div class="disbale me-3"><span class="info-page">Pagamento</span></div>
+        <div class="line-active"></div>
 
+        <div class="round d-flex justify-content-center align-items-center active me-3">3</div>
+        <div class="disbale me-3"><span class="info-page">Ordine effettuato</span></div>
+
+    </div>
+    <div class="row">
+        <div class="col mr-2 p-0">
+            <div class="container-fluid px-0 dark-bg w-100 mb-3 rounded-3">
+                <div class="container py-4">
+                    <h1>Ordine effetuato con successo!</h1>
+                    <span>Data dell'ordine: @(Model.DataOrdine.ToString("dd/MM/yyyy"))</span>
+                    <hr />
+                    <!-- box videogioco -->
+
+                        @{
+                            foreach(var item in Model.Videogiochi)
+                            {
+                                <div class="container-fluid px-0 dark-bg w-100 mb-3 rounded-end-3">
+                                    <div class="d-flex">
+                                        <div id="img">
+                                            <img src="/images/copertine/@(item.Key.Id).png" alt="" width="200" height="175">
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-start  w-100">
+                                            <div id="dettagli" class="m-2">
+                                                <h2>@item.Key.Titolo</h2>
+                                            </div>
+                                            <div class="ms-2">
+                                                <span>Quantita: @item.Value</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                    }   
+            </div>  
+        </div>
+        
+    </div class="d-flex align-content-center">
+    <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-checkout col fw-bold my-2" onclick="window.location.href='/Home/Index'">Torna alla Home</button>
+    </div>
+  </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/5101093cd6.js" crossorigin="anonymous"></script>
+<script src="/js/carrello/file.js"></script>
 </html>

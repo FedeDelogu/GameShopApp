@@ -8,6 +8,9 @@ using WebAppPlayshphere.Models;
 using Newtonsoft.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Net;
 
 namespace WebAppPlayshphere.Controllers
 {
@@ -41,10 +44,14 @@ namespace WebAppPlayshphere.Controllers
         public IActionResult Profilo()
         {
             var utenteLoggato = GetUtenteLoggato();
+            Console.WriteLine(utenteLoggato.ToString());
             if (utenteLoggato == null)
             {
                 return RedirectToAction("Login");
             }
+
+            // Recupera l'anagrafica dell'utente loggato
+            utenteLoggato.Anagrafica = (Anagrafica)DAOAnagrafica.GetInstance().Find(utenteLoggato.Id);
 
             if (utenteLoggato.Anagrafica == null)
             {
@@ -108,6 +115,7 @@ namespace WebAppPlayshphere.Controllers
 
             if (DAOUtente.GetInstance().Find(user, password))
             {
+                Console.WriteLine($"Utente trovato , utente : {user}, password : {password}");
                 Entity e = DAOUtente.GetInstance().Find(user);
                 Utente utenteFront = new Utente
                 {
@@ -218,6 +226,46 @@ namespace WebAppPlayshphere.Controllers
 
             if (DAOUtente.GetInstance().Create(e))
             {
+                try
+                {
+                    // Crea il messaggio email
+                    Utente u = (Utente)e;
+                    MailMessage mail = new MailMessage();
+                    mail.From = new MailAddress("hellsgames2024@gmail.com"); // Indirizzo mittente
+                    mail.To.Add(u.Email); // Indirizzo destinatario
+                    mail.Subject = "Registrazione Completata";
+                    mail.Body = $"Benvenut* {u.Username} nella famiglia Hell's Games™ \n" +
+                        "Goditi il nostro servizio infernale, navigando nell'ade dei nostri prezzi superbi!!!.\n";
+                    
+                    // Percorso del file immagine locale
+                    //string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "img/HellsGames.png");
+                    string imagePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "img", "HellsGames.png");
+
+                    if (System.IO.File.Exists(imagePath)) // Controlla che il file esista
+                    {
+                        Attachment attachment = new Attachment(imagePath, MediaTypeNames.Image.Jpeg); // Specifica il tipo MIME
+                        mail.Attachments.Add(attachment);
+                    }
+                    else
+                    {
+                        Console.WriteLine("File immagine non trovato!");
+                    }
+
+
+                    // Configura il client SMTP per Gmail
+                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587); // Server e porta Gmail
+                    smtpClient.Credentials = new NetworkCredential("hellsgames2024@gmail.com", "fkit fiur dpsv bqgr"); // Credenziali Gmail
+                    smtpClient.EnableSsl = true; // Abilita SSL/TLS
+
+                    // Invia l'email
+                    smtpClient.Send(mail);
+                    Console.WriteLine("Email inviata con successo!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Errore durante l'invio dell'email: " + ex.Message);
+                }
+
                 // Dove lo mando se la registrazione avviene?
                 return RedirectToAction("Login");
             }
@@ -244,6 +292,7 @@ namespace WebAppPlayshphere.Controllers
             {
                 return RedirectToAction("Login");
             }
+
             if (utenteloggato.Anagrafica == null)
             {
                 Entity AnagraficaVuota = new Anagrafica
@@ -259,7 +308,7 @@ namespace WebAppPlayshphere.Controllers
             }
 
             // Recupera le recensioni dell'utente loggato
-            List<Ordine> ordini = DAOOrdine.GetInstance().FindByUtente(utenteloggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
+            List<Ordine> ordini = DAOOrdine.GetInstance().OrdiniUtente(utenteloggato.Id); // Recupera le recensioni dall'ID dell'utente loggato
 
             // Crea un dizionario che lega l'utente alla sua lista di recensioni
             var model = new Dictionary<Utente, List<Ordine>>()
@@ -354,6 +403,19 @@ namespace WebAppPlayshphere.Controllers
             return null;
         }
 
+        [HttpGet("Utenti/GetIdUtenteLoggato")]
+        public IActionResult GetIdUtenteLoggato()
+        {
+            var utente = GetUtenteLoggato();  // Recupera l'utente loggato dalla sessione
+
+            // Verifica che l'utente esista e che abbia un Id
+            if (utente == null || utente.Id == 0)
+            {
+                return NotFound();  // Se non c'è nessun utente loggato, restituisci un errore
+            }
+
+            return Json(new { Id = utente.Id });  // Restituisci solo l'ID dell'utente come JSON
+        }
 
 
     }

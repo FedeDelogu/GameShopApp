@@ -66,9 +66,9 @@ h2:hover .fa-chevron-right{
     cursor: pointer !important;
 }
 
-#category-section{
+/*#category-section{
     margin-bottom: 8rem!important;
-}
+}*/
 /* L'overlay che copre l'immagine */
 .overlay {
     position: absolute; /* Posiziona l'overlay relativo al contenitore .col */

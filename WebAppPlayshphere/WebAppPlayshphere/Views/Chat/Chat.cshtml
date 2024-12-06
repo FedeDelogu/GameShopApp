@@ -1,0 +1,133 @@
+﻿@using Utility
+@using WebAppPlayshphere.Models
+@using WebAppPlayshphere.DAO
+@model dynamic
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Layout/mainLayout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Chat/chat.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebAppPlayshphere.styles.css" asp-append-version="true" />
+    <title>Chat</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg px-5 ">
+        <div class="container-fluid">
+            <a class="navbar-brand" onclick="window.location.href='/Home/Index'">
+                <img src="/img/HellsGames.png" alt="Logo" width="64" height="64">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")"
+                           onclick="window.location.href='/Home/Index'">Home</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="chatWindow" class="mt-3 rounded-3 p-3">
+            <!-- Messaggi caricati dal modello -->
+            @{
+                if (Model.chat.Messaggi.Count > 0 || Model.chat.Messaggi != null)
+                {
+                    foreach (var messaggio in Model.chat.Messaggi)
+                    {
+                        <div class="bg-light text-black rounded-3 p-2 my-2" style="width:min-content">@Model.utente.Username @messaggio.Contenuto</div>
+                    }
+                }
+            }
+            @{
+                var utenteLoggatoJson = Context.Session.GetString("UtenteLoggato");
+                dynamic utenteloggato = string.IsNullOrEmpty(utenteLoggatoJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject(utenteLoggatoJson);
+                var username = utenteloggato.Username;
+                var idUtente = utenteloggato.Id;
+            }
+        </div>
+        <div class="py-3 w-100 input-group ">
+            <input name="idchat" id="idchat" class="d-none" value="@Model.chat.Id" readonly></input>
+            <input type="text" id="idutente" class="d-none" value="@idUtente" readonly />
+            <input type="text" id="userInput" class="d-none" value="@username" readonly />
+            <div class="input-group mb-3">
+                <input type="text" id="messageInput" class="form-control px-2" placeholder="Scrivi un messaggio" aria-label="Scrivi un messaggio" aria-describedby="chatText">
+                <button class="btn btn-outline-success" onclick="sendMessage()" type="button" id="chatText">Invia</button>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        connection.on("ReceiveMessage", (user, message) => {
+            const chatWindow = document.getElementById("chatWindow");
+            const newMessage = document.createElement("div");
+            newMessage.textContent = `${user}: ${message}`;
+            chatWindow.appendChild(newMessage);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        });
+
+        connection.on("AccessoNegato", (message) => {
+            alert(message);
+        });
+
+        async function accediChat() {
+
+            const chatId = document.getElementById("idchat").value;
+			//const userId = document.getElementById("idutente").textContent;
+            const userId = document.getElementById("idutente").value;
+
+
+            if (connection.state !== signalR.HubConnectionState.Connected) {
+                try {
+                    await connection.start();
+                } catch (err) {
+                    console.error("Errore nella connessione SignalR:", err);
+                    return;
+                }
+            }
+
+            try {
+                await connection.invoke("AccediChat", userId, chatId);
+                console.log("Connesso alla chat con ID:", chatId);
+            } catch (err) {
+                console.error("Errore durante l'accesso alla chat:", err);
+            }
+        }
+
+        async function sendMessage() {
+            const user = document.getElementById("userInput").value;
+            const message = document.getElementById("messageInput").value;
+            const chatid = document.getElementById("idchat").value;
+            const userId = document.getElementById("idutente").value;
+            if (!message) {
+                alert("Inserisci un messaggio.");
+                return;
+            }
+
+            try {
+                await connection.invoke("SendMessage", user, chatid, userId, message);
+                document.getElementById("messageInput").value = "";
+            } catch (err) {
+                console.error("Errore durante l'invio del messaggio:", err);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", accediChat);
+    </script>
+</body>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/5101093cd6.js" crossorigin="anonymous"></script>
+
+</html>
