@@ -42,7 +42,7 @@
                         <li class="my-3">
                             <div class="fw-bold hover-flame">PIATTAFORMA</div>
                             <select name="piattaforma" id="piattaforma" class="d-block w-75 rounded-4 px-2 py-1 my-2">
-                            <option value="All">All</option>
+                            <option value="">All</option>
                             @foreach (var p in DAOPiattaforma.GetIstance().Read())
                             {
                                 <option value="@(((Piattaforma)p).Id)">@(((Piattaforma)p).Nome)</option>
@@ -152,7 +152,7 @@
         console.log("sei quiiiiiii");
         piattaforma.addEventListener('change', function () {
             console.log("ciaooooo");
-            const query = parseInt(piattaforma.value); // Ottieni il valore dell'input senza spazi extra
+            const query = piattaforma.value!=""?parseInt(piattaforma.value):-1; // Ottieni il valore dell'input senza spazi extra
 
 
             filterPiattaforma(query); // Chiama la funzione per fare la richiesta AJAX
