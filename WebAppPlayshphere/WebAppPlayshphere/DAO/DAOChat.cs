@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
         private DAOChat()
         {
 
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere3", "localhost");
 
         }
         private static DAOChat istance = null;
@@ -26,7 +26,7 @@ namespace WebAppPlayshphere.DAO
         public bool Create(Entity e)
         {
             // inserisco la chat nel db
-            bool risultato = db.Update($"INSERT INTO Chat (dataCreazione) VALUES ('{((Chat)e).DataCreazione}');");
+            bool risultato = db.Update($"INSERT INTO Chat (dataCreazione, notifica) VALUES ('{((Chat)e).DataCreazione}', 0);");
             if (!risultato)
             {
                 Console.WriteLine("ERRORE CREAZIONE CHAT (DAOCHAT)");
@@ -111,6 +111,7 @@ namespace WebAppPlayshphere.DAO
 
         public List<dynamic> ReadLista()
         {
+            Console.WriteLine("SIAMO IN READLISTA DI DAOCHAT");
             //throw new NotImplementedException();
             string query = "SELECT * FROM Chat";
             var righe = db.Read(query);
@@ -142,7 +143,7 @@ namespace WebAppPlayshphere.DAO
 
         public bool Update(Entity e)
         {
-            throw new NotImplementedException();
+            return db.Update($"UPDATE Chat SET notifica = {((Chat)e).Notifica}, dataCreazione = '{((Chat)e).DataCreazione}' WHERE id = {e.Id}");
         }
     }
 }

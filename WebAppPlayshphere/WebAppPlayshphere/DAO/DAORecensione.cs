@@ -13,7 +13,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAORecensione()
         {
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere3", "localhost");
         }
         private static DAORecensione istance = null;
 

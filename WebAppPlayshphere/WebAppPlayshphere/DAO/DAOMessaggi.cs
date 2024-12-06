@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
         private DAOMessaggi()
         {
 
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere3", "localhost");
 
         }
         private static DAOMessaggi istance = null;
@@ -39,7 +39,8 @@ namespace WebAppPlayshphere.DAO
         }
         public List<Entity> FindByUtente(int idutente)
         {
-            string query = $"SELECT * FROM Messaggi WHERE idUtente = {idutente}";
+            Console.WriteLine("siamo nel metodo find by utente di messaggi dao");
+            string query = $"SELECT * FROM Messaggi WHERE idUtente = {idutente} OR idUtente = 2;";
             var righe = db.Read(query);
             if(righe == null)
             {
@@ -50,6 +51,7 @@ namespace WebAppPlayshphere.DAO
             {
                 Entity e = new Messaggio();
                 e.FromDictionary(riga);
+                Console.WriteLine($"{((Messaggio)e).IdUtente} : {((Messaggio)e).Contenuto}");
                 ris.Add(e);
             }
             return ris;
