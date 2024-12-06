@@ -4,6 +4,8 @@ window.addEventListener('load', function () {
 
     document.getElementById('lista-utenti').addEventListener('click', listaUtenti); // Al click del Pulsante mostra lista utenti
 
+    // LISTA CHAT ATTIVE
+   
     // LISTA UTENTI NON BANNATI
     function listaUtenti() {
         fetch('/Utenti/ListaUtenti') // Richiama l'action che restituisce un JSON

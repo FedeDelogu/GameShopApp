@@ -57,7 +57,7 @@
                         <div class="mb-3 w-100 ps-2">
                             <ul class="dropdown-menu d-block position-relative w-100">
                                 <li><h6 class="dropdown-header">Amministrazione</h6></li>
-                                <li><a class="dropdown-item py-2 rounded-start-2" href="/Admin/Chat">Chat di supporto</a></li>
+                                    <li><a class="dropdown-item py-2 rounded-start-2" href="#" onclick="listaChat()">Chat di supporto</a></li>
                             </ul>
                         </div>
                         <div class="mb-3 w-100 d-flex">
@@ -99,6 +99,26 @@
             </div>
         }
     }
+    <script>
+        function listaChat() {
+            const content = document.getElementById('content-dashboard');
+
+            fetch('/Chat/Elenco', { method: 'GET' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Errore nella chiamata all\'endpoint: ' + response.statusText);
+                    }
+                    return response.text(); // Assumendo che l'endpoint restituisca HTML come stringa
+                })
+                .then(html => {
+                    content.innerHTML = html; // Inserisce l'HTML nel div
+                })
+                .catch(error => {
+                    console.error('Errore durante il caricamento degli ordini:', error);
+                    content.innerHTML = '<p>Errore nel caricamento degli ordini. Riprova più tardi.</p>';
+                });
+        }
+</script>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/5101093cd6.js" crossorigin="anonymous"></script>
