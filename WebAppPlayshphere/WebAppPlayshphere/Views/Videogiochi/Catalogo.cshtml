@@ -1,5 +1,6 @@
 @using Utility
 @using WebAppPlayshphere.Models
+@using WebAppPlayshphere.DAO
 @model List<Utility.Entity>
 @{
     Layout = "_Layout";
@@ -22,41 +23,54 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="text-light me-3 rounded-5 d-flex flex-column justify-content-start py-4" id="sidebar">
                     <ul class="ulSB">
-                        <li class="my-3"><a href="#">NEW !!!</a></li>
                         <li class="my-3">
-                            <a data-bs-toggle="collapse" href="#collapseGeneri" role="button" aria-expanded="false" aria-controls="collapseGeneri">
-                                GENERE
-                            </a>
-                            <div class="collapse my-3" id="collapseGeneri">
+                            <div class="fw-bold hover-flame">CERCA VIDEOGIOCO</div>
+                            <input class="form-control form-control-sm border-0 rounded-5" type="search" placeholder="Cerca un videogioco" aria-label="Search" id="searchBox">
+                        </li>
+                        <li class="my-3">
+                            <div class="fw-bold hover-flame">GENERI</div>
                                 <div class="gy-2 mt-1 ">
-                                    @foreach (var v in Model)
-                                    {
-                                        var genere = (((Videogioco)v).Generi);
-
-                                        <button class="btn col-5 fw-bold p-1 mx-1" style="font-size: 0.8rem;">@genere</button>
-                                    }
+                                    <select name="generi" id="generi" class="d-block w-75 rounded-4 px-2 py-1 my-2">
+                                        <option value="">All</option>
+                                        @foreach (var p in DAOVideogioco.GetIstance().GetGeneri())
+                                        {
+                                            <option value="@(p)">@(p)</option>
+                                        }
+                                     </select>
                                 </div>
-                            </div>
                         </li>
                         <li class="my-3">
                             <div class="fw-bold hover-flame">PIATTAFORMA</div>
                             <select name="piattaforma" id="piattaforma" class="d-block w-75 rounded-4 px-2 py-1 my-2">
-                                <option value="All">All</option>
-                                <option value="PS5">PS5</option>
-                                <option value="PS4">PS4</option>
-                                <option value="XBOX">XBOX</option>
-                                <option value="Nintendo Switch">Nintendo Switch</option>
+                            <option value="">All</option>
+                            @foreach (var p in DAOPiattaforma.GetIstance().Read())
+                            {
+                                <option value="@(((Piattaforma)p).Id)">@(((Piattaforma)p).Nome)</option>
+                            }
+                            </select>
+                        </li>
+                        <li class="my-3">
+                            <div class="fw-bold hover-flame">ORDINA PER:</div>
+                            <select name="ordina" id="ordina" class="d-block w-75 rounded-4 px-2 py-1 my-2">
+                                <option value="">Default</option>
+                                <option value="1">Prezzo (decrescente)</option>
+                                <option value="2">Prezzo (crescente)</option>
+                                <option value="3">Data Rilascio (decrescente)</option>
+                                <option value="4">Data Rilascio (crescente)</option>
+                                <option value="5">Valutazione (decrescente)</option>
+                                <option value="6">Valutazione (crescente)</option>
                             </select>
                         </li>
                     </ul>
+
 
                 </div>
             </div>
             <!-- FINE SIDEBAR -->
             <div class="col-6 col-md-8 col-lg-9 d-flex justify-content-center">
                 <!-- CATALOGO -->
-                <section id="catalogo">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4">
+                <section id="catalogo" class="w-100">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4" id="giochiContainer">
                         @foreach (var v in Model)
                         {
                             var titolo = (((Videogioco)v).Titolo);
@@ -71,6 +85,7 @@
                                         <h5>@titolo</h5>
                                         <h6 class="text-end fw-bold" style="color:var(--flame)">@prezzo Eur</h6>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -85,5 +100,229 @@
     </div>
 </body>
 <script src="/js/Sidebar/Sidebar.js" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("fyufhtdgfdrgdgndgfdyjdyk");
+        var barra = document.getElementById("searchBox");
+        console.log("sei quiiiiiii");
+        barra.addEventListener('input', function () {
+            console.log("ciaooooo");
+            const query = barra.value.trim(); // Ottieni il valore dell'input senza spazi extra
+
+
+            filterGames(query); // Chiama la funzione per fare la richiesta AJAX
+
+        });
+    });
+
+    // Funzione per fare la richiesta AJAX
+    function filterGames(query) {
+        const xhr = new XMLHttpRequest(); // Crea un oggetto XMLHttpRequest
+
+        // Configura la richiesta
+        xhr.open('GET', `/Videogiochi/Filtra?ricerca=` + query, true);
+
+        // Definisci la funzione di callback
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log("ci siamo");
+                var videogiochi = JSON.parse(xhr.responseText);
+                videogiochi.forEach(videogioco => {
+                    console.log(videogioco); // Verifica il contenuto di ogni videogioco
+                });
+
+                displayResults(videogiochi);
+            } else {
+                console.error('Errore durante la richiesta:', xhr.status, xhr.statusText);
+            }
+        };
+
+        // Gestisci eventuali errori
+        xhr.onerror = function () {
+            console.error('Errore di rete durante la richiesta.');
+        };
+
+        xhr.send(); // Invia la richiesta
+    }
+
+    // FILTRO PIATTAFORME
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("fyufhtdgfdrgdgndgfdyjdyk");
+        var piattaforma = document.getElementById('piattaforma');
+        console.log("sei quiiiiiii");
+        piattaforma.addEventListener('change', function () {
+            console.log("ciaooooo");
+            const query = piattaforma.value!=""?parseInt(piattaforma.value):-1; // Ottieni il valore dell'input senza spazi extra
+
+
+            filterPiattaforma(query); // Chiama la funzione per fare la richiesta AJAX
+
+        });
+    });
+
+    // Funzione per fare la richiesta AJAX
+    function filterPiattaforma(query) {
+        const xhr = new XMLHttpRequest(); // Crea un oggetto XMLHttpRequest
+
+        // Configura la richiesta
+        xhr.open('GET', `/Videogiochi/FiltraPiattaforma?idPiattaforma=` + query, true);
+
+        // Definisci la funzione di callback
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log("ci siamo");
+                var videogiochi = JSON.parse(xhr.responseText);
+                videogiochi.forEach(videogioco => {
+                    console.log(videogioco); // Verifica il contenuto di ogni videogioco
+                });
+
+                displayResults(videogiochi);
+            } else {
+                console.error('Errore durante la richiesta:', xhr.status, xhr.statusText);
+            }
+        };
+
+        // Gestisci eventuali errori
+        xhr.onerror = function () {
+            console.error('Errore di rete durante la richiesta.');
+        };
+
+        xhr.send(); // Invia la richiesta
+    }
+
+
+    // FILTRO GENERI
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("fyufhtdgfdrgdgndgfdyjdyk");
+        var generi = document.getElementById('generi');
+        console.log("sei quiiiiiii");
+        generi.addEventListener('change', function () {
+            console.log("ciaooooo");
+            const query = generi.value.trim(); // Ottieni il valore dell'input senza spazi extra
+
+
+            filterGeneri(query); // Chiama la funzione per fare la richiesta AJAX
+
+        });
+    });
+
+    // Funzione per fare la richiesta AJAX
+    function filterGeneri(query) {
+        const xhr = new XMLHttpRequest(); // Crea un oggetto XMLHttpRequest
+
+        // Configura la richiesta
+        xhr.open('GET', `/Videogiochi/FiltraGeneri?generi=` + query, true);
+
+        // Definisci la funzione di callback
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log("ci siamo");
+                var videogiochi = JSON.parse(xhr.responseText);
+                videogiochi.forEach(videogioco => {
+                    console.log(videogioco); // Verifica il contenuto di ogni videogioco
+                });
+
+                displayResults(videogiochi);
+            } else {
+                console.error('Errore durante la richiesta:', xhr.status, xhr.statusText);
+            }
+        };
+
+        // Gestisci eventuali errori
+        xhr.onerror = function () {
+            console.error('Errore di rete durante la richiesta.');
+        };
+
+        xhr.send(); // Invia la richiesta
+    }
+
+    // ORDINA PER
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("fyufhtdgfdrgdgndgfdyjdyk");
+        var ordina = document.getElementById('ordina');
+        console.log("sei quiiiiiii");
+        ordina.addEventListener('change', function () {
+            console.log("ciaooooo");
+            const query = ordina.value; // Ottieni il valore dell'input senza spazi extra
+
+
+            OrderBy(query); // Chiama la funzione per fare la richiesta AJAX
+
+        });
+    });
+
+    // Funzione per fare la richiesta AJAX
+    function OrderBy(query) {
+        const xhr = new XMLHttpRequest(); // Crea un oggetto XMLHttpRequest
+
+        // Configura la richiesta
+        xhr.open('GET', `/Videogiochi/OrdinaPer?operazione=` + query, true);
+
+        // Definisci la funzione di callback
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log("ci siamo");
+                var videogiochi = JSON.parse(xhr.responseText);
+                videogiochi.forEach(videogioco => {
+                    console.log(videogioco); // Verifica il contenuto di ogni videogioco
+                });
+
+                displayResults(videogiochi);
+            } else {
+                console.error('Errore durante la richiesta:', xhr.status, xhr.statusText);
+            }
+        };
+
+        // Gestisci eventuali errori
+        xhr.onerror = function () {
+            console.error('Errore di rete durante la richiesta.');
+        };
+
+        xhr.send(); // Invia la richiesta
+    }
+
+
+
+    // PER MOSTRARE
+    function displayResults(videogiochi) {
+        const resultsDiv = document.getElementById("catalogo"); // Assicurati di avere un elemento con id "catalogo" dove inserire i risultati
+        resultsDiv.innerHTML = ""; // Svuota i risultati precedenti
+
+        if (videogiochi.length > 0) {
+            // Crea un contenitore 'row' per la griglia
+            const row = document.createElement('div');
+            row.classList.add('row', 'row-cols-1', 'row-cols-md-2', 'row-cols-lg-3', 'row-cols-xl-4', 'gy-4');
+
+            videogiochi.forEach(videogioco => {
+                const card = `
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3" onclick="window.location.href='/Videogiochi/Dettagli?id=${videogioco.id}'">
+                <div class="card w-100 bg-dark text-light">
+                    <div>
+                        <img class="card-img-top" src="/images/copertine/${videogioco.id}.png" alt="${videogioco.titolo}">
+                    </div>
+                    <div class="card-footer h-100 d-flex flex-column justify-content-between">
+                        <h5>${videogioco.titolo}</h5>
+                        <h6 class="text-end fw-bold" style="color:var(--flame)">${videogioco.prezzo} Eur</h6>
+                    </div>
+                </div>
+            </div>
+        `;
+
+
+                // Aggiungi ogni card alla riga
+                row.innerHTML += card;
+            });
+
+            // Aggiungi la riga al contenitore del catalogo
+            resultsDiv.appendChild(row);
+        } else {
+            resultsDiv.innerHTML = "Nessun risultato trovato.";
+        }
+    }
+   
+</script>
+
+
+</script>
 
 </html>

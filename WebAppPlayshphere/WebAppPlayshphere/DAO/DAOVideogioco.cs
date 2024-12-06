@@ -10,7 +10,9 @@ namespace WebAppPlayshphere.DAO
 
         private DAOVideogioco()
         {
-            db = new Database("Playsphere", "localhost");
+
+            db = new Database("Playsphere3", "localhost");
+
         }
         private static DAOVideogioco istance = null;
 
@@ -144,6 +146,44 @@ namespace WebAppPlayshphere.DAO
             }
             return null;
         }
+
+        public List<string> GetGeneri()
+        {
+            List<string> generi = new();
+            var righe = db.Read("SELECT generi FROM Videogiochi");
+            foreach (var riga in righe)
+            {
+                string[] valori = riga["generi"].Split(",");
+                foreach (string s in valori)
+                {
+                    if (!generi.Contains(s.Trim()))
+                    {
+                        generi.Add(s.Trim());
+                        Console.WriteLine("GENERI: " + s.Trim());
+                    }
+                }
+            }
+
+            return generi;
+        }
+
+        public List<Videogioco> GetByPiattaforma(int idPiattaforma)
+        {
+            var ris = db.Read($"select Videogiochi.* from videogiochi JOIN PiattaformeVideogiochi on Videogiochi.id = PiattaformeVideogiochi.idVideogioco where PiattaformeVideogiochi.idPiattaforma = {idPiattaforma};");
+
+            List<Videogioco> giochi = new();
+
+            foreach (var item in ris)
+            {
+                Videogioco v = new();
+
+                v.FromDictionary(item);
+                giochi.Add(v);
+            }
+
+            return giochi;
+        }
+
         public Entity FindByTitolo(string titolo)
         {
             var righe = db.ReadOne($"SELECT * FROM Videogiochi WHERE titolo = '{titolo}'");
@@ -240,6 +280,107 @@ namespace WebAppPlayshphere.DAO
                 }
                 ris.Add(e);
             }
+            return ris;
+        }
+        public List<Videogioco> Ricerca(string ricerca)
+        {
+            var righe = db.Read($"SELECT * FROM Videogiochi WHERE Titolo LIKE '%{ricerca}%'");
+            if (righe == null)
+            {
+                Console.WriteLine("riga nulla");
+                return null;
+            }
+            List<Videogioco> ris = new List<Videogioco>();
+            foreach (var riga in righe)
+            {
+                Videogioco e = new Videogioco();
+                e.FromDictionary(riga);
+                // recupero tutte le piattaforme del gioco
+                List<Entity> piattaforme = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+                if (DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id) == null)
+                {
+                    Console.WriteLine("ERRORE RECUPERO PIATTAFORME");
+                }
+                // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+                foreach (var item in piattaforme)
+                {
+                    ((Videogioco)e).Piattaforme.Add(
+                        new Piattaforma()
+                        {
+                            Id = ((Piattaforma)item).Id,
+                            Nome = ((Piattaforma)item).Nome
+                        }
+                    );
+                }
+                ris.Add(e);
+            }
+            return ris;
+        }
+
+        public List<Videogioco> RicercaGeneri(string ricerca)
+        {
+            var righe = db.Read($"SELECT * FROM Videogiochi WHERE Generi LIKE '%{ricerca}%'");
+            Console.WriteLine($"SELECT * FROM Videogiochi WHERE Generi LIKE '%{ricerca}%'");
+            if (righe == null)
+            {
+                Console.WriteLine("riga nulla");
+                return null;
+            }
+            List<Videogioco> ris = new List<Videogioco>();
+            foreach (var riga in righe)
+            {
+                Videogioco e = new Videogioco();
+                e.FromDictionary(riga);
+                // recupero tutte le piattaforme del gioco
+                List<Entity> piattaforme = DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id);
+                if (DAOPiattaforma.GetIstance().FindByGioco(((Videogioco)e).Id) == null)
+                {
+                    Console.WriteLine("ERRORE RECUPERO PIATTAFORME");
+                }
+                // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+                foreach (var item in piattaforme)
+                {
+                    ((Videogioco)e).Piattaforme.Add(
+                        new Piattaforma()
+                        {
+                            Id = ((Piattaforma)item).Id,
+                            Nome = ((Piattaforma)item).Nome
+                        }
+                    );
+                }
+                ris.Add(e);
+            }
+            return ris;
+        }
+        public List<Videogioco> Order(string query) {
+            List<Videogioco> ris = new();
+            var righe = db.Read($"SELECT * FROM Videogiochi ORDER BY {query}");
+            foreach (var riga in righe) {
+                Videogioco v = new Videogioco();
+                v.FromDictionary(riga);
+                v.Recensioni = DAORecensione.GetIstance().RecensioniGioco(v.Id);
+                List<Entity> piattaforme = DAOPiattaforma.GetIstance().FindByGioco(v.Id);
+                if (DAOPiattaforma.GetIstance().FindByGioco(v.Id) == null)
+                {
+                    Console.WriteLine("ERRORE RECUPERO PIATTAFORME");
+                }
+                // per ogni piattaforma trovata la aggiungo alla lista delle piattaforme del gioco
+                
+                foreach (var item in piattaforme)
+                {
+                    
+                    v.Piattaforme.Add(
+                        new Piattaforma()
+                        {
+                            Id = ((Piattaforma)item).Id,
+                            Nome = ((Piattaforma)item).Nome
+                        }
+                    );
+                }
+                ris.Add(v);
+
+            }
+            
             return ris;
         }
 

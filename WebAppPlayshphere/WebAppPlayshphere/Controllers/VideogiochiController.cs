@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Newtonsoft.Json;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Text.Json;
 using Utility;
 using WebAppPlayshphere.DAO;
+using WebAppPlayshphere.Factory;
 using WebAppPlayshphere.Models;
 
 namespace WebAppPlayshphere.Controllers
@@ -15,6 +17,33 @@ namespace WebAppPlayshphere.Controllers
         {
             return View();
         }
+
+        public IActionResult AggiungiRecensione([FromForm] Dictionary<string, string> recensione)
+        {
+            foreach (var item in recensione)
+            {
+                Console.WriteLine(item.Key + " " + item.Value);
+            }
+            Entity e = new Recensione();
+            if (recensione != null)
+            {
+                if (recensione["valido"] == "1")
+                {
+                    recensione["valido"] = "true";
+                }
+
+                e = RecensioneFactory.CreateRecensione(recensione);
+                if (DAORecensione.GetIstance().Create(e))
+                {
+                    Console.WriteLine("Recensione creata");
+                    int id = Convert.ToInt32(recensione["idvideogioco"]);
+                    Console.WriteLine("id da passare " + id);
+                    return RedirectToAction("Dettagli", new { id = id });
+                }
+            }
+            return Content("ROTTO TUTTO");
+        }
+
 
         public IActionResult Dettagli(int id)
         {
@@ -148,6 +177,113 @@ namespace WebAppPlayshphere.Controllers
             DAOCarrello.GetIstance().Insert(idUtente, idVid, 1, idPiattaforma);
             return RedirectToAction("Dettagli", new { id = idVid });
         }
+        public IActionResult Filtra(string ricerca)
+        {
+            List<Videogioco> vg = new List<Videogioco>();
+            if (ricerca == "")
+            {
+                List<Entity> ris = DAOVideogioco.GetIstance().Read();
+                foreach(Entity e in ris)
+                {
+                    vg.Add((Videogioco)e);
+                }
+            }
+            else
+            {
+                vg = DAOVideogioco.GetIstance().Ricerca(ricerca);
+            }
+            return Json(vg);
+        }
+
+        public IActionResult FiltraPiattaforma(int idPiattaforma)
+        {
+            List<Videogioco> vg = new List<Videogioco>();
+            if (idPiattaforma == -1)
+            {
+                List<Entity> ris = DAOVideogioco.GetIstance().Read();
+                foreach (Entity e in ris) {
+                    vg.Add((Videogioco)e);
+                }
+                return Json(vg);
+            }
+             vg = DAOVideogioco.GetIstance().GetByPiattaforma(idPiattaforma);
+
+            return Json(vg);
+        }
+
+        public IActionResult FiltraGeneri(string generi)
+        {
+            List<Videogioco> vg = new List<Videogioco>();
+            if (generi == "")
+            {
+                List<Entity> ris = DAOVideogioco.GetIstance().Read();
+                foreach (Entity e in ris)
+                {
+                    vg.Add((Videogioco)e);
+                }
+            }
+            else
+            {
+                vg = DAOVideogioco.GetIstance().RicercaGeneri(generi);
+                Console.WriteLine("Lunghezza vg: " + vg.Count);
+            }
+            return Json(vg);
+        }
+
+
+        public IActionResult OrdinaPer(string operazione)
+        {
+            List<Videogioco> ris = new();
+            List<Entity> giochi = new List<Entity>();
+            string query = "";
+            switch (operazione)
+            {
+                case "1":
+                    query = "Prezzo DESC";
+                    break;
+                case "2":
+                    query = "Prezzo ASC";
+                    break;
+                case "3":
+                    query = "Rilascio DESC";
+                    break;
+                case "4":
+                    query = "Rilascio ASC";
+                    break;
+                default:
+                    Console.WriteLine("sei nel default");
+                    giochi = DAOVideogioco.GetIstance().Read();
+                    break;
+               
+            }
+            if (query == "") {
+                if (operazione != "")
+                {
+                    if (operazione == "5")
+                    {
+                        Console.WriteLine("sei nel decrescente");
+                        giochi=giochi.OrderByDescending(e => ((Videogioco)e).Valutazione()).ToList();
+                    }
+                    else
+                    {
+                        Console.WriteLine("sei nel crescente");
+                        giochi=giochi.OrderBy(e => ((Videogioco)e).Valutazione()).ToList();
+                    }
+                    foreach(var gioco in giochi)
+                    {
+                        Console.WriteLine("VALUTAZIONE: "+((Videogioco)gioco).Valutazione());
+                        ris.Add((Videogioco)gioco);
+                    }
+                }
+            }
+            else
+            {
+                ris=DAOVideogioco.GetIstance().Order(query);
+            }
+            
+            return Json(ris);
+        }
+
 
         public IActionResult Categoria(string categoria)
         {
@@ -161,6 +297,47 @@ namespace WebAppPlayshphere.Controllers
                 return JsonConvert.DeserializeObject<Utente>(utenteLoggato);
             }
             return null;
+        }
+
+        /*RISERVATI ALL'ADMIN*/
+
+        public IActionResult CatalogoJson()
+        {
+            if (DAOVideogioco.GetIstance().Read() == null)
+            {
+                Console.WriteLine("ERRORE CATALOGO");
+                return View("Home/Index");
+            }
+            List<Entity> listaGiochi = DAOVideogioco.GetIstance().Read();
+            List<Videogioco> videogiochi = new List<Videogioco>();
+            foreach (var v in listaGiochi)
+            {
+                videogiochi.Add((Videogioco)v);
+            }
+            return Json(videogiochi);
+        }
+
+        [HttpPost]
+        public IActionResult EliminaProdotto([FromBody] dynamic requestDelete)
+        {
+
+            if (requestDelete.TryGetProperty("id", out JsonElement idElement))
+            {
+                int idDelete = Convert.ToInt32(idElement.ToString());
+
+                // Validazione dei dati
+                if (idDelete <= 0) // Verifica se l'ID e il ruolo sono validi
+                {
+                    return BadRequest(new { success = false, message = "Valore id non valido" });
+                }
+
+                bool delete = DAOVideogioco.GetIstance().Delete(idDelete); // SE id > 0 allora fa il ban
+
+                return Json(new { success = delete, message = delete ? "Recensione Eliminata." : "Errore durante l'aggiornamento." });
+            }
+
+            return BadRequest(new { success = false, message = "ID Mancante" });
+
         }
 
     }

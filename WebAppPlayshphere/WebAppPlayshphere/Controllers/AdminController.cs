@@ -10,5 +10,9 @@ namespace WebAppPlayshphere.Controllers
         {
             return View();
         }
+        public IActionResult Chat()
+        {
+            return RedirectToAction("Elenco", "Chat");
+        }
     }
 }

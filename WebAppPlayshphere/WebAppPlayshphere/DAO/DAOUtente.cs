@@ -14,7 +14,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOUtente()
         {
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere3", "localhost");
 
         }
 
@@ -29,6 +29,7 @@ namespace WebAppPlayshphere.DAO
         }
         public Entity Find(int id)
         {
+            Console.WriteLine($"metodo find utente gli è arrivato l id : {id}");
             var riga = db.ReadOne($"SELECT * FROM Utenti WHERE id = {id}");
             if (riga != null && riga.Count > 0)
             {
@@ -97,11 +98,15 @@ namespace WebAppPlayshphere.DAO
         }
         public bool Find(string username, string password)
         {
+            Console.WriteLine($"username arrivata : {username}");
             var riga = db.ReadOne($"SELECT * FROM Utenti " +
                                    $"WHERE " +
                                    $"email = '{username}' AND " +
                                    $"passwordUtente = HASHBYTES('SHA2_512','{password}');");
-
+            if(riga == null)
+            {
+                Console.WriteLine("utente non trovato");
+            }
             return riga != null;
         }
         public Entity Find(string username)
