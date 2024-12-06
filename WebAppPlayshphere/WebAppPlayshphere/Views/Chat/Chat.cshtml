@@ -70,17 +70,27 @@
             .withUrl("/chathub")
             .build();
 
-        connection.on("ReceiveMessage", (user, message) => {
+                connection.on("ReceiveMessage", (user, message, loggedUser) => {
             const chatWindow = document.getElementById("chatWindow");
             const newMessage = document.createElement("div");
+
+            // Verifica se il messaggio è dell'utente loggato
+            const isOwnMessage = user === loggedUser;
+
+            if (isOwnMessage) {
+                newMessage.classList.add("bg-light", "text-black", "rounded-3", "p-2", "my-2", "align-self-start", "text-start");
+                newMessage.style.marginLeft = "auto"; // Allinea a destra
+            } else {
+                newMessage.classList.add("bg-light", "text-black", "rounded-3", "p-2", "my-2", "align-self-start", "text-start");
+                newMessage.style.marginRight = "auto"; // Allinea a sinistra
+            }
+
+            newMessage.style.width = 'min-content';
             newMessage.textContent = `${user}: ${message}`;
             chatWindow.appendChild(newMessage);
             chatWindow.scrollTop = chatWindow.scrollHeight;
         });
 
-        connection.on("AccessoNegato", (message) => {
-            alert(message);
-        });
 
         async function accediChat() {
 
