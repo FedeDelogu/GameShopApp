@@ -66,7 +66,9 @@ namespace WebAppPlayshphere.DAO
         } // OK
         public List<Entity> RecensioniGioco(int id)
         {
+
             var righe = db.Read("SELECT * FROM Recensioni WHERE idVideogioco=" + id);
+            Console.WriteLine("ID DEL CAZZO DI GIOCO: "+id);
             if (righe == null)
             {
                 return null;
