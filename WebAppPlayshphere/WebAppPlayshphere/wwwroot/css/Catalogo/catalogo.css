@@ -87,3 +87,8 @@ img {
     padding: 10px;
 }
 /* FINE FAQ */
+
+#searchBox{
+    max-width: 75%;
+    border-radius:10px;
+}
