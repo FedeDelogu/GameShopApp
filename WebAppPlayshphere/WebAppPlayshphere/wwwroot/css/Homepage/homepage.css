@@ -114,3 +114,70 @@ h2:hover .fa-chevron-right{
 .card {
     transition: transform 0.25s ease;
 }
+
+
+.smooth {
+    transition: all 0.5s ease;
+}
+
+.slider-cards > div {
+    min-height: 500px;
+}
+
+.slider-cards > .active{
+    max-width: 50%!important;
+    box-shadow: 0 0 12px 1px;
+    z-index: 1000;
+    filter: grayscale(0)!important;
+}
+
+.box .active > button {
+    display: block;
+    transition: display 0.25s ease;
+}
+
+.box:not(.active) > button {
+    display: none;
+    transition: display 0.25s ease;
+}
+
+.slider-cards .box {
+    filter: grayscale(90%);
+    transition: filter 0.5s ease;
+}
+
+#bg1 {
+    background-image: url('/images/copertine/4.png');
+    background-position: center;
+    background-size: cover;
+}
+
+#bg2 {
+    background-image: url('/images/copertine/16.png');
+    background-position: center;
+    background-size: cover;
+}
+
+#bg3 {
+    background-image: url('/images/copertine/8.png');
+    background-position: center;
+    background-size: cover;
+}
+
+#bg4 {
+    background-image: url('/images/copertine/14.png');
+    background-position: center;
+    background-size: cover;
+}
+
+#bg5 {
+    background-image: url('/images/copertine/15.png');
+    background-position: center;
+    background-size: cover;
+}
+
+.btn-flame {
+    background-color: var(--flame) !important;
+    color: var(--eerie-black) !important;
+    border-color: var(--eerie-black) !important;
+}
