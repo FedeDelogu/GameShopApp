@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
         private DAOPartecipantiChat()
         {
 
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere3", "localhost");
 
         }
         private static DAOPartecipantiChat istance = null;

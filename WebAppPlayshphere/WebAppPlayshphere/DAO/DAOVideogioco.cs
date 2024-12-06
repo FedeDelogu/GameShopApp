@@ -11,7 +11,7 @@ namespace WebAppPlayshphere.DAO
         private DAOVideogioco()
         {
 
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere3", "localhost");
 
         }
         private static DAOVideogioco istance = null;

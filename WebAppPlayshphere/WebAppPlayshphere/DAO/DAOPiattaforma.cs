@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
 
         private DAOPiattaforma()
         {
-            db = new Database("Playsphere", "localhost");
+            db = new Database("Playsphere3", "localhost");
         }
         private static DAOPiattaforma istance = null;
 

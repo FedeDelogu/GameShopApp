@@ -72,7 +72,7 @@ namespace WebAppPlayshphere.Controllers
         {
             Utente utente = (Utente)DAOUtente.GetInstance().Find(int.Parse(idutente));
             Chat chat = (Chat)DAOChat.GetInstance().FindByUtente(utente.Id);
-            if (DAOMessaggi.GetInstance().FindByUtente(int.Parse(idutente)) != null) // caht con messaggi
+            if (DAOMessaggi.GetInstance().FindByUtente(int.Parse(idutente)) != null) // chat con messaggi
             {
                 if(DAOMessaggi.GetInstance().FindByUtente(int.Parse(idutente)).Count == 0)
                 {

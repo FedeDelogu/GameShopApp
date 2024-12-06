@@ -20,6 +20,7 @@
         <p>ID : @f.chat.Id</p>
         <p>data : @f.chat.DataCreazione</p>
         <p>utente : @f.utente.Username</p>
+        <p style="color : red">@(f.chat.Notifica == 1 ? "Notifica : Hai dei messaggi da leggere" : "")</p>
         <button onclick="window.location.href='/Chat/ChatAdmin/0/?idchat=@f.chat.Id&idutente=@f.utente.Id'">Chat</button>
         <hr />
         <br />
