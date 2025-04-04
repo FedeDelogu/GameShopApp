@@ -119,6 +119,8 @@ namespace WebAppPlayshphere.Controllers
                 Entity e = DAOUtente.GetInstance().Find(user);
                 if(((Utente)e).Ruolo == -1)
                 {
+                    // Passa il messaggio di errore alla vista
+                    TempData["ErrorMessage"] = "Utenza bloccata";
                     return RedirectToAction("Login");
                 }
                 Utente utenteFront = new Utente
@@ -142,6 +144,8 @@ namespace WebAppPlayshphere.Controllers
             }
             else
             {
+                // Passa il messaggio di errore alla vista
+                TempData["ErrorMessage"] = "Credenziali non valide. Riprova.";
                 return RedirectToAction("Login");
             }
         }

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Layout/mainLayout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebAppPlayshphere.styles.css" asp-append-version="true" />
+    <script src="~/js/Login/valida.js"></script>
     <title>Login</title>
 </head>
 <body>
@@ -22,7 +23,13 @@
         <div class="d-flex justify-content-between align-items-center align-content-center vh-100">
             <section id="login" class="d-flex flex-column align-items-center align-content-center justify-content-center">
                 <h2 class=" text-white">Login</h2>
-                <form class="row justify-content-center my-5" method="POST" action="/Utenti/Accedi">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <script>
+                        alert('@TempData["ErrorMessage"]');
+                    </script>
+                }
+                <form class="row justify-content-center my-5" method="POST" action="/Utenti/Accedi" onsubmit="return valida()">
 
                     <div class="mb-3 col-8 p-0">
                         <input type="text" class="form-control email-password" name="username" id="username" placeholder="Inserisci la tua email" required>

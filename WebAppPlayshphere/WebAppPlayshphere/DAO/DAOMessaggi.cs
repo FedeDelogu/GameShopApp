@@ -10,7 +10,7 @@ namespace WebAppPlayshphere.DAO
         private DAOMessaggi()
         {
 
-            db = new Database("Playsphere3", "localhost");
+            db = new Database("Playsphere", "localhost");
 
         }
         private static DAOMessaggi istance = null;
