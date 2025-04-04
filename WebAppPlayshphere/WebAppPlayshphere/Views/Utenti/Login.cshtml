@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="~/WebAppPlayshphere.styles.css" asp-append-version="true" />
     <script src="~/js/Login/valida.js"></script>
     <title>Login</title>
+    <script src="~/js/Login.js"></script>
 </head>
 <body>
 
@@ -25,10 +26,11 @@
                 <h2 class=" text-white">Login</h2>
                 @if (TempData["ErrorMessage"] != null)
                 {
-                    <script>
-                        alert('@TempData["ErrorMessage"]');
-                    </script>
+                    <div class="alert alert-danger col-8 text-center">
+                        @TempData["ErrorMessage"]
+                    </div>
                 }
+
                 <form class="row justify-content-center my-5" method="POST" action="/Utenti/Accedi" onsubmit="return valida()">
 
                     <div class="mb-3 col-8 p-0">
@@ -59,7 +61,9 @@
                                     passwordField.type = "password";
                                 }
                             }
+
                         </script>
+
                     </div>
                     <div class="mb-3 col-8 form-check">
                         <input type="checkbox" class="form-check-input" id="rememberMe">
